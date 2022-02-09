@@ -174,7 +174,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-
+        \Jenssegers\Agent\AgentServiceProvider::class,
         \ModStart\ModStartServiceProvider::class,
         \ModStart\Misc\Captcha\CaptchaServiceProvider::class,
 
