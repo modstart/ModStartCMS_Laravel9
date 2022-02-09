@@ -1,0 +1,16 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - src/Http/Client
+        - src/FlareMiddleware
+        - src/Context/RequestContextProvider
+
+
+    tmpDir: build/phpstan
+    checkMissingIterableValueType: true
+
