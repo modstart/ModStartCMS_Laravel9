@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '33ad9703e3b7c73660c8c83b1bd42d05cfed4de0',
+        'reference' => '6c2b98d39f403bd7a4d13a8ca4eb04534406939f',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -146,6 +146,15 @@
             'install_path' => __DIR__ . '/../dragonmantank/cron-expression',
             'aliases' => array(),
             'reference' => 'be85b3f05b46c39bbc0d95f6c071ddff669510fa',
+            'dev_requirement' => false,
+        ),
+        'easywechat-composer/easywechat-composer' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../easywechat-composer/easywechat-composer',
+            'aliases' => array(),
+            'reference' => 'master',
             'dev_requirement' => false,
         ),
         'egulias/email-validator' => array(
@@ -520,7 +529,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '33ad9703e3b7c73660c8c83b1bd42d05cfed4de0',
+            'reference' => '6c2b98d39f403bd7a4d13a8ca4eb04534406939f',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -621,7 +630,7 @@
             'aliases' => array(
                 0 => '9999999-dev',
             ),
-            'reference' => '7eabbe0c2f8c5cd3673b9d5d3cfc919e99855665',
+            'reference' => '77b6d88fe205d5d3e3880c9ec53ac14487a0b234',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(
@@ -810,6 +819,15 @@
             'reference' => '597cb647654ede35e43b137926dfdfef0fb11743',
             'dev_requirement' => true,
         ),
+        'pimple/pimple' => array(
+            'pretty_version' => 'v3.5.0',
+            'version' => '3.5.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../pimple/pimple',
+            'aliases' => array(),
+            'reference' => 'a94b3a4db7fb774b3d78dad2315ddc07629e1bed',
+            'dev_requirement' => false,
+        ),
         'predis/predis' => array(
             'pretty_version' => 'v1.1.10',
             'version' => '1.1.10.0',
@@ -911,12 +929,12 @@
             ),
         ),
         'psr/simple-cache' => array(
-            'pretty_version' => '3.0.0',
-            'version' => '3.0.0.0',
+            'pretty_version' => '1.0.1',
+            'version' => '1.0.1.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/simple-cache',
             'aliases' => array(),
-            'reference' => '764e0b3939f5ca87cb904f570ef9be2d78a07865',
+            'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
             'dev_requirement' => false,
         ),
         'psr/simple-cache-implementation' => array(
@@ -1436,6 +1454,15 @@
             'install_path' => __DIR__ . '/../voku/portable-ascii',
             'aliases' => array(),
             'reference' => '9bd89e83cecdf8c37b64909454249eaed98b2c89',
+            'dev_requirement' => false,
+        ),
+        'w7corp/easywechat' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../w7corp/easywechat',
+            'aliases' => array(),
+            'reference' => 'master',
             'dev_requirement' => false,
         ),
         'webmozart/assert' => array(

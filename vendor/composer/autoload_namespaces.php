@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Pimple' => array($vendorDir . '/pimple/pimple/src'),
     'NinjaMutex' => array($vendorDir . '/arvenil/ninja-mutex/src'),
     'Mockery' => array($vendorDir . '/mockery/mockery/library'),
     'HTMLPurifier' => array($vendorDir . '/ezyang/htmlpurifier/library'),

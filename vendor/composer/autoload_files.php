@@ -33,5 +33,7 @@ return array(
     '2cffec82183ee1cea088009cef9a6fc3' => $vendorDir . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
     '6124b4c8570aa390c21fafd04a26c69f' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
     'b6b991a57620e2fb6b2f66f03fe9ddc2' => $vendorDir . '/symfony/string/Resources/functions.php',
+    '313a9b01f294d730dfc8ff43b9e56416' => $vendorDir . '/w7corp/easywechat/src/Kernel/Support/Helpers.php',
+    '8cfe2b61cc956a1edbaf214308e8c9a1' => $vendorDir . '/w7corp/easywechat/src/Kernel/Helpers.php',
     '05bd88eab6627efe378f45b89642a123' => $vendorDir . '/modstart/modstart/src/helpers.php',
 );
