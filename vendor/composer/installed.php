@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '20976800c87b9257a7a0263e7e6e3bd759ac029e',
+        'reference' => 'abe893beb89e5e9952912fe259d739a064dbecb7',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -154,7 +154,7 @@
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../easywechat-composer/easywechat-composer',
             'aliases' => array(),
-            'reference' => 'master',
+            'reference' => '4d6acc9baa9f02cd80c007f14e22f7e5d6931409',
             'dev_requirement' => false,
         ),
         'egulias/email-validator' => array(
@@ -529,7 +529,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '20976800c87b9257a7a0263e7e6e3bd759ac029e',
+            'reference' => 'abe893beb89e5e9952912fe259d739a064dbecb7',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -628,7 +628,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../modstart/modstart',
             'aliases' => array(),
-            'reference' => 'master',
+            'reference' => '14ac5c9d2a2463c1a110baa1e71f7e32e7a3d2b0',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(
@@ -927,12 +927,12 @@
             ),
         ),
         'psr/simple-cache' => array(
-            'pretty_version' => '1.0.1',
-            'version' => '1.0.1.0',
+            'pretty_version' => '3.0.0',
+            'version' => '3.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/simple-cache',
             'aliases' => array(),
-            'reference' => '408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+            'reference' => '764e0b3939f5ca87cb904f570ef9be2d78a07865',
             'dev_requirement' => false,
         ),
         'psr/simple-cache-implementation' => array(
@@ -1460,7 +1460,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../w7corp/easywechat',
             'aliases' => array(),
-            'reference' => 'master',
+            'reference' => '0ae20c1f24731ebacc59d7da29518098223043de',
             'dev_requirement' => false,
         ),
         'webmozart/assert' => array(
