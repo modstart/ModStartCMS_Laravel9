@@ -71,10 +71,6 @@
     "prefer-stable": true,
     "repositories": [
         {
-            "type": "vcs",
-            "url": "https://gitee.com/modstart-lib/modstart.git"
-        },
-        {
             "type": "composer",
             "url": "https://modstart.com/composer"
         }
