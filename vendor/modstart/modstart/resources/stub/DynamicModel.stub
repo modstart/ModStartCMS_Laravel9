@@ -1,6 +1,0 @@
-<?php
-namespace DynamicModel;
-
-class ${className} extends \ModStart\Core\Dao\DynamicModel {
-    protected $table = '${table}';
-}

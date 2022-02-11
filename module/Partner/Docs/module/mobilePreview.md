@@ -1,1 +1,0 @@
-https://ms-assets.modstart.com/data/image/2021/12/10/49164_meon_1987.png
