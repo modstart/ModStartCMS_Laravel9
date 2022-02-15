@@ -169,7 +169,7 @@ class ModStartServiceProvider extends ServiceProvider
         DB::listen(function ($query, $bindings = null, $time = null, $connectionName = null) use (&$queryCountPerRequest, &$queryCountPerRequestSqls) {
             $queryCountPerRequest++;
             $sql = $query;
-            if (PHP_VERSION_ID >= 80000) {
+            if (\ModStart\ModStart::env() == 'laravel9') {
                 /** @var QueryExecuted $query */
                 $sql = $query->sql;
                 $bindings = $query->bindings;
