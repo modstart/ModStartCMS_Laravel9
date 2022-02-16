@@ -33,19 +33,6 @@
         'key' => 'siteDescription',
         'value' => 'ModStart是一个开源内容开发框架，免费且永久商用，基于配置+模块化开发，可以帮您快速完成网站系统的搭建。',
       ),
-      37 =>
-      array (
-        'key' => 'systemCounter',
-        'value' => '<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?c1367ea4c1f7fe05cfe5a84a76691976";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>',
-      ),
       40 =>
       array (
         'key' => 'Cms_HomeInfoTitle',
@@ -93,9 +80,9 @@ var _hmt = _hmt || [];
         'modelId' => 4,
         'alias' => NULL,
         'title' => '销售员',
-        'summary' => '1、 组织领导公司的财务、成本、投融资、预算、会计核算及监督、财务分析等方面的工作； 
+        'summary' => '1、 组织领导公司的财务、成本、投融资、预算、会计核算及监督、财务分析等方面的工作；
 
-2、 主持建立和完善财务管理制度和相关工作程序，制定和管理税收政策方案及程序； 
+2、 主持建立和完善财务管理制度和相关工作程序，制定和管理税收政策方案及程序；
 
 3、 掌握公司财务状况、经营成果和资金变动情况，拟订或规划资金筹措和资本运作方案；',
         'cover' => 'https://mz-assets.tecmz.com/data/mz-demo/gift-3.jpg',
