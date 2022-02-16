@@ -29,7 +29,7 @@ class DatabaseMonitor
                 $time = $query->time;
             }
             self::$queryCountPerRequestSqls[] = "$sql, " . json_encode($bindings);
-            Log::info("SQL $sql, " . json_encode($bindings));
+            // Log::info("SQL $sql, " . json_encode($bindings));
             if ($time > 500) {
                 $param = json_encode($bindings);
                 Log::warning("LONG_SQL ${time}ms, $sql, $param");
