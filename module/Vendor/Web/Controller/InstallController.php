@@ -12,7 +12,6 @@ use ModStart\Admin\Auth\Admin;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Response;
-use ModStart\Core\Util\CurlUtil;
 use ModStart\Core\Util\RandomUtil;
 use ModStart\Module\ModuleManager;
 use PDO;
@@ -129,7 +128,12 @@ class InstallController extends Controller
         if (empty($password)) {
             return Response::jsonError("管理用户密码为空");
         }
-        $exitCode = Artisan::call("migrate");
+        $exitCode = 0;
+        try {
+            $exitCode = Artisan::call("migrate");
+        } catch (\Exception $e) {
+            return $this->handleException($e);
+        }
         if (0 != $exitCode) {
             return Response::jsonError("安装错误 exitCode($exitCode)");
         }
@@ -144,7 +148,11 @@ class InstallController extends Controller
             if (!ModuleManager::isExists($module)) {
                 continue;
             }
-            $ret = ModuleManager::install($module);
+            try {
+                $ret = ModuleManager::install($module);
+            } catch (\Exception $e) {
+                return $this->handleException($e);
+            }
             if (Response::isError($ret)) {
                 return Response::generateError($ret['msg']);
             }
@@ -167,5 +175,23 @@ class InstallController extends Controller
         file_put_contents(storage_path('install.lock'), 'lock');
 
         return Response::json(0, '安装成功，点击即将跳转到管理后台', null, '/admin');
+    }
+
+    private function handleException(\Exception $e)
+    {
+        $msg = $e->getMessage();
+        $traces = $e->getTraceAsString();
+        if (preg_match("/Table '(.*?)' already exists/", $msg, $mat)) {
+            return Response::jsonError('数据表 ' . $mat[1] . ' 已经存在（可能您使用了一个非空的数据库，请删除表或更新数据库）');
+        }
+        if (preg_match("/Duplicate column name '(.*?)'/", $msg, $mat)) {
+            $field = $mat[1];
+            $file = null;
+            if (preg_match("/(module\\/.*?\\/Migrate\\/.*?\\.php)/", $traces, $mat)) {
+                $file = $mat[1];
+            }
+            return Response::jsonError('数据表字段 ' . $field . ' 已经存在（请查看' . $file . '迁移文件配置）');
+        }
+        throw $e;
     }
 }
