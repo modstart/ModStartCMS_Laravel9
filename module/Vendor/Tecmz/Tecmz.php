@@ -171,4 +171,12 @@ class Tecmz
         return $this->request('/censor_text', $post);
     }
 
+    
+    public function ipToLocation($ip)
+    {
+        $post = [];
+        $post['ip'] = $ip;
+        return $this->request('/ip_to_location', $post);
+    }
+
 }

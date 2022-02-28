@@ -91,8 +91,6 @@ QQ交流群： [467107293](https://qm.qq.com/cgi-bin/qm/qr?k=JP5GySRSCM8BUVoIGwf
 
 系统完全开源，基于 **Apache 2.0** 开源协议，**免费且不限制商业使用**。
 
-`ModStart` 致力于服务开发者，为开发者节省时间，让大家有更多的时间读书、健身、开源、投资、帮朋友、陪家人，感谢您支持我们的开源事业。
-
 
 <img src="https://ms-assets.modstart.com/data/image/2021/11/07/46017_dv5r_7358.jpg" alt="功能架构" />
 
