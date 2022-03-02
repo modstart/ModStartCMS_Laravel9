@@ -4,6 +4,7 @@
 namespace Module\Vendor\Provider\Notifier;
 
 
+
 class NotifierBizWidget
 {
     private static $list = [];

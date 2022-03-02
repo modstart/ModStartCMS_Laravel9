@@ -26,6 +26,7 @@ class NotifierProvider
         return $instances;
     }
 
+    
     public static function notify($biz, $title, $content, $param = [])
     {
         foreach (self::all() as $instance) {
