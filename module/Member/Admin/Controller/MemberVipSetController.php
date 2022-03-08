@@ -21,7 +21,7 @@ class MemberVipSetController extends Controller
         $builder
             ->init('member_vip_set')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->id('id', 'ID')->addable(true)->editable(true);
                 $builder->text('title', '名称');
                 $builder->image('icon', '图标');

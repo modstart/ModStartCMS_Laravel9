@@ -22,7 +22,12 @@ class NavUtil
         ]);
     }
 
-    
+    /**
+     * 根据位置获取
+     *
+     * @param string $position
+     * @return mixed
+     */
     public static function listByPosition($position = 'header')
     {
         $nodes = TreeUtil::modelToTree('nav', [
@@ -36,7 +41,13 @@ class NavUtil
         });
     }
 
-    
+    /**
+     * 根据位置获取，有缓存
+     *
+     * @param string $position
+     * @param int $minutes
+     * @return mixed
+     */
     public static function listByPositionWithCache($position = 'header', $minutes = 600)
     {
         return Cache::remember(self::CACHE_KEY_PREFIX . $position, $minutes, function () use ($position) {

@@ -1,5 +1,5 @@
 <?php
-
+/* @var \Illuminate\Routing\Router $router */
 
 use Module\Cms\Type\CmsMode;
 use Module\Cms\Util\CmsCatUtil;

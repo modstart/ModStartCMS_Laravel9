@@ -20,7 +20,11 @@ use Module\Vendor\Provider\HomePage\HomePageProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-    
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
     public function boot(Dispatcher $events)
     {
         if (method_exists(ModuleClassLoader::class, 'addClass')) {
@@ -125,7 +129,11 @@ class ModuleServiceProvider extends ServiceProvider
 
     }
 
-    
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
     public function register()
     {
 

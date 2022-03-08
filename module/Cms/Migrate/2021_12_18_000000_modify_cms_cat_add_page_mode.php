@@ -7,12 +7,16 @@ use Module\Cms\Type\CmsMode;
 
 class ModifyCmsCatAddPageMode extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('cms_model', function (Blueprint $table) {
 
-            
+            /** @see CmsMode */
             $table->tinyInteger('mode')->nullable()->comment('');
             $table->string('pageTemplate', 100)->nullable()->comment('');
             $table->string('formTemplate', 100)->nullable()->comment('');
@@ -31,7 +35,11 @@ class ModifyCmsCatAddPageMode extends Migration
 
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 
