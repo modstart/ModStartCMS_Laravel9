@@ -6,11 +6,7 @@ use ModStart\Core\Dao\ModelManageUtil;
 
 class CreatePartner extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (ModelManageUtil::hasTable('partner')) {
@@ -42,11 +38,7 @@ class CreatePartner extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

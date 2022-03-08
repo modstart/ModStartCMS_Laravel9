@@ -4,11 +4,7 @@
 namespace Module\Vendor\Provider\Notifier;
 
 
-/**
- * Class NotifierBizWidget
- * @package Module\Vendor\Provider\Notifier
- * @since 2.0.0
- */
+
 class NotifierBizWidget
 {
     private static $list = [];

@@ -23,12 +23,7 @@ class Tecmz
         $this->appSecret = $appSecret;
     }
 
-    /**
-     * 校验签名
-     *
-     * @param $param
-     * @return bool
-     */
+    
     public function signCheck($param)
     {
         if (empty($param['sign']) || empty($param['timestamp']) || empty($param['app_id'])) {
@@ -49,11 +44,7 @@ class Tecmz
         return true;
     }
 
-    /**
-     * @param $appId
-     * @param $appSecret
-     * @return Tecmz
-     */
+    
     public static function instance($appId, $appSecret = null)
     {
         static $map = [];
@@ -81,13 +72,7 @@ class Tecmz
         return CurlUtil::postJSONBody(self::$API_BASE . $gate, $param);
     }
 
-    /**
-     * 测试接口连通性
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>null]
-     */
+    
     public function ping()
     {
         $ret = $this->request('/ping');
@@ -97,18 +82,7 @@ class Tecmz
         return Response::generate(0, 'ok');
     }
 
-    /**
-     * 自助结算 创建订单
-     *
-     * @param $bizSn
-     * @param $money
-     * @param $notifyUrl
-     * @param $returnUrl
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'ok']
-     * 成功 [code=>0,msg=>'ok','data'=>['biz_sn'=>'','sn'=>'','pay_url'=>'']]
-     */
+    
     public function payOfflineCreate($bizSn, $money, $notifyUrl, $returnUrl)
     {
         return $this->request('/pay_offline/create', [
@@ -119,16 +93,7 @@ class Tecmz
         ]);
     }
 
-    /**
-     * 安全验证获取验证信息
-     *
-     * @param $action
-     * @param $key
-     * @param $data
-     * @param $runtime
-     * @param $types
-     * @return [code=>0,msg=>'ok',data=>[...]]
-     */
+    
     public function captchaVerify($action, $key, $data, $runtime, $types)
     {
         return $this->request('/captcha/verify', [
@@ -140,11 +105,7 @@ class Tecmz
         ]);
     }
 
-    /**
-     * @param $key
-     * @return [code=>0,msg=>'ok'] 验证成功
-     *         [code=>-1,msg=>'error'] 验证失败
-     */
+    
     public function captchaValidate($key)
     {
         return $this->request('/captcha/validate', [
@@ -152,17 +113,7 @@ class Tecmz
         ]);
     }
 
-    /**
-     * 短信服务 发送短信
-     *
-     * @param $phone
-     * @param $templateId
-     * @param array $params
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>null]
-     */
+    
     public function smsSend($phone, $templateId, $params = [])
     {
         $post = [];
@@ -175,17 +126,7 @@ class Tecmz
         ], $post));
     }
 
-    /**
-     * 语音转换
-     *
-     * @param $from
-     * @param $to
-     * @param $contentBase64
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>null]
-     */
+    
     public function audioConvert($from, $to, $contentBase64)
     {
         $post = [];
@@ -195,16 +136,7 @@ class Tecmz
         return $this->request('/audio_convert', $post);
     }
 
-    /**
-     * ASR
-     *
-     * @param $type
-     * @param $contentBase64
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>null]
-     */
+    
     public function asr($type, $contentBase64)
     {
         $post = [];
@@ -213,16 +145,7 @@ class Tecmz
         return $this->request('/asr', $post);
     }
 
-    /**
-     * 快递查询
-     *
-     * @param $type
-     * @param $no
-     * @return array
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>null]
-     */
+    
     public function express($type, $no)
     {
         $post = [];
@@ -231,16 +154,7 @@ class Tecmz
         return $this->request('/express', $post);
     }
 
-    /**
-     * 图片审核
-     *
-     * @param string $imageBase64
-     * @param string $imageUrl
-     * @return array|mixed
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>[ result=>'失败、合规、不合规、疑似、审核失败',messages=>[] ]]
-     */
+    
     public function censorImage($imageBase64, $imageUrl)
     {
         $post = [];
@@ -249,15 +163,7 @@ class Tecmz
         return $this->request('/censor_image', $post);
     }
 
-    /**
-     * 文本审核
-     *
-     * @param string $text
-     * @return array|mixed
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>[ result=>'失败、合规、不合规、疑似、审核失败',messages=>[] ]]
-     */
+    
     public function censorText($text)
     {
         $post = [];
@@ -265,15 +171,7 @@ class Tecmz
         return $this->request('/censor_text', $post);
     }
 
-    /**
-     * IP地址查询
-     *
-     * @param string $ip
-     * @return array|mixed
-     *
-     * 失败 [code=>-1,msg=>'<失败原因>',data=>null]
-     * 成功 [code=>0,msg=>'ok',data=>[ country=>'',province=>'',city=>'',district=>'',isp=>'', ]]
-     */
+    
     public function ipToLocation($ip)
     {
         $post = [];

@@ -5,11 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class NavNavAddPid extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!\ModStart\Core\Dao\ModelManageUtil::hasTableColumn('nav', 'pid')) {
@@ -20,11 +16,7 @@ class NavNavAddPid extends Migration
         \ModStart\Core\Dao\ModelUtil::updateAll('nav', ['pid' => 0]);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
     }

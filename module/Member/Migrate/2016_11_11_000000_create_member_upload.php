@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMemberUpload extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!\ModStart\Core\Dao\ModelManageUtil::hasTable('member_upload')) {
@@ -29,11 +25,7 @@ class CreateMemberUpload extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

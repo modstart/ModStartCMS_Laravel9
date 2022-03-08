@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMemberCredit extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         Schema::create('member_credit', function (Blueprint $table) {
@@ -26,11 +22,7 @@ class CreateMemberCredit extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

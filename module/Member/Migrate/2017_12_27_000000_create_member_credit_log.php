@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMemberCreditLog extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
 
@@ -28,11 +24,7 @@ class CreateMemberCreditLog extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

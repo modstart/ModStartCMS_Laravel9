@@ -13,12 +13,10 @@ use Module\Member\Web\Controller\MemberFrameController;
 
 class MemberProfileController extends MemberFrameController implements MemberLoginCheck
 {
-    /** @var \App\Api\Controller\MemberProfileController */
+    
     private $api;
 
-    /**
-     * MemberProfileController constructor.
-     */
+    
     public function __construct()
     {
         parent::__construct();

@@ -5,11 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class ModifyMemberUserAddNickname extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!\ModStart\Core\Dao\ModelManageUtil::hasTableColumn('member_user', 'nickname')) {
@@ -22,11 +18,7 @@ class ModifyMemberUserAddNickname extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

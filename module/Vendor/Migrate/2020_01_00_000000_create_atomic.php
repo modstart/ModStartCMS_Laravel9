@@ -6,11 +6,7 @@ use ModStart\Core\Dao\ModelManageUtil;
 
 class CreateAtomic extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!ModelManageUtil::hasTable('atomic')) {
@@ -29,11 +25,7 @@ class CreateAtomic extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

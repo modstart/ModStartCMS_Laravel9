@@ -6,11 +6,7 @@ use ModStart\Core\Dao\ModelManageUtil;
 
 class CreateNav extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (ModelManageUtil::hasTable('nav')) {
@@ -66,11 +62,7 @@ class CreateNav extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
     }

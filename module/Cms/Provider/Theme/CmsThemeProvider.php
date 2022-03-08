@@ -9,18 +9,13 @@ class CmsThemeProvider
 {
     use ProviderTrait;
 
-    /**
-     * @return AbstractThemeProvider[]
-     */
+    
     public static function all()
     {
         return self::listAll();
     }
 
-    /**
-     * @param $name
-     * @return AbstractThemeProvider
-     */
+    
     public static function get($name)
     {
         return self::getByName($name);

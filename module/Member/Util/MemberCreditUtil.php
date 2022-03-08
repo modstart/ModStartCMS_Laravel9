@@ -21,14 +21,7 @@ class MemberCreditUtil
         return $m['total'];
     }
 
-    /**
-     * !! 这个方法应该在事务中调用
-     *
-     * @param $memberUserId
-     * @param $change
-     * @param $remark
-     * @throws \Exception
-     */
+    
     public static function change($memberUserId, $change, $remark)
     {
         if (!$change) {

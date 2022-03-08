@@ -10,11 +10,7 @@ use Module\Vendor\Admin\Config\AdminWidgetLink;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
+    
     public function boot(Dispatcher $events)
     {
         AdminMenu::register([
@@ -40,11 +36,7 @@ class ModuleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+    
     public function register()
     {
 

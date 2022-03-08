@@ -20,11 +20,7 @@ use Module\Vendor\Provider\SmsTemplate\SmsTemplateProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
+    
     public function boot(Dispatcher $events)
     {
         MemberMenu::register(function () {
@@ -186,11 +182,7 @@ class ModuleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+    
     public function register()
     {
 

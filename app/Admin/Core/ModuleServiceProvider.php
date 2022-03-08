@@ -10,11 +10,7 @@ use ModStart\Admin\Config\AdminMenu;
 
 class ModuleServiceProvider extends ServiceProvider
 {
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
+    
     public function boot(Dispatcher $events)
     {
         AdminMenu::register(function () {
@@ -29,11 +25,7 @@ class ModuleServiceProvider extends ServiceProvider
         });
     }
 
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
+    
     public function register()
     {
 

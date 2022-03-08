@@ -15,8 +15,7 @@ class BaseCatController extends ModuleBaseController
     protected function setup($name = 0)
     {
         if (empty($name)) {
-            // var_dump(Request::path());
-            $cat = CmsCatUtil::getByUrl(Request::path());
+                        $cat = CmsCatUtil::getByUrl(Request::path());
         } else {
             if (is_numeric($name)) {
                 $cat = CmsCatUtil::get($name);

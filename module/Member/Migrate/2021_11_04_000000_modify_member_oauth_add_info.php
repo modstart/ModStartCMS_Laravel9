@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifyMemberOauthAddInfo extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         Schema::table('member_oauth', function (Blueprint $table) {
@@ -18,11 +14,7 @@ class ModifyMemberOauthAddInfo extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
     }

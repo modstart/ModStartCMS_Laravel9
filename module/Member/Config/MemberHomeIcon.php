@@ -6,12 +6,7 @@ namespace Module\Member\Config;
 
 use Illuminate\Support\Str;
 
-/**
- * 用户首页图标
- * Class MemberHomeIcon
- * @package Module\Member\Config
- * @since 1.5.0
- */
+
 class MemberHomeIcon
 {
     private static $menu = [];
@@ -95,8 +90,7 @@ class MemberHomeIcon
                 if (count(explode('^^', $prefix)) !== count(explode('^^', $k))) {
                     continue;
                 }
-                // echo "$prefix -> $k\n";
-            } else {
+                            } else {
                 if (1 != count($ks)) {
                     continue;
                 }
@@ -109,7 +103,6 @@ class MemberHomeIcon
             if (empty($item['children']) && empty($item['url'])) continue;
             $tree[] = $item;
         }
-        // echo $prefix . ' -> ' . json_encode($tree) . "\n";
-        return $tree;
+                return $tree;
     }
 }

@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMemberVipOrder extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         Schema::create('member_vip_order', function (Blueprint $table) {
@@ -21,7 +17,7 @@ class CreateMemberVipOrder extends Migration
             $table->integer('vipId')->nullable()->comment('');
             $table->decimal('payFee', 20, 2)->nullable()->comment('');
 
-            /** @see \Module\Vendor\Type\OrderStatus */
+            
             $table->tinyInteger('status')->nullable()->comment('默认');
 
             $table->date('expire')->nullable()->comment('');
@@ -30,11 +26,7 @@ class CreateMemberVipOrder extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

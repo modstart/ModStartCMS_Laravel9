@@ -10,10 +10,7 @@ class TecmzUtil
         return 'https://api.tecmz.com';
     }
 
-    /**
-     * @param $configPrefix
-     * @return Tecmz
-     */
+    
     public static function instance($configPrefix)
     {
         $config = modstart_config();

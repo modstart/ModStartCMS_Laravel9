@@ -4,12 +4,7 @@ namespace Module\Vendor\Html;
 
 use ModStart\Core\Type\BaseType;
 
-/**
- * Class HtmlType
- * @package Module\Vendor\Html
- * @deprecated
- * @see \Module\Vendor\Provider\RichContent\RichContentProvider
- */
+
 class HtmlType implements BaseType
 {
     const RICH_TEXT = 1;

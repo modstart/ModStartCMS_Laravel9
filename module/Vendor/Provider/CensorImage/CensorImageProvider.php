@@ -8,9 +8,7 @@ use ModStart\Core\Exception\BizException;
 
 class CensorImageProvider
 {
-    /**
-     * @var AbstractCensorImageProvider[]
-     */
+    
     private static $instances = [
         DefaultCensorImageProvider::class,
     ];
@@ -20,9 +18,7 @@ class CensorImageProvider
         self::$instances[] = $provider;
     }
 
-    /**
-     * @return AbstractCensorImageProvider[]
-     */
+    
     public static function all()
     {
         foreach (self::$instances as $k => $v) {
@@ -45,11 +41,7 @@ class CensorImageProvider
         });
     }
 
-    /**
-     * @param $name
-     * @return AbstractCensorImageProvider
-     * @throws BizException
-     */
+    
     public static function get($name)
     {
         foreach (self::all() as $item) {

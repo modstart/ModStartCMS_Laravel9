@@ -5,16 +5,10 @@ namespace Module\Vendor\Provider\MailSender;
 
 use ModStart\Core\Exception\BizException;
 
-/**
- * Class MailSenderProvider
- * @package Module\Vendor\Provider\MailSender
- * @since 1.7.0
- */
+
 class MailSenderProvider
 {
-    /**
-     * @var AbstractMailSenderProvider[]
-     */
+    
     private static $instances = [
     ];
 
@@ -23,9 +17,7 @@ class MailSenderProvider
         self::$instances[] = $provider;
     }
 
-    /**
-     * @return AbstractMailSenderProvider[]
-     */
+    
     public static function all()
     {
         foreach (self::$instances as $k => $v) {
@@ -38,15 +30,11 @@ class MailSenderProvider
         return self::$instances;
     }
 
-    /**
-     * @param $name
-     * @return AbstractMailSenderProvider
-     * @throws BizException
-     */
+    
     public static function get($name)
     {
         foreach (self::all() as $item) {
-            /** @var AbstractMailSenderProvider $item */
+            
             if ($item->name() == $name) {
                 return $item;
             }
@@ -54,9 +42,7 @@ class MailSenderProvider
         BizException::throws('没有找到MailSenderProvider');
     }
 
-    /**
-     * @return bool
-     */
+    
     public static function hasProvider()
     {
         $provider = app()->config->get('EmailSenderProvider');

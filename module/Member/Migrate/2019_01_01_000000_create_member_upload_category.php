@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateMemberUploadCategory extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!\ModStart\Core\Dao\ModelManageUtil::hasTable('member_upload_category')) {
@@ -32,11 +28,7 @@ class CreateMemberUploadCategory extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

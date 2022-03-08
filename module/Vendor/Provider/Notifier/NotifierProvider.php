@@ -8,9 +8,7 @@ use Module\Vendor\Util\NoneLoginOperateUtil;
 
 class NotifierProvider
 {
-    /**
-     * @return AbstractNotifierProvider[]
-     */
+    
     public static function all()
     {
         static $instances = null;
@@ -28,13 +26,7 @@ class NotifierProvider
         return $instances;
     }
 
-    /**
-     * 发送消息通知
-     * @param $biz
-     * @param $title
-     * @param $content
-     * @param array $param
-     */
+    
     public static function notify($biz, $title, $content, $param = [])
     {
         foreach (self::all() as $instance) {

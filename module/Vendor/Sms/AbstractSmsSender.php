@@ -3,11 +3,7 @@
 
 namespace Module\Vendor\Sms;
 
-/**
- * Class AbstractSmsSender
- * @package Module\Vendor\Sms
- * @deprecated @since 1.6.0
- */
+
 abstract class AbstractSmsSender
 {
     abstract protected function sendExecute($phone, $template, $templateData, $param = []);

@@ -16,7 +16,7 @@ class CmsFeatureMemberPost extends Migration
         });
         Schema::table('cms_content', function (Blueprint $table) {
             $table->integer('memberUserId')->nullable()->comment('');
-            /** @see \Module\Cms\Type\CmsContentVerifyStatus */
+            
             $table->tinyInteger('verifyStatus')->nullable()->comment('');
             $table->index(['memberUserId']);
         });
@@ -25,11 +25,7 @@ class CmsFeatureMemberPost extends Migration
         ]);
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

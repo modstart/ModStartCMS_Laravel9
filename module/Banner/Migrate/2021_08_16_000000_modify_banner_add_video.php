@@ -7,11 +7,7 @@ use Module\Banner\Type\BannerType;
 
 class ModifyBannerAddVideo extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         Schema::table('banner', function (Blueprint $table) {
@@ -19,11 +15,7 @@ class ModifyBannerAddVideo extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
     }

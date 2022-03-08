@@ -12,21 +12,10 @@ use ModStart\Core\Input\Response;
 use Module\Cms\Type\CmsModelFieldType;
 use Module\Cms\Util\CmsContentUtil;
 
-/**
- * Class FormController
- * @package Module\Cms\Api\Controller
- *
- * @Api 通用CMS
- */
+
 class FormController extends BaseCatController
 {
-    /**
-     * @return array
-     * @throws BizException
-     *
-     * @Api 表单-获取详情
-     * @ApiBodyParam cat string 栏目标识（ID、名称）
-     */
+    
     public function index()
     {
         $input = InputPackage::buildFromInput();
@@ -37,14 +26,7 @@ class FormController extends BaseCatController
         return Response::generateSuccessData($viewData);
     }
 
-    /**
-     * @return array|\Illuminate\Contracts\View\Factory|\Illuminate\Foundation\Application|\Illuminate\View\View
-     *
-     * @Api 表单-内容提交
-     * @ApiBodyParam cat string 栏目标识（ID、名称）
-     * @ApiBodyParam content string 内容
-     * @ApiBodyParam xxx string 其他信息
-     */
+    
     public function submit()
     {
         $input = InputPackage::buildFromInput();

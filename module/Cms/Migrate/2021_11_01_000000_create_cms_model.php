@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCmsModel extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
 
@@ -39,7 +35,7 @@ class CreateCmsModel extends Migration
             $table->string('title', 50)->nullable()->comment('');
             $table->string('name', 50)->nullable()->comment('');
 
-            /** @see \Module\Cms\Type\CmsModelFieldType */
+            
             $table->string('fieldType', 20)->nullable()->comment('');
             $table->text('fieldData')->nullable()->comment('');
             $table->integer('maxLength')->nullable()->comment('');
@@ -54,11 +50,7 @@ class CreateCmsModel extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

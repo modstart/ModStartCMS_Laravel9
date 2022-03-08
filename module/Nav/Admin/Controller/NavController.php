@@ -38,7 +38,7 @@ class NavController extends Controller
         $builder
             ->init('nav')
             ->field(function ($builder) {
-                /** @var HasFields $builder */
+                
                 $builder->id('id', 'ID');
                 $builder->select('position', '位置')
                     ->optionType(NavPosition::class)
@@ -68,7 +68,7 @@ class NavController extends Controller
         $builder->scopeDefault(NavPosition::first());
         $builder
             ->hookSaved(function (Form $form) {
-                /** @var \stdClass $item */
+                
                 $item = $form->item();
                 if ($item->pid > 0) {
                     $parent = ModelUtil::get('nav', $item->pid);

@@ -10,10 +10,7 @@ use ModStart\Field\AutoRenderedFieldValue;
 
 class MemberCmsUtil
 {
-    /**
-     * @param $memberUserId
-     * @return AutoRenderedFieldValue
-     */
+    
     public static function showFromId($memberUserId)
     {
         if (!$memberUserId) {
@@ -23,10 +20,7 @@ class MemberCmsUtil
         return self::show($memberUser);
     }
 
-    /**
-     * @param $memberUser
-     * @return AutoRenderedFieldValue
-     */
+    
     public static function show($memberUser)
     {
         if (!empty($memberUser)) {

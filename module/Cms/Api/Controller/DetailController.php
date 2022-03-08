@@ -13,21 +13,10 @@ use Module\Cms\Util\CmsCatUtil;
 use Module\Cms\Util\CmsContentUtil;
 use Module\Member\Auth\MemberUser;
 
-/**
- * Class DetailController
- * @package Module\Cms\Api\Controller
- *
- * @Api 通用CMS
- */
+
 class DetailController extends ModuleBaseController
 {
-    /**
-     * @return array
-     * @throws BizException
-     *
-     * @Api 内容-获取详情
-     * @ApiBodyParam id integer 内容ID
-     */
+    
     public function index()
     {
         $input = InputPackage::buildFromInput();

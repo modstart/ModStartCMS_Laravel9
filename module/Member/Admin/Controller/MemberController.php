@@ -40,7 +40,7 @@ class MemberController extends Controller
         $builder
             ->init('member_user')
             ->field(function ($builder) {
-                /** @var HasFields $builder */
+                
                 $builder->id('id', 'ID');
                 MemberAdminList::callGridField($builder);
                 $builder->display('avatar', '头像')->hookRendering(function (AbstractField $field, $item, $index) {
@@ -82,7 +82,7 @@ class MemberController extends Controller
                 }
             })
             ->hookSaved(function (Form $form) {
-                /** @var \stdClass $item */
+                
                 $item = $form->item();
                 switch ($form->mode()) {
                     case FormMode::ADD:

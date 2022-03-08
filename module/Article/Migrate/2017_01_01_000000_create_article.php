@@ -5,11 +5,7 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateArticle extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         if (!\ModStart\Core\Dao\ModelManageUtil::hasTable('article')) {
@@ -27,11 +23,7 @@ class CreateArticle extends Migration
         }
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
 

@@ -5,11 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class ModifyAdminUserAddPhoneEmail extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+    
     public function up()
     {
         $connection = config('modstart.admin.database.connection') ?: config('database.default');
@@ -23,11 +19,7 @@ class ModifyAdminUserAddPhoneEmail extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
+    
     public function down()
     {
     }

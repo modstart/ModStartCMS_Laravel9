@@ -13,22 +13,14 @@ class Handler extends ExceptionHandler
 {
     use ExceptionReportHandleTrait;
 
-    /**
-     * A list of the exception types that are not reported.
-     *
-     * @var array<int, class-string<Throwable>>
-     */
+    
     protected $dontReport = [
         HttpException::class,
         ModelNotFoundException::class,
         BizException::class,
     ];
 
-    /**
-     * A list of the inputs that are never flashed for validation exceptions.
-     *
-     * @var array<int, string>
-     */
+    
     protected $dontFlash = [
         'current_password',
         'password',

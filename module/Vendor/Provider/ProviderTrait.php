@@ -5,9 +5,7 @@ namespace Module\Vendor\Provider;
 
 trait ProviderTrait
 {
-    /**
-     * @var array
-     */
+    
     private static $list = [];
 
     public static function register($provider)

@@ -9,11 +9,7 @@ use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Response;
 use ModStart\Misc\Captcha\CaptchaFacade;
 
-/**
- * Class DefaultCaptchaProvider
- * @package Module\Vendor\Captcha
- * @deprecated
- */
+
 class DefaultCaptchaProvider extends AbstractCaptchaProvider
 {
     public function render()

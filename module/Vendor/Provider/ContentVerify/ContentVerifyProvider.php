@@ -5,9 +5,7 @@ namespace Module\Vendor\Provider\ContentVerify;
 
 class ContentVerifyProvider
 {
-    /**
-     * @var AbstractContentVerifyProvider[]
-     */
+    
     private static $instances = [
     ];
 
@@ -16,9 +14,7 @@ class ContentVerifyProvider
         self::$instances[] = $provider;
     }
 
-    /**
-     * @return AbstractContentVerifyProvider[]
-     */
+    
     public static function all()
     {
         foreach (self::$instances as $k => $v) {
@@ -31,10 +27,7 @@ class ContentVerifyProvider
         return self::$instances;
     }
 
-    /**
-     * @param $name
-     * @return AbstractContentVerifyProvider
-     */
+    
     public static function get($name)
     {
         if (empty($name)) {
