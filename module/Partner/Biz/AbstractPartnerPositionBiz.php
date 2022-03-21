@@ -1,13 +1,12 @@
 <?php
 
 
-namespace Module\Partner\Provider;
+namespace Module\Partner\Biz;
 
 
-abstract class AbstractPartnerPositionProvider
+abstract class AbstractPartnerPositionBiz
 {
     abstract public function name();
 
     abstract public function title();
 }
-

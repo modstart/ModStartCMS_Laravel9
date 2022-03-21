@@ -1,15 +1,14 @@
 <?php
 
 
-namespace Module\Partner\Provider;
+namespace Module\Article\Biz;
 
 
-use Module\Vendor\Provider\ProviderTrait;
+use Module\Vendor\Biz\BizTrait;
 
-
-class PartnerPositionProvider
+class ArticlePositionBiz
 {
-    use ProviderTrait;
+    use BizTrait;
 
     
     public static function all()
