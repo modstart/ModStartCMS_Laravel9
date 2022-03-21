@@ -32,11 +32,13 @@
     </div>
     <div data-search class="ub-lister-search">
         @foreach($filters as $filter)
-            {!! $filter->render() !!}
+            @if(!$filter->autoHide())
+                {!! $filter->render() !!}
+            @endif
         @endforeach
         <div class="field">
             @if(!count($filters))
-                <button class="btn btn-primary" data-search-button>
+                <button class="btn" data-search-button>
                     <i class="iconfont icon-refresh"></i> {{L('Refresh')}}
                 </button>
             @endif
@@ -53,6 +55,19 @@
                     <i class="iconfont icon-download"></i> {{L('Export')}}
                 </button>
             @endif
+            @if($hasAutoHideFilters)
+                <button class="btn" data-expand-search-button>
+                    <i class="iconfont icon-filter"></i>
+                    {{L('More')}}
+                </button>
+            @endif
+        </div>
+        <div class="field-more-expand">
+            @foreach($filters as $filter)
+                @if($filter->autoHide())
+                    {!! $filter->render() !!}
+                @endif
+            @endforeach
         </div>
     </div>
     <div data-addition class="table-addition-container"></div>
@@ -110,10 +125,7 @@
             }
             return items;
         };
-        layui.extend({
-            mstable: window.__msCDN + 'asset/layui/lay/ext/mstable.js?v20220119'
-        });
-        layui.use(['table', 'laypage', 'mstable'], function () {
+        layui.use(['table', 'laypage'], function () {
             var table = layui.table.render({
                 id: '{{$id}}Table',
                 elem: '#{{$id}}Table',
@@ -124,15 +136,16 @@
                 page: false,
                 skin: 'line',
                 text: {
-                    none: '{{L('No Records')}}'
+                    none: '<div class="ub-text-muted"><i class="iconfont icon-empty-box" style="font-size:2rem;"></i><br />{{L('No Records')}}</div>'
                 },
                 // size: 'sm',
                 loading: true,
                 cellMinWidth: 100,
                 cols: [[]],
                 data: [],
+                autoColumnWidth: true,
+                autoScrollTop: false,
                 done: function () {
-                    layui.mstable.render(this);
                 }
             });
             layui.table.on('sort({{$id}}Table)', function (obj) {
@@ -144,6 +157,7 @@
                 lister.setPage(1);
                 lister.load();
             })
+            var isFirst = true;
             var $lister = $('#{{$id}}');
             var lister = new window.api.lister({
                 search: $lister.find('[data-search]'),
@@ -409,12 +423,12 @@
         });
         @if($canBatchSelect || $canSingleSelectItem || $canMultiSelectItem)
         setTimeout(function () {
-            $('body > .ub-panel-dialog .panel-dialog-foot [data-submit]').show().on('click', function () {
+            $('body > .ub-panel-dialog .panel-dialog-foot').show().find('[data-submit]').show().on('click', function () {
                 var ids = window.__grids.instances['{{$id}}'].getCheckedIds();
                 var items = window.__grids.instances['{{$id}}'].getCheckedItems();
                 // console.log('itemSelected',ids, items);
                 window.parent.__dialogSelectIds = ids;
-                window.parent.__dialogSelectItems = items;
+                window.parent.__selectorDialogItems = items;
                 parent.layer.closeAll();
             });
         }, 0);

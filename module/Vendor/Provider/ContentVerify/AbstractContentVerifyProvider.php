@@ -15,23 +15,31 @@ use Module\Vendor\Provider\Notifier\NotifierProvider;
 
 abstract class AbstractContentVerifyProvider
 {
+    
     abstract public function name();
 
+    
     abstract public function title();
 
+    
     abstract public function verifyAutoProcess($param);
 
-    abstract public function buildForm(Form $form, $param);
-
+    
     abstract public function verifyCount();
 
+    
     abstract public function verifyRule();
 
+    
+    abstract public function buildForm(Form $form, $param);
+
+    
     public function verifyUrl()
     {
         return action($this->verifyRule());
     }
 
+    
     public function verifyAutoProcessedNotify()
     {
         return true;
@@ -47,6 +55,7 @@ abstract class AbstractContentVerifyProvider
         } else {
             $shortTitle = $title;
         }
+        $shortTitle = HtmlUtil::text($shortTitle);
         $shortTitle = $this->title() . ($shortTitle ? '(' . $shortTitle . ')' : '');
         if ($this->verifyAutoProcess($param)) {
             if ($this->verifyAutoProcessedNotify()) {

@@ -18,11 +18,13 @@ use ModStart\Core\Util\CRUDUtil;
 use ModStart\Core\Util\RandomUtil;
 use ModStart\Field\AbstractField;
 use ModStart\Field\AutoRenderedFieldValue;
+use ModStart\Field\Type\FieldRenderMode;
 use ModStart\Form\Form;
 use ModStart\Form\Type\FormMode;
 use ModStart\Grid\GridFilter;
 use ModStart\Module\ModuleManager;
 use ModStart\Support\Concern\HasFields;
+use ModStart\Widget\TextDialogRequest;
 use Module\Member\Config\MemberAdminList;
 use Module\Member\Provider\MemberAdminShowPanel\MemberAdminShowPanelProvider;
 use Module\Member\Type\MemberStatus;
@@ -49,7 +51,21 @@ class MemberController extends Controller
                     return AutoRenderedFieldValue::make("<a href='$avatarBig' class='tw-inline-block' data-image-preview>
                         <img src='$avatarSmall' class='tw-rounded-full tw-w-8 tw-h-8 tw-shadow'></a>");
                 });
-                $builder->text('username', '用户名')->required()->ruleUnique('member_user');
+                $builder->text('username', '用户名')->required()->ruleUnique('member_user')
+                    ->hookRendering(function (AbstractField $field, $item, $index) {
+                        switch ($field->renderMode()) {
+                            case FieldRenderMode::GRID:
+                            case FieldRenderMode::DETAIL:
+                                return AutoRenderedFieldValue::make(
+                                    TextDialogRequest::make(
+                                        'primary',
+                                        htmlspecialchars($item->username),
+                                        modstart_admin_url('member/show', ['_id' => $item->id])
+                                    )->width('90%')->height('90%')->render()
+                                );
+                                break;
+                        }
+                    });
                 $builder->text('password', '初始密码')
                     ->editable(false)->addable(true)
                     ->listable(false)->showable(false)->required()->defaultValue(RandomUtil::lowerString(8));
@@ -64,21 +80,21 @@ class MemberController extends Controller
                 }
                 if (ModuleManager::getModuleConfigBoolean('Member', 'vipEnable', false)) {
                     $builder->radio('vipId', 'VIP')->options(MemberVipUtil::mapTitle())->required();
-                    $builder->date('vipExpire', 'VIP过期');
+                    $builder->date('vipExpire', 'VIP过期')->required();
                 }
                 $builder->display('created_at', '注册时间');
             })
             ->gridFilter(function (GridFilter $filter) {
                 $filter->eq('id', L('ID'));
                 $filter->like('username', '用户名');
-                $filter->like('email', '邮箱');
-                $filter->like('phone', '手机');
-                $filter->eq('status', '状态')->select(MemberStatus::class);
+                $filter->like('email', '邮箱')->autoHide(true);
+                $filter->like('phone', '手机')->autoHide(true);
+                $filter->eq('status', '状态')->autoHide(true)->select(MemberStatus::class);
                 if (ModuleManager::getModuleConfigBoolean('Member', 'groupEnable', false)) {
-                    $filter->eq('groupId', '分组')->select(MemberGroupUtil::mapIdTitle());
+                    $filter->eq('groupId', '分组')->autoHide(true)->select(MemberGroupUtil::mapIdTitle());
                 }
                 if (ModuleManager::getModuleConfigBoolean('Member', 'vipEnable', false)) {
-                    $filter->eq('vipId', 'VIP')->select(MemberVipUtil::mapTitle());
+                    $filter->eq('vipId', 'VIP')->autoHide(true)->select(MemberVipUtil::mapTitle());
                 }
             })
             ->hookSaved(function (Form $form) {

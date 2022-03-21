@@ -5,6 +5,8 @@ namespace ModStart\Core\Input;
 use Illuminate\Support\Facades\Input;
 use ModStart\Core\Util\FormatUtil;
 use ModStart\Core\Util\HtmlUtil;
+use ModStart\Core\Util\StrUtil;
+use ModStart\Core\Util\TagUtil;
 use ModStart\Core\Util\TimeUtil;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -153,7 +155,7 @@ class InputPackage
         return min(max($pageSize, $min), $max);
     }
 
-    public function getRichContent($key, $defaultValue = 0)
+    public function getRichContent($key, $defaultValue = null)
     {
         if (isset($this->data[$key])) {
             if (!is_string($this->data[$key])) {
@@ -161,6 +163,7 @@ class InputPackage
             }
             $content = trim($this->data[$key]);
             $content = HtmlUtil::filter2($content);
+            $content = StrUtil::filterSpecialChars($content);
             return $content;
         }
         return $defaultValue;
@@ -185,11 +188,22 @@ class InputPackage
     {
         if (isset($this->data[$key])) {
             $value = @trim((string)$this->data[$key]);
+            $value = StrUtil::filterSpecialChars($value);
             if ($value) {
                 return $value;
             }
         }
         return $defaultValue;
+    }
+
+    public function getSeperatedTagsString($key, $seperator = ',')
+    {
+        return TagUtil::seperated2String($this->getTrimString($key), $seperator);
+    }
+
+    public function getSeperatedTagsArray($key, $seperator = ',')
+    {
+        return TagUtil::seperated2Array($this->getTrimString($key), $seperator);
     }
 
     public function getMultiTrimString($keys, $defaultValue = '')
@@ -229,7 +243,9 @@ class InputPackage
             if (!is_string($this->data[$key])) {
                 return $defaultValue;
             }
-            return trim($this->data[$key]);
+            $value = trim($this->data[$key]);
+            $value = StrUtil::filterSpecialChars($value);
+            return $value;
         }
         return $defaultValue;
     }

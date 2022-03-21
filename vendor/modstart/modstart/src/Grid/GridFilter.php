@@ -27,7 +27,7 @@ class GridFilter
     protected $model;
 
     /**
-     * @var array
+     * @var AbstractFilter[]
      */
     protected $filters = [];
 
@@ -117,6 +117,16 @@ class GridFilter
         return $this->filters;
     }
 
+    public function hasAutoHideFilters()
+    {
+        foreach ($this->filters as $filter) {
+            if ($filter->autoHide()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getConditions()
     {
         $conditions = [];
@@ -159,6 +169,14 @@ class GridFilter
     private function getScopeConditions()
     {
         return [];
+    }
+
+    /**
+     * @return array
+     */
+    public function getSearch()
+    {
+        return $this->search;
     }
 
     /**

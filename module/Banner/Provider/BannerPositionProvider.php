@@ -6,6 +6,7 @@ namespace Module\Banner\Provider;
 
 use Module\Vendor\Provider\ProviderTrait;
 
+
 class BannerPositionProvider
 {
     use ProviderTrait;
