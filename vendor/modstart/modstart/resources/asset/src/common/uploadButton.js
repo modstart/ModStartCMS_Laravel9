@@ -209,6 +209,10 @@ var UploadButton = function (selector, option) {
             opt.finish();
         });
 
+        uploader.on('uploadError',function(a,b,c){
+            opt.tipError('上传出现错误，请联系后台管理员');
+        })
+
         uploader.on('error', function (type) {
             if ('Q_TYPE_DENIED' == type) {
                 opt.tipError('文件类型不合法（只能上传' + opt.extensions + '文件）');
