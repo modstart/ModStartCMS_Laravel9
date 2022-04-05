@@ -10,6 +10,10 @@ use ModStart\Core\Input\Request;
 use ModStart\Core\Util\CRUDUtil;
 use ModStart\Grid\Grid;
 
+/**
+ * Trait HasAdminGrid
+ * @package ModStart\Admin\Concern
+ */
 trait HasAdminGrid
 {
     public $registerGridClass = null;
@@ -44,10 +48,15 @@ trait HasAdminGrid
         }
         /** @var Grid $grid */
         $grid = $this->grid();
-        CRUDUtil::registerGridResource($grid, $this->registerGridClass ? $this->registerGridClass : '\\' . __CLASS__, $this->gridPageUrlParam);
+        $param = array_merge($this->gridPageUrlParam, $grid->scopeParam());
+        CRUDUtil::registerGridResource($grid, $this->registerGridClass ? $this->registerGridClass : '\\' . __CLASS__, $param);
         if (Request::isPost()) {
             return $grid->request();
         }
-        return $page->pageTitle($this->computeTitleGrid($grid->title(), 'List'))->body($grid);
+        $pageTitle = $grid->title();
+        if (null === $pageTitle) {
+            $pageTitle = $this->computeTitleGrid($grid->title(), 'List');
+        }
+        return $page->pageTitle($pageTitle)->body($grid);
     }
 }

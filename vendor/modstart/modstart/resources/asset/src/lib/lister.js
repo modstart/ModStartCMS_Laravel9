@@ -167,6 +167,7 @@ let Lister = function (container, option) {
     this.init();
     this.initSearch();
     this.initTable();
+    this.prepareSearch();
     this.load();
 
 };

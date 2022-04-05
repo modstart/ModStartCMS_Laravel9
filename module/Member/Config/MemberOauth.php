@@ -47,7 +47,14 @@ class MemberOauth
                 return $item;
             }
         }
-        BizException::throws('授权登录信息未找到');
+        return null;
+    }
+
+    public static function getOrFail($name)
+    {
+        $oauth = self::get($name);
+        BizException::throwsIfEmpty('授权登录信息(' . $name . ')未找到', $oauth);
+        return $oauth;
     }
 
     private static function sort()

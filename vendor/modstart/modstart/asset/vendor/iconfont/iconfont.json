@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3164378",
+      "name": "list_库存明细查询",
+      "font_class": "empty-box",
+      "unicode": "e671",
+      "unicode_decimal": 58993
+    },
+    {
+      "icon_id": "4766954",
+      "name": "star",
+      "font_class": "star-alt",
+      "unicode": "e7df",
+      "unicode_decimal": 59359
+    },
+    {
+      "icon_id": "1222755",
+      "name": "eglass-star",
+      "font_class": "star",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
       "icon_id": "7239636",
       "name": "alipay",
       "font_class": "alipay",
@@ -391,13 +412,6 @@
       "unicode_decimal": 58912
     },
     {
-      "icon_id": "885495",
-      "name": "star",
-      "font_class": "star",
-      "unicode": "e613",
-      "unicode_decimal": 58899
-    },
-    {
       "icon_id": "185178",
       "name": "cny",
       "font_class": "cny",
@@ -564,13 +578,6 @@
       "font_class": "tools",
       "unicode": "e639",
       "unicode_decimal": 58937
-    },
-    {
-      "icon_id": "586868",
-      "name": "empty-box",
-      "font_class": "empty-box",
-      "unicode": "e716",
-      "unicode_decimal": 59158
     },
     {
       "icon_id": "587086",

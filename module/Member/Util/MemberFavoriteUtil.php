@@ -4,6 +4,7 @@ namespace Module\Member\Util;
 
 use ModStart\Core\Dao\ModelUtil;
 
+
 class MemberFavoriteUtil
 {
     public static function urlFavorite($category, $categoryId, $redirect = '')
