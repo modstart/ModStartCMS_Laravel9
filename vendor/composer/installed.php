@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'abe893beb89e5e9952912fe259d739a064dbecb7',
+        'reference' => '30c5786050af8ac491eee6581ab33b96c757c71c',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -194,12 +194,12 @@
             'dev_requirement' => false,
         ),
         'ezyang/htmlpurifier' => array(
-            'pretty_version' => 'v4.14.0',
-            'version' => '4.14.0.0',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
             'type' => 'library',
             'install_path' => __DIR__ . '/../ezyang/htmlpurifier',
             'aliases' => array(),
-            'reference' => '12ab42bd6e742c70c0a52f7b82477fcd44e64b75',
+            'reference' => '1908252b2d7c86f959019d2b2e88629da70f28c7',
             'dev_requirement' => false,
         ),
         'facade/ignition-contracts' => array(
@@ -529,7 +529,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'abe893beb89e5e9952912fe259d739a064dbecb7',
+            'reference' => '30c5786050af8ac491eee6581ab33b96c757c71c',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -628,7 +628,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../modstart/modstart',
             'aliases' => array(),
-            'reference' => '14ac5c9d2a2463c1a110baa1e71f7e32e7a3d2b0',
+            'reference' => '7fbda0a9d9c0c33edd73558398759417d2325d37',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(
@@ -1460,7 +1460,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../w7corp/easywechat',
             'aliases' => array(),
-            'reference' => '0ae20c1f24731ebacc59d7da29518098223043de',
+            'reference' => '578ac384132e31776585bf1510325bcd94e4e884',
             'dev_requirement' => false,
         ),
         'webmozart/assert' => array(
