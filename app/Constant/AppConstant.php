@@ -5,5 +5,6 @@ namespace App\Constant;
 class AppConstant
 {
     const APP = 'cms9';
-    const VERSION = '3.6.0';
+    const APP_NAME = 'ModStartCMS9';
+    const VERSION = '3.7.0';
 }

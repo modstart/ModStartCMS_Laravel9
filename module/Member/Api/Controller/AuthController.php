@@ -146,10 +146,12 @@ class AuthController extends ModuleBaseController
         }
         
         $oauth = MemberOauth::getOrFail($oauthType);
-        $ret = $oauth->processLogin([
+        $param = Session::get('oauthLoginParam', []);
+        Session::forget('oauthLoginParam');
+        $ret = $oauth->processLogin(array_merge($param, [
             'code' => $code,
             'callback' => $callback,
-        ]);
+        ]));
         if (!isset($ret['code'])) {
             return Response::generate(-1, '登录失败(返回结果为空)');
         }
@@ -180,10 +182,12 @@ class AuthController extends ModuleBaseController
         $silence = $input->getBoolean('silence', false);
         
         $oauth = MemberOauth::getOrFail($oauthType);
-        $ret = $oauth->processRedirect([
+        $param = [
             'callback' => $callback,
             'silence' => $silence,
-        ]);
+        ];
+        Session::put('oauthLoginParam', $param);
+        $ret = $oauth->processRedirect($param);
         BizException::throwsIfResponseError($ret);
         return Response::generate(0, 'ok', [
             'redirect' => $ret['data']['redirect'],
@@ -395,12 +399,14 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
+    
     public function logout()
     {
         Session::forget('memberUserId');
         return Response::generateSuccess();
     }
 
+    
     public function login()
     {
         $input = InputPackage::buildFromInput();
@@ -459,6 +465,7 @@ class AuthController extends ModuleBaseController
         return CaptchaFacade::create('default');
     }
 
+    
     public function loginCaptcha()
     {
         $captcha = $this->loginCaptchaRaw();
@@ -467,6 +474,7 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
+    
     public function register()
     {
         if (modstart_config('registerDisable', false)) {
@@ -580,6 +588,7 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
+    
     public function registerEmailVerify()
     {
         if (modstart_config('registerDisable', false)) {
@@ -623,6 +632,8 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
+
+    
     public function registerPhoneVerify()
     {
         if (modstart_config('registerDisable', false)) {
@@ -666,6 +677,7 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
+    
     public function registerCaptchaVerify()
     {
         $input = InputPackage::buildFromInput();
@@ -692,6 +704,7 @@ class AuthController extends ModuleBaseController
         return CaptchaFacade::create('default');
     }
 
+    
     public function registerCaptcha()
     {
         Session::forget('registerCaptchaPass');
@@ -701,6 +714,7 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
+    
     public function retrievePhone()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -738,6 +752,7 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, null);
     }
 
+    
     public function retrievePhoneVerify()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -776,6 +791,7 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
+    
     public function retrieveEmail()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -821,6 +837,7 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, null);
     }
 
+    
     public function retrieveEmailVerify()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -860,6 +877,7 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
+    
     public function retrieveResetInfo()
     {
         $retrieveMemberUserId = Session::get('retrieveMemberUserId');
@@ -881,6 +899,7 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
+    
     public function retrieveReset()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -918,6 +937,7 @@ class AuthController extends ModuleBaseController
         return CaptchaFacade::create('default');
     }
 
+    
     public function retrieveCaptcha()
     {
         $captcha = $this->retrieveCaptchaRaw();

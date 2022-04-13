@@ -2,7 +2,7 @@
 
 use Module\Cms\Util\CmsCatUtil;
 use Module\Cms\Util\CmsContentUtil;
-use Module\Member\Auth\MemberUser;
+use Module\Cms\Util\CmsMemberPermitUtil;
 
 
 class MCms
@@ -72,6 +72,32 @@ class MCms
     }
 
     
+    public static function getContentData($record)
+    {
+        if (empty($record)) {
+            return null;
+        }
+        $cat = self::getCat($record['catId']);
+        return CmsContentUtil::getData($cat, $record['id']);
+    }
+
+    
+    public static function getContentDataField($record, $fieldName, $default = null)
+    {
+        static $pool = [];
+        if (empty($record)) {
+            return null;
+        }
+        if (isset($pool[$record['id']])) {
+            $data = $pool[$record['id']];
+        } else {
+            $data = self::getContentData($record);
+            $pool[$record['id']] = $data;
+        }
+        return isset($data[$fieldName]) ? $data[$fieldName] : $default;
+    }
+
+    
     public static function nextOne($catId, $recordId)
     {
         return CmsContentUtil::nextOne($catId, $recordId);
@@ -83,39 +109,17 @@ class MCms
         return CmsContentUtil::prevOne($catId, $recordId);
     }
 
+
     
-    public static function canAccessCatContent($cat)
+    public static function canVisitCat($cat)
     {
-        if ($cat['visitMemberGroupEnable']) {
-            if (!MemberUser::isGroup($cat['visitMemberGroups'])) {
-                return false;
-            }
-        }
-        if ($cat['visitMemberVipEnable']) {
-            if (!MemberUser::isVip($cat['visitMemberVips'])) {
-                return false;
-            }
-        }
-        return true;
+        return CmsMemberPermitUtil::canVisitCat($cat);
     }
 
     
     public static function canPostCat($cat)
     {
-        if (!$cat['memberUserPostEnable']) {
-            return false;
-        }
-        if ($cat['postMemberGroupEnable']) {
-            if (!MemberUser::isGroup($cat['postMemberGroups'])) {
-                return false;
-            }
-        }
-        if ($cat['postMemberVipEnable']) {
-            if (!MemberUser::isVip($cat['postMemberVips'])) {
-                return false;
-            }
-        }
-        return true;
+        return CmsMemberPermitUtil::canPostCat($cat);
     }
 
 

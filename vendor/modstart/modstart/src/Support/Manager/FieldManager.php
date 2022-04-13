@@ -30,10 +30,14 @@ class FieldManager
             'link' => \ModStart\Field\Link::class,
             'switch' => \ModStart\Field\SwitchField::class,
             'textarea' => \ModStart\Field\Textarea::class,
+            'json' => \ModStart\Field\Json::class,
+            'jsonKeyValue' => \ModStart\Field\JsonKeyValue::class,
+            'jsonIdItems' => \ModStart\Field\JsonIdItems::class,
             'color' => \ModStart\Field\Color::class,
             'date' => \ModStart\Field\Date::class,
             'datetime' => \ModStart\Field\Datetime::class,
             'time' => \ModStart\Field\Time::class,
+            'period' => \ModStart\Field\Period::class,
             'radio' => \ModStart\Field\Radio::class,
             'select' => \ModStart\Field\Select::class,
             'richHtml' => \ModStart\Field\RichHtml::class,
@@ -59,6 +63,7 @@ class FieldManager
 
             'layoutGrid' => \ModStart\Layout\LayoutGrid::class,
             'layoutTab' => \ModStart\Layout\LayoutTab::class,
+            'layoutPanel' => \ModStart\Layout\LayoutPanel::class,
         ];
 
         foreach ($map as $abstract => $class) {

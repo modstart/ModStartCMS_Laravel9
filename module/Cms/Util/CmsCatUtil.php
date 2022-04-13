@@ -17,13 +17,16 @@ class CmsCatUtil
     public static function clearCache()
     {
         Cache::forget('CmsCatAll');
+        Cache::forget('CmsCatMap');
     }
 
     
     public static function all()
     {
         return Cache::rememberForever('CmsCatAll', function () {
-            $records = ModelUtil::all('cms_cat');
+            $records = ModelUtil::all('cms_cat', [
+                'enable' => true,
+            ]);
             ModelUtil::decodeRecordsNumberArray($records, [
                 'visitMemberGroups', 'visitMemberVips',
                 'postMemberGroups', 'postMemberVips',
@@ -33,6 +36,15 @@ class CmsCatUtil
                 $records[$k]['_url'] = CatUrlMode::url($v);
             }
             return $records;
+        });
+    }
+
+    public static function map()
+    {
+        return Cache::rememberForever('CmsCatMap', function () {
+            return array_build(self::all(), function ($k, $v) {
+                return [$v['id'], $v];
+            });
         });
     }
 
@@ -138,12 +150,8 @@ class CmsCatUtil
     
     public static function get($id)
     {
-        foreach (self::all() as $item) {
-            if ($item['id'] == $id) {
-                return $item;
-            }
-        }
-        return null;
+        $map = self::map();
+        return isset($map[$id]) ? $map[$id] : null;
     }
 
     public static function allSafely()
