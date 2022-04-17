@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '30c5786050af8ac491eee6581ab33b96c757c71c',
+        'reference' => 'e1c9b650e368dad57099cd26317a8a092d9c58e1',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -529,7 +529,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '30c5786050af8ac491eee6581ab33b96c757c71c',
+            'reference' => 'e1c9b650e368dad57099cd26317a8a092d9c58e1',
             'dev_requirement' => false,
         ),
         'laravel/sail' => array(
@@ -628,7 +628,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../modstart/modstart',
             'aliases' => array(),
-            'reference' => '7fbda0a9d9c0c33edd73558398759417d2325d37',
+            'reference' => '750d84c07d3ed743e6931274d665ec4032c5ca4b',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(

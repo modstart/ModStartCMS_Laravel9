@@ -364,6 +364,9 @@ class ModelUtil
      */
     public static function relationAssign($model, $sourceField, $sourceValue, $targetField, $targetValues, $filter = [], $idField = 'id')
     {
+        if (empty($targetValues)) {
+            $targetValues = [];
+        }
         $relations = self::all($model, array_merge([$sourceField => $sourceValue], $filter), [$idField, $targetField]);
         $deletes = [];
         $inserts = [];

@@ -193,4 +193,5 @@ return [
     'More' => '更多',
     'Cover' => '封面',
     'Json Format Error' => 'JSON格式错误',
+    'TempPath Not Exists, Please Upload Again' => '临时文件不存在，请重新上传',
 ];

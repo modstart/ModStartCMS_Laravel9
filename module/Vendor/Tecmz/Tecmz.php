@@ -179,4 +179,13 @@ class Tecmz
         return $this->request('/ip_to_location', $post);
     }
 
+    
+    public function docToImage($docPath, $pageLimit = 0)
+    {
+        $post = [];
+        $post['docPath'] = $docPath;
+        $post['pageLimit'] = $pageLimit;
+        return $this->request('/doc_to_image', $post);
+    }
+
 }
