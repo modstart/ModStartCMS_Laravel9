@@ -2,9 +2,7 @@
 
 namespace ModStart\Repository;
 
-use Doctrine\DBAL\Query\QueryBuilder;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Traits\Macroable;
 use ModStart\Detail\Detail;
 use ModStart\Form\Form;
@@ -86,52 +84,37 @@ abstract class Repository implements RepositoryInterface, SortRepositoryInterfac
 
     public function add(Form $form)
     {
-        throw new \RuntimeException('This repository does not support "add" method');
+        throw new \RuntimeException('This repository does not support "add" method.');
     }
 
     public function editing(Form $form)
     {
-        throw new \RuntimeException('This repository does not support "editing" method');
+        throw new \RuntimeException('This repository does not support "editing" method.');
     }
 
     public function edit(Form $form)
     {
-        throw new \RuntimeException('This repository does not support "edit" method');
+        throw new \RuntimeException('This repository does not support "edit" method.');
     }
 
     public function show(Detail $detail)
     {
-        throw new \RuntimeException('This repository does not support "show" method');
+        throw new \RuntimeException('This repository does not support "show" method.');
     }
 
     public function deleting(Form $form)
     {
-        throw new \RuntimeException('This repository does not support "delete" method');
+        throw new \RuntimeException('This repository does not support "delete" method.');
     }
 
     public function delete(Form $form, Arrayable $deletingData)
     {
-        throw new \RuntimeException('This repository does not support "delete" method');
+        throw new \RuntimeException('This repository does not support "delete" method.');
     }
 
-    /**
-     * list items for conditions
-     * @param Model $model
-     * @return Collection
-     */
     public function get(Model $model)
     {
-        throw new \RuntimeException('This repository does not support "get" method');
-    }
-
-    /**
-     * get built model query for conditions
-     * @param Model $model
-     * @return QueryBuilder
-     */
-    public function getQuery(Model $model)
-    {
-        throw new \RuntimeException('This repository dose not support "getQuery" method');
+        throw new \RuntimeException('This repository does not support "get" method.');
     }
 
     private $sortColumn = 'sort';
@@ -199,9 +182,6 @@ abstract class Repository implements RepositoryInterface, SortRepositoryInterfac
         throw new \RuntimeException('This repository does not support "getTreeItems" method.');
     }
 
-    /**
-     * @return array
-     */
     public function getTreeAncestorItems()
     {
         throw new \RuntimeException('This repository does not support "getTreeAncestorItems" method.');

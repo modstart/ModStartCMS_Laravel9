@@ -8,7 +8,6 @@ use Illuminate\Support\Str;
 use ModStart\Core\Assets\AssetsUtil;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\Response;
-use ModStart\Core\Util\EnvUtil;
 use ModStart\Core\Util\FileUtil;
 use ModStart\Data\Event\DataFileUploadedEvent;
 use ModStart\Data\Storage\FileDataStorage;
@@ -18,21 +17,6 @@ class DataManager
     /** @var AbstractDataStorage[] */
     private static $storages = [];
     private static $config = null;
-
-    public static function uploadConfig($category)
-    {
-        if (!is_array($category)) {
-            $category = [$category];
-        }
-        $categoryConfigs = [];
-        foreach ($category as $cat) {
-            $categoryConfigs[$cat] = config('data.upload.' . $cat);
-        }
-        return [
-            'chunkSize' => EnvUtil::env('uploadMaxSize'),
-            'category' => $categoryConfigs,
-        ];
-    }
 
     /**
      * 从用户配置中获取文件上传相关配置
@@ -300,7 +284,7 @@ class DataManager
         $storage = self::storage($option);
         $dataTemp = $storage->repository()->getTemp($category, $dataTempPath);
         if (empty($dataTemp)) {
-            return Response::generate(-1, L('TempPath Not Exists, Please Upload Again'));
+            return Response::generate(-1, 'TempPath not exists');
         }
         $extension = FileUtil::extension($dataTemp['filename']);
         $updateTimestamp = time();
@@ -312,7 +296,7 @@ class DataManager
 
         if (!$storage->has($from)) {
             $storage->repository()->deleteTempById($dataTemp['id']);
-            return Response::generate(-3, L('TempPath Not Exists, Please Upload Again'));
+            return Response::generate(-3, 'TempPath not exists');
         }
 
         $storage->move($from, $to);
@@ -459,10 +443,8 @@ class DataManager
         if (!file_exists($localFile)) {
             return Response::generate(-1, L('Safe File Error') . ' - ' . $path);
         }
-        $base = public_path('');
         return Response::generate(0, null, [
             'path' => $localFile,
-            'baseUrl' => ltrim(str_replace('\\', '/', substr($localFile, strlen($base))), '/\\'),
             'name' => basename($localFile),
         ]);
     }

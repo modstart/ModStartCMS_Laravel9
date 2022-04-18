@@ -114,17 +114,6 @@ class Model
     }
 
     /**
-     * @return $this
-     */
-    public function clearQuery()
-    {
-        if (!$this->queries->isEmpty()) {
-            $this->queries = new Collection();
-        }
-        return $this;
-    }
-
-    /**
      * @return Collection
      */
     public function getQueries()
@@ -287,11 +276,6 @@ class Model
         }
 
         return $this;
-    }
-
-    public function getConditionQuery()
-    {
-        return $this->repository->getQuery($this);
     }
 
     /**

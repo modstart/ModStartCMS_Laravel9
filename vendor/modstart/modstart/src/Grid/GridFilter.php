@@ -9,7 +9,6 @@ use ModStart\Grid\Filter\Field\AbstractFilterField;
 use ModStart\Grid\Filter\Like;
 use ModStart\Grid\Filter\Likes;
 use ModStart\Grid\Filter\Range;
-use ModStart\Grid\Filter\Has;
 use ReflectionClass;
 
 /**
@@ -19,7 +18,6 @@ use ReflectionClass;
  * @method Like             like($column, $label = '')
  * @method Likes            likes($column, $label = '')
  * @method Range            range($column, $label = '')
- * @method Has              has($column, $label = '')
  */
 class GridFilter
 {
@@ -41,7 +39,6 @@ class GridFilter
         'like',
         'likes',
         'range',
-        'has',
     ];
 
     /**
@@ -160,24 +157,12 @@ class GridFilter
         return array_filter($conditions);
     }
 
-    public function executeQuery()
-    {
-        $conditions = array_merge(
-            $this->getScopeConditions(),
-            $this->getConditions()
-        );
-        // print_r($conditions);exit();
-        $this->model->clearQuery();
-        return $this->model->addConditions($conditions)->getConditionQuery();
-    }
-
     public function execute()
     {
         $conditions = array_merge(
             $this->getScopeConditions(),
             $this->getConditions()
         );
-        $this->model->clearQuery();
         return $this->model->addConditions($conditions)->buildData();
     }
 

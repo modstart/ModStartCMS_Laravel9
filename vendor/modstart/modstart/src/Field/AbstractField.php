@@ -474,7 +474,7 @@ class AbstractField implements Renderable
      *
      * @return $this
      */
-    public function addVariables(array $variables = [])
+    protected function addVariables(array $variables = [])
     {
         $this->variables = array_merge($this->variables, $variables);
         return $this;

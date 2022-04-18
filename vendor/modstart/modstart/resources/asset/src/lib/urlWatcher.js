@@ -18,7 +18,6 @@ var UrlWatcher = function (option) {
     this.start = function () {
         me.running = true;
         setTimeout(me.sendRequest, opt.intervalInMS);
-        return me
     };
 
     this.stop = function () {
@@ -26,12 +25,10 @@ var UrlWatcher = function (option) {
             return;
         }
         me.running = false;
-        return me
     };
 
     this.next = function () {
         setTimeout(me.sendRequest, opt.intervalInMS);
-        return me
     };
 
     this.sendRequest = function () {
@@ -40,7 +37,7 @@ var UrlWatcher = function (option) {
         }
         opt.preRequest();
         $.post(opt.url, opt.data, function (res) {
-            opt.requestFinish.call(me, res);
+            opt.requestFinish(res);
         });
     };
 
