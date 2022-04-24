@@ -47,5 +47,8 @@ return [
         'Cms' => [
             'enable' => true,
         ],
+//        'DataQcloudCos' => [
+//            'enable' => true,
+//        ],
     ],
 ];
