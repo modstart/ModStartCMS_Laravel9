@@ -15,7 +15,8 @@ class MemberController extends MemberFrameController implements MemberLoginCheck
 {
     public function index(WebPage $page)
     {
-        $page->view('module::Member.View.pc.member.index');
+        list($view, $viewFrame) = $this->viewPaths('member.index');
+        $page->view($view);
         foreach (MemberHomeIcon::get() as $group) {
             $page->append(Box::make(new Row(function (Row $row) use ($group) {
                 foreach ($group['children'] as $child) {

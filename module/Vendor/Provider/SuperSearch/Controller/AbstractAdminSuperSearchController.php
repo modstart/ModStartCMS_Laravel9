@@ -15,9 +15,6 @@ use Module\Vendor\Provider\SuperSearch\SuperSearchBiz;
 abstract class AbstractAdminSuperSearchController extends Controller
 {
     
-    abstract public function sync($provider, $bucket, $nextId);
-
-    
     public function renderIndex($provider, $bizList)
     {
         $bizList = array_map(function ($biz) {
@@ -40,7 +37,11 @@ abstract class AbstractAdminSuperSearchController extends Controller
                         $provider->bucketDelete($bucket);
                         $provider->bucketCreate($bucket, $biz->fields());
                     }
-                    return $this->sync($provider, $bucket, $nextId);
+                    $ret = $biz->syncBatch($provider, $nextId);
+                    $data = [];
+                    $data['count'] = $ret['count'];
+                    $data['nextId'] = $ret['nextId'];
+                    return Response::generateSuccessData($data);
             }
         }
         return view('module::Vendor.View.superSearch.admin.index', [

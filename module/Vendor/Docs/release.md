@@ -1,7 +1,17 @@
-## 3.3.0
+## 3.4.0
+
+- 新增：LBS定位Provider功能增强
+- 新增：日志新增Rotate特性
+- 新增：超级搜索同步策略调整
+- 新增：LiveStream新增pushFields自定义字段
+- 新增：QuickRun新增快速自定义字段、数据抓取功能
+
+---
+
+## 3.3.0 超级搜索，多搜提供者
 
 - 新增：超级搜索 SuperSearch
-- 新增：搜多提供者 SearchBox
+- 新增：多搜提供者 SearchBox
 - 优化：邮件基础模板显示优化
 
 ---
