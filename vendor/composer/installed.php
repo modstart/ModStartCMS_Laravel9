@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd2388953007e8f45009981ed576168b4c82c3d5f',
+        'reference' => '831d07d1ff098692f7b8dc62cef5c7517e277903',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -433,7 +433,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd2388953007e8f45009981ed576168b4c82c3d5f',
+            'reference' => '831d07d1ff098692f7b8dc62cef5c7517e277903',
             'dev_requirement' => false,
         ),
         'laravel/sanctum' => array(
@@ -514,7 +514,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../modstart/modstart',
             'aliases' => array(),
-            'reference' => 'f5fe5547e92f5c678d7f8d8310a58e31eff4a65b',
+            'reference' => 'c1037226444f364a3a9281bbf8e72fdf0fe6218a',
             'dev_requirement' => false,
         ),
         'monolog/monolog' => array(

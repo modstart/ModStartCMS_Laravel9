@@ -86,6 +86,26 @@ class MCms
         return $records;
     }
 
+    
+    public static function latestTopContentByCatUrl($cateUrl, $limit = 10)
+    {
+        $cat = self::getCatByUrl($cateUrl);
+        return self::latestTopContentByCat($cat['id'], $limit);
+    }
+
+    
+    public static function latestTopContentByCat($catId, $limit = 10)
+    {
+        $option = [
+            'where' => [
+                'isTop' => true,
+            ]
+        ];
+        $paginateData = CmsContentUtil::paginateCat($catId, 1, $limit, $option);
+        $records = $paginateData['records'];
+        return $records;
+    }
+
     public static function latestCat($catId, $limit = 10)
     {
         return self::latestContentByCat($catId, $limit);

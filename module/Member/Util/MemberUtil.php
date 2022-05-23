@@ -268,6 +268,9 @@ class MemberUtil
             if ($ret['code']) {
                 return $ret;
             }
+            if (strlen($username) < 3) {
+                return Response::generate(-1, '用户名至少3个字符');
+            }
                         if (Str::contains($username, '@')) {
                 return Response::generate(-1, '用户名不能包含特殊字符');
             }

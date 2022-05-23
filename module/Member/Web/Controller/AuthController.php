@@ -27,7 +27,7 @@ class AuthController extends ModuleBaseController
     public function login()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         if (modstart_config('ssoClientEnable', false)) {
             Input::merge(['client' => Request::domainUrl() . '/sso/client']);
             $ret = $this->api->ssoClientPrepare();
@@ -78,7 +78,7 @@ class AuthController extends ModuleBaseController
     public function register()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         if (Request::isPost()) {
             $ret = $this->api->register();
             if ($ret['code']) {
@@ -121,7 +121,7 @@ class AuthController extends ModuleBaseController
     public function retrieve()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         return $this->view('retrieve', [
             'redirect' => $redirect,
         ]);
@@ -130,7 +130,7 @@ class AuthController extends ModuleBaseController
     public function retrievePhone()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         if (Request::isPost()) {
             $ret = $this->api->retrievePhone();
             if ($ret['code']) {
@@ -151,7 +151,7 @@ class AuthController extends ModuleBaseController
     public function retrieveEmail()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         if (Request::isPost()) {
             $ret = $this->api->retrieveEmail();
             if ($ret['code']) {
@@ -177,7 +177,7 @@ class AuthController extends ModuleBaseController
     public function retrieveReset()
     {
         $input = InputPackage::buildFromInput();
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         if (Request::isPost()) {
             $ret = $this->api->retrieveReset();
             if ($ret['code']) {
@@ -202,7 +202,7 @@ class AuthController extends ModuleBaseController
         if ($view) {
             Session::put('oauthLoginView', true);
         }
-        $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
         $callback = Request::domainUrl() . '/oauth_callback_' . $oauthType;
         $ret = $this->api->oauthLogin($oauthType, $callback);
         if ($ret['code']) {
@@ -222,7 +222,7 @@ class AuthController extends ModuleBaseController
         $view = Session::get('oauthLoginView', false);
         Session::forget('oauthLoginView');
         if ($view) {
-            $redirect = Session::get('oauthRedirect', modstart_web_url(''));
+            $redirect = Session::get('oauthRedirect', modstart_web_url('member'));
             $oauthUserInfo = Session::get('oauthUserInfo');
             Session::put('oauthViewOpenId_' . $oauthType, $oauthUserInfo['openid']);
             return Response::redirect($redirect);
@@ -232,7 +232,7 @@ class AuthController extends ModuleBaseController
 
     public function oauthBind($oauthType = null)
     {
-        $redirect = Session::get('oauthRedirect', modstart_web_url(''));
+        $redirect = Session::get('oauthRedirect', modstart_web_url('member'));
         if (Request::isPost()) {
             $ret = $this->api->oauthBind($oauthType);
             if ($ret['code']) {
@@ -275,7 +275,7 @@ class AuthController extends ModuleBaseController
         if ($ret['code']) {
             return Response::send(-1, $ret['msg']);
         }
-        $redirect = Session::get('ssoClientRedirect', modstart_web_url(''));
+        $redirect = Session::get('ssoClientRedirect', modstart_web_url('member'));
         return Response::send(0, null, null, $redirect);
     }
 
