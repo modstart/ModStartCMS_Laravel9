@@ -5,6 +5,7 @@ namespace App\Web\Controller;
 
 use Module\Vendor\Installer\Util\InstallerUtil;
 use Module\Vendor\Provider\HomePage\HomePageProvider;
+use ModStart\Core\Util\QrcodeUtil;
 
 class IndexController extends BaseController
 {

@@ -13,7 +13,6 @@ use ModStart\Field\AbstractField;
 use ModStart\Field\AutoRenderedFieldValue;
 use ModStart\Field\Type\FieldRenderMode;
 use ModStart\Form\Form;
-use ModStart\Grid\GridFilter;
 use ModStart\ModStart;
 use ModStart\Repository\Filter\ScopeFilter;
 use ModStart\Support\Concern\HasFields;
@@ -56,7 +55,7 @@ class NavController extends Controller
                     });
                 $builder->text('name', '名称');
                 $builder->link('link', '链接');
-                $builder->switch('enable', '启用')->optionsYesNo()->gridEditable(true);
+                $builder->switch('enable', '启用')->optionsYesNo()->gridEditable(true)->defaultValue(true);
                 $builder->radio('openType', '打开方式')->optionType(NavOpenType::class)->defaultValue(NavOpenType::CURRENT_WINDOW);
                 $builder->display('created_at', L('Created At'))->listable(false);
                 $builder->display('updated_at', L('Updated At'))->listable(false);
@@ -84,7 +83,6 @@ class NavController extends Controller
             ->canBatchDelete(true)
             ->asTree('id', 'pid', 'sort', 'name')
             ->treeMaxLevel(2)
-            ->title('导航')
-            ->dialogSizeSmall();
+            ->title('导航');
     }
 }

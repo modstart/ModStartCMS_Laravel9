@@ -1,7 +1,7 @@
 <div id="{{$id}}" data-grid data-basic-lister class="ub-lister-table-container">
     @if(!empty($scopes))
         <div class="tw-pb-3">
-            <div class="ub-nav-tab">
+            <div class="ub-nav-tab mini">
                 @foreach($scopes as $scope)
                     <a class="{{$scopeCurrent==$scope['name']?'active':''}}"
                        href="?{{\ModStart\Core\Input\Request::mergeQueries(['_scope'=>$scope['name']])}}">

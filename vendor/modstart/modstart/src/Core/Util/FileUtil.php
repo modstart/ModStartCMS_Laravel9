@@ -139,6 +139,12 @@ class FileUtil
         return $ext;
     }
 
+    public static function isPathCategory($pathname, $category)
+    {
+        $ext = self::extension($pathname);
+        return in_array($ext, config('data.upload.' . $category . '.extensions'));
+    }
+
     public static function arrayToCSVString($list)
     {
         $lines = [];
@@ -456,7 +462,8 @@ class FileUtil
         if (empty($ext)) {
             $ext = self::extension($path);
         }
-        $tempPath = public_path('temp/' . md5($path) . (starts_with($ext, '.') ? $ext : '.' . $ext));
+        $appKey = config('env.APP_KEY');
+        $tempPath = public_path('temp/' . md5($appKey . ':' . $path) . (starts_with($ext, '.') ? $ext : '.' . $ext));
         if (file_exists($tempPath)) {
             return $tempPath;
         }
