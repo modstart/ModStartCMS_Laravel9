@@ -174,6 +174,9 @@
                 hashUrl: false,
                 server: window.location.href,
                 showLoading: false,
+                param: {
+                    pageSize: {!! $defaultPageSize !!}
+                },
                 customLoading: function(loading){
                     @if(!empty($gridBeforeRequestScript))
                         {!! $gridBeforeRequestScript !!};
@@ -205,7 +208,7 @@
                         curr: data.page,
                         count: data.total,
                         limit: data.pageSize,
-                        limits: [10, 20, 50, 100],
+                        limits: {!! json_encode($pageSizes) !!},
                         layout: ['limit', 'prev', 'page', 'next', 'count',],
                         jump: function (obj, first) {
                             if (!first) {

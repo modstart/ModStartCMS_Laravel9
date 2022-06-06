@@ -5,6 +5,11 @@ namespace ModStart\Core\Util;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\Response;
 
+/**
+ * Class FileUtil
+ * @package ModStart\Core\Util
+ * @Util 文件
+ */
 class FileUtil
 {
     public static function mime($type)
@@ -235,6 +240,17 @@ class FileUtil
         return strtolower(pathinfo($pathname, PATHINFO_BASENAME));
     }
 
+    /**
+     * @Util 格式化字节
+     * @param $bytes int 字节数
+     * @param $decimals int 小数最多保留位数，默认为2
+     * @return string
+     * @example
+     * // 返回 1 MB
+     * FileUtil::formatByte(1024*1024)
+     * // 返回 1.5 GB
+     * FileUtil::formatByte(1024*1024*1024*1.5)
+     */
     public static function formatByte($bytes, $decimals = 2)
     {
         $size = sprintf("%u", $bytes);
