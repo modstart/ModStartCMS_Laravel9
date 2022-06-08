@@ -20,7 +20,7 @@
             <div class="search">
                 <div class="box">
                     <form action="{{modstart_web_url('search')}}" method="get">
-                        <input type="text" name="keywords" placeholder="搜索内容"/>
+                        <input type="text" name="keywords" value="{{empty($keywords)?'':$keywords}}" placeholder="搜索内容"/>
                         <button type="submit"><i class="iconfont icon-search"></i></button>
                     </form>
                 </div>

@@ -6,7 +6,7 @@
 
 {!! \ModStart\ModStart::js('asset/vendor/jqueryMark.js') !!}
 {!! \ModStart\ModStart::style('[data-markjs]{color:red !important;background:transparent;}') !!}
-{!! \ModStart\ModStart::script("$('.ub-list-items .title,.ub-list-items .tag').mark(".json_encode($keywords).",{});") !!}
+{!! \ModStart\ModStart::script("$('.ub-list-items .title,.ub-list-items .tag').mark(".json_encode($keywords).".split('').join(' '),{separateWordSearch:true});") !!}
 
 @section('bodyContent')
 
@@ -17,7 +17,7 @@
         <div class="form">
             <form action="{{modstart_web_url('search')}}" method="get">
                 <div class="box">
-                    <input type="text" name="keywords" value="{{$keywords or ''}}" class="form form-lg" placeholder="输入关键词搜索" />
+                    <input type="text" name="keywords" value="{{empty($keywords)?'':$keywords}}" class="form form-lg" placeholder="输入关键词搜索" />
                     <button type="submit" class="btn btn-lg"><i class="iconfont icon-search"></i> 搜索</button>
                 </div>
             </form>
