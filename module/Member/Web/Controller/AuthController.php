@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Session;
 use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Request;
 use ModStart\Core\Input\Response;
-use ModStart\Core\Util\CurlUtil;
 use ModStart\Module\ModuleBaseController;
 use Module\Member\Auth\MemberUser;
 
@@ -28,6 +27,7 @@ class AuthController extends ModuleBaseController
     {
         $input = InputPackage::buildFromInput();
         $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
+        $this->api->checkRedirectSafety($redirect);
         if (modstart_config('ssoClientEnable', false)) {
             Input::merge(['client' => Request::domainUrl() . '/sso/client']);
             $ret = $this->api->ssoClientPrepare();
@@ -44,6 +44,17 @@ class AuthController extends ModuleBaseController
             }
             return Response::send(0, '', '', $redirect);
         }
+        if (modstart_config('Member_LoginPhoneEnable', false)) {
+            $loginDefault = modstart_config('Member_LoginDefault', 'default');
+            if ('phone' == $loginDefault) {
+                $force = $input->getBoolean('force', false);
+                if (!$force) {
+                    return Response::redirect(modstart_web_url('login/phone', [
+                        'redirect' => $redirect,
+                    ]));
+                }
+            }
+        }
         return $this->view('login', ['redirect' => $redirect]);
     }
 
@@ -52,10 +63,38 @@ class AuthController extends ModuleBaseController
         return $this->api->loginCaptchaRaw();
     }
 
+    public function loginPhone()
+    {
+        $input = InputPackage::buildFromInput();
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
+        $this->api->checkRedirectSafety($redirect);
+        if (Request::isPost()) {
+            $ret = $this->api->loginPhone();
+            if ($ret['code']) {
+                return Response::send(-1, $ret['msg']);
+            }
+            return Response::send(0, null, null, $redirect);
+        }
+        return $this->view('loginPhone', [
+            'redirect' => $redirect,
+        ]);
+    }
+
+    public function loginPhoneCaptcha()
+    {
+        return $this->api->loginPhoneCaptchaRaw();
+    }
+
+    public function loginPhoneVerify()
+    {
+        return Response::sendFromGenerate($this->api->loginPhoneVerify());
+    }
+
     public function logout()
     {
         $input = InputPackage::buildFromInput();
         $redirect = $input->getTrimString('redirect', modstart_web_url(''));
+        $this->api->checkRedirectSafety($redirect);
         if (modstart_config('ssoClientEnable', false) && modstart_config('ssoClientLogoutSyncEnable', false)) {
             Input::merge(['domainUrl' => Request::domainUrl()]);
             $ret = $this->api->ssoClientLogoutPrepare();
@@ -89,7 +128,35 @@ class AuthController extends ModuleBaseController
             }
             return Response::send(0, '', '', modstart_web_url('login') . '?redirect=' . urlencode($redirect));
         }
+        if (modstart_config('Member_RegisterPhoneEnable', false)) {
+            $registerDefault = modstart_config('Member_RegisterDefault', 'default');
+            if ('phone' == $registerDefault) {
+                $force = $input->getBoolean('force', false);
+                if (!$force) {
+                    return Response::redirect(modstart_web_url('register/phone', [
+                        'redirect' => $redirect,
+                    ]));
+                }
+            }
+        }
         return $this->view('register', [
+            'redirect' => $redirect,
+        ]);
+    }
+
+    public function registerPhone()
+    {
+        $input = InputPackage::buildFromInput();
+        $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
+        $this->api->checkRedirectSafety($redirect);
+        if (Request::isPost()) {
+            $ret = $this->api->registerPhone();
+            if ($ret['code']) {
+                return Response::send(-1, $ret['msg']);
+            }
+            return Response::send(0, null, null, $redirect);
+        }
+        return $this->view('registerPhone', [
             'redirect' => $redirect,
         ]);
     }
@@ -203,6 +270,7 @@ class AuthController extends ModuleBaseController
             Session::put('oauthLoginView', true);
         }
         $redirect = $input->getTrimString('redirect', modstart_web_url('member'));
+        $this->api->checkRedirectSafety($redirect);
         $callback = Request::domainUrl() . '/oauth_callback_' . $oauthType;
         $ret = $this->api->oauthLogin($oauthType, $callback);
         if ($ret['code']) {
@@ -233,6 +301,7 @@ class AuthController extends ModuleBaseController
     public function oauthBind($oauthType = null)
     {
         $redirect = Session::get('oauthRedirect', modstart_web_url('member'));
+        $this->api->checkRedirectSafety($redirect);
         if (Request::isPost()) {
             $ret = $this->api->oauthBind($oauthType);
             if ($ret['code']) {

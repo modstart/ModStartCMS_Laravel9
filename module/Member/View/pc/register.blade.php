@@ -44,7 +44,7 @@
                 interval: 60,
             },window.api.dialog);
             new window.api.commonVerify({
-                generateServer: '/register/phone_verify',
+                generateServer: '{{$__msRoot}}register/phone_verify',
                 selectorTarget: 'input[name=phone]',
                 selectorGenerate: '[data-phone-verify-generate]',
                 selectorCountdown: '[data-phone-verify-countdown]',
@@ -84,10 +84,10 @@
                     <div class="line">
                         <div class="field">
                             <div class="row no-gutters">
-                                <div class="col-6">
+                                <div class="col-7">
                                     <input type="text" class="form-lg" name="captcha" autocomplete="off" onblur="__memberCheckCaptcha()" placeholder="图片验证码" />
                                 </div>
-                                <div class="col-6">
+                                <div class="col-5">
                                     <img class="captcha captcha-lg" data-captcha title="刷新验证" onclick="this.src=window.__msRoot+'register/captcha?'+Math.random()" src="{{$__msRoot}}register/captcha?{{time()}}" />
                                 </div>
                             </div>

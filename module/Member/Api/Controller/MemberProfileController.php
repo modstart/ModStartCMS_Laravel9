@@ -24,8 +24,10 @@ use Module\Vendor\Email\MailSendJob;
 use Module\Vendor\Sms\SmsUtil;
 use Module\Vendor\Support\ResponseCodes;
 
+
 class MemberProfileController extends ModuleBaseController implements MemberLoginCheck
 {
+    
     public function password()
     {
         $input = InputPackage::buildFromInput();
@@ -48,6 +50,7 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '修改成功', null, '[reload]');
     }
 
+    
     public function avatar()
     {
         $input = InputPackage::buildFromInput();
@@ -105,6 +108,7 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return CaptchaFacade::create('default');
     }
 
+    
     public function captcha()
     {
         $captcha = $this->captchaRaw();
@@ -197,6 +201,7 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '验证码发送成功');
     }
 
+    
     public function phone()
     {
         $input = InputPackage::buildFromInput();
@@ -242,6 +247,7 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '修改成功', null, '[reload]');
     }
 
+    
     public function phoneVerify()
     {
         $phone = Input::get('target');

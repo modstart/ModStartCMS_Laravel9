@@ -10,8 +10,10 @@ use ModStart\Data\UeditorManager;
 use Module\Member\Auth\MemberUser;
 use Module\Member\Support\MemberLoginCheck;
 
+
 class MemberDataController extends Controller implements MemberLoginCheck
 {
+    
     public function fileManager($category)
     {
         return FileManager::handle(

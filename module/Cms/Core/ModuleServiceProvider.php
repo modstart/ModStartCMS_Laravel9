@@ -15,12 +15,13 @@ use Module\Cms\Provider\CmsHomePageProvider;
 use Module\Cms\Provider\Theme\CmsThemeProvider;
 use Module\Cms\Provider\Theme\DefaultThemeProvider;
 use Module\Cms\Util\CmsModelUtil;
+use Module\SiteMapManager\Biz\SiteMapManagerBiz;
 use Module\TagManager\Biz\TagManagerBiz;
 use Module\Vendor\Admin\Config\AdminWidgetDashboard;
 use Module\Vendor\Admin\Config\AdminWidgetLink;
 use Module\Vendor\Provider\HomePage\HomePageProvider;
-use Module\Vendor\Provider\SearchBox\SearchBoxProvider;
 use Module\Vendor\Provider\SearchBox\QuickSearchBoxProvider;
+use Module\Vendor\Provider\SearchBox\SearchBoxProvider;
 
 class ModuleServiceProvider extends ServiceProvider
 {
@@ -31,7 +32,7 @@ class ModuleServiceProvider extends ServiceProvider
             ModuleClassLoader::addClass('MCms', __DIR__ . '/../Helpers/MCms.php');
         }
         SearchBoxProvider::register(
-            QuickSearchBoxProvider::make('cms','内容',modstart_web_url('search'),100)
+            QuickSearchBoxProvider::make('cms', '内容', modstart_web_url('search'), 100)
         );
         CmsThemeProvider::register(DefaultThemeProvider::class);
         HomePageProvider::register(CmsHomePageProvider::class);
@@ -134,6 +135,11 @@ class ModuleServiceProvider extends ServiceProvider
 
         if (ModuleManager::isModuleEnabled('TagManager')) {
             TagManagerBiz::register(CmsTagManagerBiz::class);
+        }
+        if (modstart_module_enabled('SiteMapManager')) {
+            if (class_exists(SiteMapManagerBiz::class)) {
+                SiteMapManagerBiz::register(CmsSiteMapManagerBiz::class);
+            }
         }
 
     }

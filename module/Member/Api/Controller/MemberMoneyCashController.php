@@ -14,8 +14,10 @@ use Module\Member\Support\MemberLoginCheck;
 use Module\Member\Type\MemberMoneyCashType;
 use Module\Member\Util\MemberMoneyUtil;
 
+
 class MemberMoneyCashController extends Controller implements MemberLoginCheck
 {
+    
     public function get()
     {
         $total = MemberMoneyUtil::getTotal(MemberUser::id());
@@ -31,6 +33,7 @@ class MemberMoneyCashController extends Controller implements MemberLoginCheck
         ]);
     }
 
+    
     public function calc()
     {
         $input = InputPackage::buildFromInput();
@@ -50,6 +53,7 @@ class MemberMoneyCashController extends Controller implements MemberLoginCheck
         ]);
     }
 
+    
     public function submit()
     {
         if (!modstart_config('Member_MoneyCashEnable', false)) {

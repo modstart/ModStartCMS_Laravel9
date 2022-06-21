@@ -7,6 +7,11 @@ use Module\Cms\Util\CmsMemberPermitUtil;
 
 class MCms
 {
+    
+    public static function get($id)
+    {
+        return CmsContentUtil::get($id);
+    }
 
     
     public static function getCatByUrl($catUrl)

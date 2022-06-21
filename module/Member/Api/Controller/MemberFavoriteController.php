@@ -12,8 +12,10 @@ use Module\Member\Auth\MemberUser;
 use Module\Member\Support\MemberLoginCheck;
 use Module\Member\Util\MemberFavoriteUtil;
 
+
 class MemberFavoriteController extends Controller implements MemberLoginCheck
 {
+    
     public function favorite()
     {
         $input = InputPackage::buildFromInput();
@@ -31,6 +33,7 @@ class MemberFavoriteController extends Controller implements MemberLoginCheck
         return Response::generateSuccess();
     }
 
+    
     public function unfavorite()
     {
         $input = InputPackage::buildFromInput();

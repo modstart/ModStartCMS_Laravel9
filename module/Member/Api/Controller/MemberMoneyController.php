@@ -10,8 +10,10 @@ use Module\Member\Auth\MemberUser;
 use Module\Member\Support\MemberLoginCheck;
 use Module\Member\Util\MemberMoneyUtil;
 
+
 class MemberMoneyController extends ModuleBaseController implements MemberLoginCheck
 {
+    
     public function get()
     {
         return Response::generateSuccessData([
@@ -19,11 +21,12 @@ class MemberMoneyController extends ModuleBaseController implements MemberLoginC
         ]);
     }
 
+    
     public function log()
     {
         $input = InputPackage::buildFromInput();
         $option = [];
-        $searchInput = $input->getJsonAsInput('search');
+        $searchInput = $input->getSearchInput();
         $type = $searchInput->getTrimString('type');
         switch ($type) {
             case 'income':
