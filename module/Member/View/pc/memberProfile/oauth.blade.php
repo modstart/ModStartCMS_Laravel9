@@ -6,7 +6,7 @@
 
 @section('memberBodyContent')
 
-    @include('module::Member.View.pc.memberProfile.bindNav')
+    @include('module::Member.View.pc.memberProfile.securityNav')
 
     <div class="ub-panel">
         <div class="head">

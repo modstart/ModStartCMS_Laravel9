@@ -13,9 +13,11 @@ use ModStart\Module\ModuleManager;
 use Module\Member\Config\MemberHomeIcon;
 use Module\Member\Config\MemberMenu;
 use Module\Member\Listener\MemberVipPayListener;
+use Module\Member\Provider\MemberDeleteScheduleProvider;
 use Module\Member\Provider\VerifySmsTemplateProvider;
 use Module\Vendor\Admin\Config\AdminWidgetDashboard;
 use Module\Vendor\Admin\Config\AdminWidgetLink;
+use Module\Vendor\Provider\Schedule\ScheduleProvider;
 use Module\Vendor\Provider\SmsTemplate\SmsTemplateProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -35,7 +37,7 @@ class ModuleServiceProvider extends ServiceProvider
                             'url' => modstart_web_url('member_money'),
                         ] : null,
                         ModuleManager::getModuleConfigBoolean('Member', 'creditEnable') ? [
-                            'title' => '我的积分',
+                            'title' => '我的' . ModuleManager::getModuleConfig('Member', 'creditName', '积分'),
                             'url' => modstart_web_url('member_credit'),
                         ] : null,
                     ],
@@ -63,10 +65,6 @@ class ModuleServiceProvider extends ServiceProvider
                             'url' => modstart_web_url('member_profile/profile'),
                         ],
                         [
-                            'title' => '账号绑定',
-                            'url' => modstart_web_url('member_profile/bind'),
-                        ],
-                        [
                             'sort' => 999999,
                             'title' => '退出登录',
                             'url' => modstart_web_url('logout'),
@@ -77,6 +75,7 @@ class ModuleServiceProvider extends ServiceProvider
         });
 
         SmsTemplateProvider::register(VerifySmsTemplateProvider::class);
+        ScheduleProvider::register(MemberDeleteScheduleProvider::class);
 
         MemberHomeIcon::register(function () {
             return [
@@ -138,25 +137,33 @@ class ModuleServiceProvider extends ServiceProvider
                             'title' => '用户管理',
                             'url' => '\Module\Member\Admin\Controller\MemberController@index',
                         ],
+                        [
+                            'title' => '用户资产',
+                            'children' => [
+                                ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable') ?
+                                    [
+                                        'title' => '用户钱包流水',
+                                        'url' => '\Module\Member\Admin\Controller\MemberMoneyLogController@index',
+                                    ] : null,
+                                ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable') ?
+                                    [
+                                        'title' => '用户钱包提现申请',
+                                        'url' => '\Module\Member\Admin\Controller\MemberMoneyCashController@index',
+                                    ] : null,
+                                ModuleManager::getModuleConfigBoolean('Member', 'creditEnable') ?
+                                    [
+                                        'title' => '用户积分流水',
+                                        'url' => '\Module\Member\Admin\Controller\MemberCreditLogController@index',
+                                    ] : null,
+                            ]
+                        ],
                         ModuleManager::getModuleConfigBoolean('Member', 'vipEnable') ?
                             [
                                 'title' => '会员VIP订单',
                                 'url' => '\Module\Member\Admin\Controller\MemberVipOrderController@index',
                             ] : null,
-                        ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable') ?
-                            [
-                                'title' => '钱包提现申请',
-                                'url' => '\Module\Member\Admin\Controller\MemberMoneyCashController@index',
-                            ] : null,
-                    ]
-                ],
-                [
-                    'title' => '功能设置',
-                    'icon' => 'tools',
-                    'sort' => 300,
-                    'children' => [
                         [
-                            'title' => '用户设置',
+                            'title' => '用户功能设置',
                             'children' => [
                                 [
                                     'title' => '功能设置',
@@ -183,7 +190,7 @@ class ModuleServiceProvider extends ServiceProvider
                                     'url' => '\Module\Member\Admin\Controller\MemberGroupController@index',
                                 ] : null,
                             ]
-                        ],
+                        ]
                     ]
                 ],
             ];

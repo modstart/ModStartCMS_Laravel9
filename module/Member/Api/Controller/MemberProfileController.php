@@ -13,6 +13,7 @@ use ModStart\Core\Input\Response;
 use ModStart\Core\Util\EventUtil;
 use ModStart\Core\Util\FileUtil;
 use ModStart\Core\Util\FormatUtil;
+use ModStart\Core\Util\TimeUtil;
 use ModStart\Misc\Captcha\CaptchaFacade;
 use ModStart\Module\ModuleBaseController;
 use Module\Member\Auth\MemberUser;
@@ -297,5 +298,40 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
             MemberUtil::forgetOauth($oauth->name(), $openId);
         }
         return Response::generate(0, '解绑成功', null, '[reload]');
+    }
+
+    
+    public function delete()
+    {
+        if (!modstart_config('Member_DeleteEnable', false)) {
+            return Response::generateError('注销账号功能未开启');
+        }
+        $memberUser = MemberUser::get();
+        if ($memberUser['deleteAtTime'] > 0) {
+            return Response::generateError('账号正在注销中');
+        }
+        $input = InputPackage::buildFromInput();
+        $agree = $input->getTrimString('agree');
+        BizException::throwsIf('请勾选同意选项', $agree != 'yes');
+        MemberUtil::update(MemberUser::id(), [
+            'deleteAtTime' => time() + TimeUtil::PERIOD_MONTH,
+        ]);
+        return Response::generate(0, '申请注销成功', null, '[reload]');
+    }
+
+    
+    public function deleteRevert()
+    {
+        if (!modstart_config('Member_DeleteEnable', false)) {
+            return Response::generateError('注销账号功能未开启');
+        }
+        $memberUser = MemberUser::get();
+        if (empty($memberUser['deleteAtTime'])) {
+            return Response::generateError('账号没有注销操作');
+        }
+        MemberUtil::update(MemberUser::id(), [
+            'deleteAtTime' => 0
+        ]);
+        return Response::generate(0, '撤销操作成功', null, '[reload]');
     }
 }

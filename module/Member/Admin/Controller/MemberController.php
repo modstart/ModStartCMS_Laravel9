@@ -23,6 +23,7 @@ use ModStart\Form\Form;
 use ModStart\Form\Type\FormMode;
 use ModStart\Grid\GridFilter;
 use ModStart\Module\ModuleManager;
+use ModStart\Repository\Filter\RepositoryFilter;
 use ModStart\Support\Concern\HasFields;
 use ModStart\Widget\TextDialogRequest;
 use Module\Member\Config\MemberAdminList;
@@ -84,6 +85,9 @@ class MemberController extends Controller
                 }
                 $builder->display('created_at', '注册时间');
             })
+            ->repositoryFilter(function (RepositoryFilter $filter) {
+                $filter->where(['isDeleted' => false]);
+            })
             ->gridFilter(function (GridFilter $filter) {
                 $filter->eq('id', L('ID'));
                 $filter->like('username', '用户名');
@@ -108,7 +112,7 @@ class MemberController extends Controller
             })
             ->title('用户')
             ->canShow(false)
-            ->canDelete(false);
+            ->canDelete(true);
     }
 
     public function select(AdminDialogPage $page)
@@ -188,5 +192,12 @@ class MemberController extends Controller
             'record' => $record,
             'showPanelProviders' => $showPanelProviders,
         ]);
+    }
+
+    public function delete()
+    {
+        AdminPermission::demoCheck();
+        MemberUtil::delete(CRUDUtil::id());
+        return Response::redirect(CRUDUtil::jsGridRefresh());
     }
 }

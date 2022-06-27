@@ -16,7 +16,7 @@
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
-        "modstart/modstart": "dev-master",
+        "modstart/modstart-laravel9": "dev-master",
         "predis/predis": "^1.1"
     },
     "autoload": {
@@ -63,7 +63,7 @@
     "repositories": [
         {
             "type": "composer",
-            "url": "https://modstart.com/composer"
+            "url": "https://modstart.com/composer_9"
         }
     ]
 }
