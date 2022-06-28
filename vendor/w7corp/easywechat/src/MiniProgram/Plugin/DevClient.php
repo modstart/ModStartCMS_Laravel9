@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Plugin;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class DevClient.
  *
@@ -29,38 +31,51 @@ class DevClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUsers($page = 1, $size = 10)
+    public function getUsers(int $page = 1, int $size = 10)
     {
-        return $this->httpPostJson('wxa/devplugin', ['action' => 'dev_apply_list', 'page' => $page, 'num' => $size]);
+        return $this->httpPostJson('wxa/devplugin', [
+            'action' => 'dev_apply_list',
+            'page' => $page,
+            'num' => $size,
+        ]);
     }
+
     /**
      * Agree to use plugin.
      *
-     * @param $appId
+     * @param string $appId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function agree($appId)
+    public function agree(string $appId)
     {
-        return $this->httpPostJson('wxa/devplugin', ['action' => 'dev_agree', 'appid' => $appId]);
+        return $this->httpPostJson('wxa/devplugin', [
+            'action' => 'dev_agree',
+            'appid' => $appId,
+        ]);
     }
+
     /**
      * Refuse to use plugin.
      *
-     * @param $reason
+     * @param string $reason
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function refuse($reason)
+    public function refuse(string $reason)
     {
-        return $this->httpPostJson('wxa/devplugin', ['action' => 'dev_refuse', 'reason' => $reason]);
+        return $this->httpPostJson('wxa/devplugin', [
+            'action' => 'dev_refuse',
+            'reason' => $reason,
+        ]);
     }
+
     /**
      * Delete rejected applications.
      *
@@ -71,6 +86,8 @@ class DevClient extends BaseClient
      */
     public function delete()
     {
-        return $this->httpPostJson('wxa/devplugin', ['action' => 'dev_delete']);
+        return $this->httpPostJson('wxa/devplugin', [
+            'action' => 'dev_delete',
+        ]);
     }
 }

@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Mall;
 
 /**
@@ -26,6 +27,7 @@ class ForwardsMall
      * @var \EasyWeChat\Kernel\ServiceContainer
      */
     protected $app;
+
     /**
      * @param \EasyWeChat\Kernel\ServiceContainer $app
      */
@@ -33,8 +35,9 @@ class ForwardsMall
     {
         $this->app = $app;
     }
+
     /**
-     * @param $property
+     * @param string $property
      *
      * @return mixed
      */

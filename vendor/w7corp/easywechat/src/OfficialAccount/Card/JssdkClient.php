@@ -8,11 +8,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\Card;
 
 use EasyWeChat\BasicService\Jssdk\Client as Jssdk;
 use EasyWeChat\Kernel\Support\Arr;
 use function EasyWeChat\Kernel\Support\str_random;
+
 /**
  * Class Jssdk.
  *
@@ -21,8 +23,8 @@ use function EasyWeChat\Kernel\Support\str_random;
 class JssdkClient extends Jssdk
 {
     /**
-     * @param   $refresh
-     * @param $type
+     * @param bool   $refresh
+     * @param string $type
      *
      * @return array
      *
@@ -31,10 +33,11 @@ class JssdkClient extends Jssdk
      * @throws \EasyWeChat\Kernel\Exceptions\RuntimeException
      * @throws \Psr\SimpleCache\InvalidArgumentException
      */
-    public function getTicket($refresh = false, $type = 'wx_card')
+    public function getTicket(bool $refresh = false, string $type = 'wx_card'): array
     {
         return parent::getTicket($refresh, $type);
     }
+
     /**
      * 微信卡券：JSAPI 卡券发放.
      *
@@ -48,10 +51,11 @@ class JssdkClient extends Jssdk
             return $this->attachExtension($card['card_id'], $card);
         }, $cards));
     }
+
     /**
      * 生成 js添加到卡包 需要的 card_list 项.
      *
-     * @param $cardId
+     * @param string $cardId
      * @param array  $extension
      *
      * @return array
@@ -65,8 +69,17 @@ class JssdkClient extends Jssdk
         $timestamp = time();
         $nonce = str_random(6);
         $ticket = $this->getTicket()['ticket'];
-        $ext = array_merge(['timestamp' => $timestamp, 'nonce_str' => $nonce], Arr::only($extension, ['code', 'openid', 'outer_id', 'balance', 'fixed_begintimestamp', 'outer_str']));
-        $ext['signature'] = $this->dictionaryOrderSignature($ticket, $timestamp, $cardId, isset($ext['code']) ? $ext['code'] : '', isset($ext['openid']) ? $ext['openid'] : '', $nonce);
-        return ['cardId' => $cardId, 'cardExt' => json_encode($ext)];
+
+        $ext = array_merge(['timestamp' => $timestamp, 'nonce_str' => $nonce], Arr::only(
+            $extension,
+            ['code', 'openid', 'outer_id', 'balance', 'fixed_begintimestamp', 'outer_str']
+        ));
+
+        $ext['signature'] = $this->dictionaryOrderSignature($ticket, $timestamp, $cardId, $ext['code'] ?? '', $ext['openid'] ?? '', $nonce);
+
+        return [
+            'cardId' => $cardId,
+            'cardExt' => json_encode($ext),
+        ];
     }
 }

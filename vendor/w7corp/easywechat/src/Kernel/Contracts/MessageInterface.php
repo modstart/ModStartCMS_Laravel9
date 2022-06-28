@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Contracts;
 
 /**
@@ -20,13 +21,15 @@ interface MessageInterface
     /**
      * @return string
      */
-    public function getType();
+    public function getType(): string;
+
     /**
      * @return array
      */
-    public function transformForJsonRequest();
+    public function transformForJsonRequest(): array;
+
     /**
      * @return string
      */
-    public function transformToXml();
+    public function transformToXml(): string;
 }

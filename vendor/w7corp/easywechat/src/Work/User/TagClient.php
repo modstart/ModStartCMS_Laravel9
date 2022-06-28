@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\User;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class TagClient.
  *
@@ -21,7 +23,7 @@ class TagClient extends BaseClient
     /**
      * Create tag.
      *
-     * @param   $tagName
+     * @param string   $tagName
      * @param int|null $tagId
      *
      * @return mixed
@@ -29,27 +31,37 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create($tagName, $tagId = null)
+    public function create(string $tagName, int $tagId = null)
     {
-        $params = ['tagname' => $tagName, 'tagid' => $tagId];
+        $params = [
+            'tagname' => $tagName,
+            'tagid' => $tagId,
+        ];
+
         return $this->httpPostJson('cgi-bin/tag/create', $params);
     }
+
     /**
      * Update tag.
      *
      * @param int    $tagId
-     * @param $tagName
+     * @param string $tagName
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update($tagId, $tagName)
+    public function update(int $tagId, string $tagName)
     {
-        $params = ['tagid' => $tagId, 'tagname' => $tagName];
+        $params = [
+            'tagid' => $tagId,
+            'tagname' => $tagName,
+        ];
+
         return $this->httpPostJson('cgi-bin/tag/update', $params);
     }
+
     /**
      * Delete tag.
      *
@@ -59,10 +71,11 @@ class TagClient extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function delete($tagId)
+    public function delete(int $tagId)
     {
         return $this->httpGet('cgi-bin/tag/delete', ['tagid' => $tagId]);
     }
+
     /**
      * @param int $tagId
      *
@@ -70,10 +83,11 @@ class TagClient extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function get($tagId)
+    public function get(int $tagId)
     {
         return $this->httpGet('cgi-bin/tag/get', ['tagid' => $tagId]);
     }
+
     /**
      * @param int   $tagId
      * @param array $userList
@@ -83,10 +97,11 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function tagUsers($tagId, array $userList = [])
+    public function tagUsers(int $tagId, array $userList = [])
     {
         return $this->tagOrUntagUsers('cgi-bin/tag/addtagusers', $tagId, $userList);
     }
+
     /**
      * @param int   $tagId
      * @param array $partyList
@@ -96,10 +111,11 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function tagDepartments($tagId, array $partyList = [])
+    public function tagDepartments(int $tagId, array $partyList = [])
     {
         return $this->tagOrUntagUsers('cgi-bin/tag/addtagusers', $tagId, [], $partyList);
     }
+
     /**
      * @param int   $tagId
      * @param array $userList
@@ -109,10 +125,11 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function untagUsers($tagId, array $userList = [])
+    public function untagUsers(int $tagId, array $userList = [])
     {
         return $this->tagOrUntagUsers('cgi-bin/tag/deltagusers', $tagId, $userList);
     }
+
     /**
      * @param int   $tagId
      * @param array $partyList
@@ -122,12 +139,13 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function untagDepartments($tagId, array $partyList = [])
+    public function untagDepartments(int $tagId, array $partyList = [])
     {
         return $this->tagOrUntagUsers('cgi-bin/tag/deltagusers', $tagId, [], $partyList);
     }
+
     /**
-     * @param $endpoint
+     * @param string $endpoint
      * @param int    $tagId
      * @param array  $userList
      * @param array  $partyList
@@ -137,11 +155,17 @@ class TagClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function tagOrUntagUsers($endpoint, $tagId, array $userList = [], array $partyList = [])
+    protected function tagOrUntagUsers(string $endpoint, int $tagId, array $userList = [], array $partyList = [])
     {
-        $data = ['tagid' => $tagId, 'userlist' => $userList, 'partylist' => $partyList];
+        $data = [
+            'tagid' => $tagId,
+            'userlist' => $userList,
+            'partylist' => $partyList,
+        ];
+
         return $this->httpPostJson($endpoint, $data);
     }
+
     /**
      * @return mixed
      *

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the EasyWeChatComposer.
  *
@@ -8,11 +10,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChatComposer\Traits;
 
 use EasyWeChat\Kernel\BaseClient;
 use EasyWeChatComposer\Delegation\DelegationTo;
 use EasyWeChatComposer\EasyWeChat;
+
 trait WithAggregator
 {
     /**
@@ -24,21 +28,26 @@ trait WithAggregator
             $this['config']->set($key, $value);
         }
     }
+
     /**
      * @return bool
      */
     public function shouldDelegate($id)
     {
-        return $this['config']->get('delegation.enabled') && $this->offsetGet($id) instanceof BaseClient;
+        return $this['config']->get('delegation.enabled')
+            && $this->offsetGet($id) instanceof BaseClient;
     }
+
     /**
      * @return $this
      */
     public function shouldntDelegate()
     {
         $this['config']->set('delegation.enabled', false);
+
         return $this;
     }
+
     /**
      * @param string $id
      *

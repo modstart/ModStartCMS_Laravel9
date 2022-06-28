@@ -8,15 +8,16 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
  * Class TaskCard.
  *
- * @property $title
- * @property $description
- * @property $url
- * @property $task_id
+ * @property string $title
+ * @property string $description
+ * @property string $url
+ * @property string $task_id
  * @property array  $btn
  */
 class TaskCard extends Message
@@ -27,10 +28,17 @@ class TaskCard extends Message
      * @var string
      */
     protected $type = 'taskcard';
+
     /**
      * Properties.
      *
      * @var array
      */
-    protected $properties = ['title', 'description', 'url', 'task_id', 'btn'];
+    protected $properties = [
+        'title',
+        'description',
+        'url',
+        'task_id',
+        'btn',
+    ];
 }

@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Mall;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -22,7 +24,7 @@ class OrderClient extends BaseClient
      * 导入订单.
      *
      * @param array $params
-     * @param  $isHistory
+     * @param bool  $isHistory
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
@@ -33,11 +35,12 @@ class OrderClient extends BaseClient
     {
         return $this->httpPostJson('mall/importorder', $params, ['action' => 'add-order', 'is_history' => (int) $isHistory]);
     }
+
     /**
      * 导入订单.
      *
      * @param array $params
-     * @param  $isHistory
+     * @param bool  $isHistory
      *
      * @return mixed
      *
@@ -48,11 +51,12 @@ class OrderClient extends BaseClient
     {
         return $this->httpPostJson('mall/importorder', $params, ['action' => 'update-order', 'is_history' => (int) $isHistory]);
     }
+
     /**
      * 删除订单.
      *
-     * @param $openid
-     * @param $orderId
+     * @param string $openid
+     * @param string $orderId
      *
      * @return mixed
      *
@@ -61,7 +65,11 @@ class OrderClient extends BaseClient
      */
     public function delete($openid, $orderId)
     {
-        $params = ['user_open_id' => $openid, 'order_id' => $orderId];
+        $params = [
+            'user_open_id' => $openid,
+            'order_id' => $orderId,
+        ];
+
         return $this->httpPostJson('mall/deleteorder', $params);
     }
 }

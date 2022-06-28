@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\TemplateMessage;
 
 use EasyWeChat\OfficialAccount\TemplateMessage\Client as BaseClient;
+
 /**
  * Class Client.
  *
@@ -18,15 +20,25 @@ use EasyWeChat\OfficialAccount\TemplateMessage\Client as BaseClient;
  */
 class Client extends BaseClient
 {
-    const API_SEND = 'cgi-bin/message/wxopen/template/send';
+    public const API_SEND = 'cgi-bin/message/wxopen/template/send';
+
     /**
      * {@inheritdoc}.
      */
-    protected $message = ['touser' => '', 'template_id' => '', 'page' => '', 'form_id' => '', 'data' => [], 'emphasis_keyword' => ''];
+    protected $message = [
+        'touser' => '',
+        'template_id' => '',
+        'page' => '',
+        'form_id' => '',
+        'data' => [],
+        'emphasis_keyword' => '',
+    ];
+
     /**
      * {@inheritdoc}.
      */
     protected $required = ['touser', 'template_id', 'form_id'];
+
     /**
      * @param int $offset
      * @param int $count
@@ -36,24 +48,26 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function list($offset, $count)
+    public function list(int $offset, int $count)
     {
         return $this->httpPostJson('cgi-bin/wxopen/template/library/list', compact('offset', 'count'));
     }
+
     /**
-     * @param $id
+     * @param string $id
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($id)
+    public function get(string $id)
     {
         return $this->httpPostJson('cgi-bin/wxopen/template/library/get', compact('id'));
     }
+
     /**
-     * @param $id
+     * @param string $id
      * @param array  $keyword
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
@@ -61,22 +75,29 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function add($id, array $keyword)
+    public function add(string $id, array $keyword)
     {
-        return $this->httpPostJson('cgi-bin/wxopen/template/add', ['id' => $id, 'keyword_id_list' => $keyword]);
+        return $this->httpPostJson('cgi-bin/wxopen/template/add', [
+            'id' => $id,
+            'keyword_id_list' => $keyword,
+        ]);
     }
+
     /**
-     * @param $templateId
+     * @param string $templateId
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete($templateId)
+    public function delete(string $templateId)
     {
-        return $this->httpPostJson('cgi-bin/wxopen/template/del', ['template_id' => $templateId]);
+        return $this->httpPostJson('cgi-bin/wxopen/template/del', [
+            'template_id' => $templateId,
+        ]);
     }
+
     /**
      * @param int $offset
      * @param int $count
@@ -86,7 +107,7 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getTemplates($offset, $count)
+    public function getTemplates(int $offset, int $count)
     {
         return $this->httpPostJson('cgi-bin/wxopen/template/list', compact('offset', 'count'));
     }

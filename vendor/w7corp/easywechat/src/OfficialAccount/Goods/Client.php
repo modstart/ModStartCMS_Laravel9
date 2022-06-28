@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\Goods;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -30,8 +32,11 @@ class Client extends BaseClient
      */
     public function add(array $data)
     {
-        return $this->httpPostJson('scan/product/v2/add', ['product' => $data]);
+        return $this->httpPostJson('scan/product/v2/add', [
+            'product' => $data,
+        ]);
     }
+
     /**
      * Update the goods.
      *
@@ -44,40 +49,51 @@ class Client extends BaseClient
      */
     public function update(array $data)
     {
-        return $this->httpPostJson('scan/product/v2/add', ['product' => $data]);
+        return $this->httpPostJson('scan/product/v2/add', [
+            'product' => $data,
+        ]);
     }
+
     /**
      * Get add or update goods results.
      *
-     * @param $ticket
+     * @param string $ticket
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function status($ticket)
+    public function status(string $ticket)
     {
-        return $this->httpPostJson('scan/product/v2/status', ['status_ticket' => $ticket]);
+        return $this->httpPostJson('scan/product/v2/status', [
+            'status_ticket' => $ticket,
+        ]);
     }
+
     /**
      * Get goods information.
      *
-     * @param $pid
+     * @param string $pid
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($pid)
+    public function get(string $pid)
     {
-        return $this->httpPostJson('scan/product/v2/getinfo', ['product' => ['pid' => $pid]]);
+        return $this->httpPostJson('scan/product/v2/getinfo', [
+            'product' => [
+                'pid' => $pid,
+            ],
+        ]);
     }
+
     /**
      * Get a list of goods.
      *
-     * @param $context
+     * @param string $context
      * @param int    $page
      * @param int    $size
      *
@@ -86,8 +102,12 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function list($context = '', $page = 1, $size = 10)
+    public function list(string $context = '', int $page = 1, int $size = 10)
     {
-        return $this->httpPostJson('scan/product/v2/getinfobypage', ['page_context' => $context, 'page_num' => $page, 'page_size' => $size]);
+        return $this->httpPostJson('scan/product/v2/getinfobypage', [
+            'page_context' => $context,
+            'page_num' => $page,
+            'page_size' => $size,
+        ]);
     }
 }

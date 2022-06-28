@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Payment\Contract;
 
 use EasyWeChat\Payment\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -32,8 +34,10 @@ class Client extends BaseClient
     public function web(array $params)
     {
         $params['appid'] = $this->app['config']->app_id;
+
         return $this->safeRequest('papay/entrustweb', $params);
     }
+
     /**
      * entrust app.
      *
@@ -48,8 +52,10 @@ class Client extends BaseClient
     public function app(array $params)
     {
         $params['appid'] = $this->app['config']->app_id;
+
         return $this->safeRequest('papay/preentrustweb', $params);
     }
+
     /**
      * entrust html 5.
      *
@@ -64,8 +70,10 @@ class Client extends BaseClient
     public function h5(array $params)
     {
         $params['appid'] = $this->app['config']->app_id;
+
         return $this->safeRequest('papay/h5entrustweb', $params);
     }
+
     /**
      * apply papay.
      *
@@ -80,8 +88,10 @@ class Client extends BaseClient
     public function apply(array $params)
     {
         $params['appid'] = $this->app['config']->app_id;
+
         return $this->safeRequest('pay/pappayapply', $params);
     }
+
     /**
      * delete papay contrace.
      *
@@ -96,6 +106,7 @@ class Client extends BaseClient
     public function delete(array $params)
     {
         $params['appid'] = $this->app['config']->app_id;
+
         return $this->safeRequest('papay/deletecontract', $params);
     }
 }

@@ -8,10 +8,12 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\GroupRobot;
 
 use EasyWeChat\Kernel\BaseClient;
 use EasyWeChat\Work\GroupRobot\Messages\Message;
+
 /**
  * Class Client.
  *
@@ -30,8 +32,9 @@ class Client extends BaseClient
     {
         return (new Messenger($this))->message($message);
     }
+
     /**
-     * @param $key
+     * @param string $key
      * @param array  $message
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
@@ -39,9 +42,10 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function send($key, array $message)
+    public function send(string $key, array $message)
     {
         $this->accessToken = null;
+
         return $this->httpPostJson('cgi-bin/webhook/send', $message, ['key' => $key]);
     }
 }

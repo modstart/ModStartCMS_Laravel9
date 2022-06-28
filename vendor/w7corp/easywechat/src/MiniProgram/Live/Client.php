@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Live;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -27,11 +29,16 @@ class Client extends BaseClient
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      * @deprecated This method has been merged into `\EasyWeChat\MiniProgram\Broadcast`
      */
-    public function getRooms($start = 0, $limit = 10)
+    public function getRooms(int $start = 0, int $limit = 10)
     {
-        $params = ['start' => $start, 'limit' => $limit];
+        $params = [
+            'start' => $start,
+            'limit' => $limit,
+        ];
+
         return $this->httpPostJson('wxa/business/getliveinfo', $params);
     }
+
     /**
      * Get Playback List.
      *
@@ -42,9 +49,15 @@ class Client extends BaseClient
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      * @deprecated This method has been merged into `\EasyWeChat\MiniProgram\Broadcast`
      */
-    public function getPlaybacks($roomId, $start = 0, $limit = 10)
+    public function getPlaybacks(int $roomId, int $start = 0, int $limit = 10)
     {
-        $params = ['action' => 'get_replay', 'room_id' => $roomId, 'start' => $start, 'limit' => $limit];
+        $params = [
+            'action' => 'get_replay',
+            'room_id' => $roomId,
+            'start' => $start,
+            'limit' => $limit,
+        ];
+
         return $this->httpPostJson('wxa/business/getliveinfo', $params);
     }
 }

@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Support;
 
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
+
 /**
  * Class Str.
  */
@@ -22,22 +24,25 @@ class Str
      * @var array
      */
     protected static $snakeCache = [];
+
     /**
      * The cache of camel-cased words.
      *
      * @var array
      */
     protected static $camelCache = [];
+
     /**
      * The cache of studly-cased words.
      *
      * @var array
      */
     protected static $studlyCache = [];
+
     /**
      * Convert a value to camel case.
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
@@ -46,8 +51,10 @@ class Str
         if (isset(static::$camelCache[$value])) {
             return static::$camelCache[$value];
         }
+
         return static::$camelCache[$value] = lcfirst(static::studly($value));
     }
+
     /**
      * Generate a more truly "random" alpha-numeric string.
      *
@@ -60,13 +67,18 @@ class Str
     public static function random($length = 16)
     {
         $string = '';
+
         while (($len = strlen($string)) < $length) {
             $size = $length - $len;
+
             $bytes = static::randomBytes($size);
+
             $string .= substr(str_replace(['/', '+', '='], '', base64_encode($bytes)), 0, $size);
         }
+
         return $string;
     }
+
     /**
      * Generate a more truly "random" bytes.
      *
@@ -92,8 +104,10 @@ class Str
         } else {
             throw new RuntimeException('OpenSSL extension is required for PHP 5 users.');
         }
+
         return $bytes;
     }
+
     /**
      * Generate a "random" alpha-numeric string.
      *
@@ -106,12 +120,14 @@ class Str
     public static function quickRandom($length = 16)
     {
         $pool = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
         return substr(str_shuffle(str_repeat($pool, $length)), 0, $length);
     }
+
     /**
-     * Convert the given to upper-case.
+     * Convert the given string to upper-case.
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
@@ -119,10 +135,11 @@ class Str
     {
         return mb_strtoupper($value);
     }
+
     /**
-     * Convert the given to title case.
+     * Convert the given string to title case.
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
@@ -130,39 +147,47 @@ class Str
     {
         return mb_convert_case($value, MB_CASE_TITLE, 'UTF-8');
     }
+
     /**
-     * Convert a to snake case.
+     * Convert a string to snake case.
      *
-     * @param $value
-     * @param $delimiter
+     * @param string $value
+     * @param string $delimiter
      *
      * @return string
      */
     public static function snake($value, $delimiter = '_')
     {
-        $key = $value . $delimiter;
+        $key = $value.$delimiter;
+
         if (isset(static::$snakeCache[$key])) {
             return static::$snakeCache[$key];
         }
+
         if (!ctype_lower($value)) {
-            $value = strtolower(preg_replace('/(.)(?=[A-Z])/', '$1' . $delimiter, $value));
+            $value = strtolower(preg_replace('/(.)(?=[A-Z])/', '$1'.$delimiter, $value));
         }
+
         return static::$snakeCache[$key] = trim($value, '_');
     }
+
     /**
      * Convert a value to studly caps case.
      *
-     * @param $value
+     * @param string $value
      *
      * @return string
      */
     public static function studly($value)
     {
         $key = $value;
+
         if (isset(static::$studlyCache[$key])) {
             return static::$studlyCache[$key];
         }
+
         $value = ucwords(str_replace(['-', '_'], ' ', $value));
+
         return static::$studlyCache[$key] = str_replace(' ', '', $value);
     }
 }

@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\MsgAudit;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -25,10 +27,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException|\GuzzleHttp\Exception\GuzzleException
      */
-    public function getPermitUsers($type = null)
+    public function getPermitUsers(string $type = null)
     {
-        return $this->httpPostJson('cgi-bin/msgaudit/get_permit_user_list', empty($type) ? [] : ['type' => $type]);
+        return $this->httpPostJson('cgi-bin/msgaudit/get_permit_user_list', (empty($type) ? [] : ['type' => $type]));
     }
+
     /**
      * @param array $info 数组，格式: [[userid, exteranalopenid], [userid, exteranalopenid]]
      *
@@ -39,33 +42,44 @@ class Client extends BaseClient
      */
     public function getSingleAgreeStatus(array $info)
     {
-        $params = ['info' => $info];
+        $params = [
+            'info' => $info
+        ];
+
         return $this->httpPostJson('cgi-bin/msgaudit/check_single_agree', $params);
     }
+
     /**
-     * @param   $roomId
+     * @param  string  $roomId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRoomAgreeStatus($roomId)
+    public function getRoomAgreeStatus(string $roomId)
     {
-        $params = ['roomid' => $roomId];
+        $params = [
+            'roomid' => $roomId
+        ];
+
         return $this->httpPostJson('cgi-bin/msgaudit/check_room_agree', $params);
     }
+
     /**
-     * @param   $roomId
+     * @param  string  $roomId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getRoom($roomId)
+    public function getRoom(string $roomId)
     {
-        $params = ['roomid' => $roomId];
+        $params = [
+            'roomid' => $roomId
+        ];
+
         return $this->httpPostJson('cgi-bin/msgaudit/groupchat/get', $params);
     }
 }

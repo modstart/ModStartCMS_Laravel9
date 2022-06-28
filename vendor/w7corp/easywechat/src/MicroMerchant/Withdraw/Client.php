@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MicroMerchant\Withdraw;
 
 use EasyWeChat\MicroMerchant\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -22,8 +24,8 @@ class Client extends BaseClient
     /**
      * Query withdrawal status.
      *
-     * @param $date
-     * @param $subMchId
+     * @param string $date
+     * @param string $subMchId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
@@ -33,13 +35,19 @@ class Client extends BaseClient
      */
     public function queryWithdrawalStatus($date, $subMchId = '')
     {
-        return $this->safeRequest('fund/queryautowithdrawbydate', ['date' => $date, 'sign_type' => 'HMAC-SHA256', 'nonce_str' => uniqid('micro'), 'sub_mch_id' => $subMchId ?: $this->app['config']->sub_mch_id]);
+        return $this->safeRequest('fund/queryautowithdrawbydate', [
+            'date' => $date,
+            'sign_type' => 'HMAC-SHA256',
+            'nonce_str' => uniqid('micro'),
+            'sub_mch_id' => $subMchId ?: $this->app['config']->sub_mch_id,
+        ]);
     }
+
     /**
      * Re-initiation of withdrawal.
      *
-     * @param $date
-     * @param $subMchId
+     * @param string $date
+     * @param string $subMchId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
@@ -49,6 +57,11 @@ class Client extends BaseClient
      */
     public function requestWithdraw($date, $subMchId = '')
     {
-        return $this->safeRequest('fund/reautowithdrawbydate', ['date' => $date, 'sign_type' => 'HMAC-SHA256', 'nonce_str' => uniqid('micro'), 'sub_mch_id' => $subMchId ?: $this->app['config']->sub_mch_id]);
+        return $this->safeRequest('fund/reautowithdrawbydate', [
+            'date' => $date,
+            'sign_type' => 'HMAC-SHA256',
+            'nonce_str' => uniqid('micro'),
+            'sub_mch_id' => $subMchId ?: $this->app['config']->sub_mch_id,
+        ]);
     }
 }

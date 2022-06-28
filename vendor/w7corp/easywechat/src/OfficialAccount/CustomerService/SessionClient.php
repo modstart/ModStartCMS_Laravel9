@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\CustomerService;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class SessionClient.
  *
@@ -21,16 +23,17 @@ class SessionClient extends BaseClient
     /**
      * List all sessions of $account.
      *
-     * @param $account
+     * @param string $account
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function list($account)
+    public function list(string $account)
     {
         return $this->httpGet('customservice/kfsession/getsessionlist', ['kf_account' => $account]);
     }
+
     /**
      * List all the people waiting.
      *
@@ -42,48 +45,59 @@ class SessionClient extends BaseClient
     {
         return $this->httpGet('customservice/kfsession/getwaitcase');
     }
+
     /**
      * Create a session.
      *
-     * @param $account
-     * @param $openid
+     * @param string $account
+     * @param string $openid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create($account, $openid)
+    public function create(string $account, string $openid)
     {
-        $params = ['kf_account' => $account, 'openid' => $openid];
+        $params = [
+            'kf_account' => $account,
+            'openid' => $openid,
+        ];
+
         return $this->httpPostJson('customservice/kfsession/create', $params);
     }
+
     /**
      * Close a session.
      *
-     * @param $account
-     * @param $openid
+     * @param string $account
+     * @param string $openid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function close($account, $openid)
+    public function close(string $account, string $openid)
     {
-        $params = ['kf_account' => $account, 'openid' => $openid];
+        $params = [
+            'kf_account' => $account,
+            'openid' => $openid,
+        ];
+
         return $this->httpPostJson('customservice/kfsession/close', $params);
     }
+
     /**
      * Get a session.
      *
-     * @param $openid
+     * @param string $openid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function get($openid)
+    public function get(string $openid)
     {
         return $this->httpGet('customservice/kfsession/getsession', ['openid' => $openid]);
     }

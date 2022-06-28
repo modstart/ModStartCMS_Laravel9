@@ -13,7 +13,7 @@
 
 **Closed issues:**
 
-- filecache.php 文件     createPathIfNeeded\($path\) : [\#1046](https://github.com/overtrue/wechat/issues/1046)
+- filecache.php 文件     createPathIfNeeded\(string $path\) : bool [\#1046](https://github.com/overtrue/wechat/issues/1046)
 - 沙箱模式的Notify总是出错：Invalid request payloads. [\#1045](https://github.com/overtrue/wechat/issues/1045)
 - 你好我是SwooleDistributed框架的作者 [\#1040](https://github.com/overtrue/wechat/issues/1040)
 

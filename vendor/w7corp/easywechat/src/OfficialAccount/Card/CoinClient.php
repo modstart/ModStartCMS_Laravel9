@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\Card;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class CoinClient.
  *
@@ -27,8 +29,9 @@ class CoinClient extends BaseClient
     {
         return $this->httpGet('card/pay/activate');
     }
+
     /**
-     * @param $cardId
+     * @param string $cardId
      * @param int    $quantity
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
@@ -36,10 +39,14 @@ class CoinClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getPrice($cardId, $quantity)
+    public function getPrice(string $cardId, int $quantity)
     {
-        return $this->httpPostJson('card/pay/getpayprice', ['card_id' => $cardId, 'quantity' => $quantity]);
+        return $this->httpPostJson('card/pay/getpayprice', [
+            'card_id' => $cardId,
+            'quantity' => $quantity,
+        ]);
     }
+
     /**
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
@@ -49,6 +56,7 @@ class CoinClient extends BaseClient
     {
         return $this->httpGet('card/pay/getcoinsinfo');
     }
+
     /**
      * @param int $count
      *
@@ -57,22 +65,26 @@ class CoinClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function recharge($count)
+    public function recharge(int $count)
     {
-        return $this->httpPostJson('card/pay/recharge', ['coin_count' => $count]);
+        return $this->httpPostJson('card/pay/recharge', [
+            'coin_count' => $count,
+        ]);
     }
+
     /**
-     * @param $orderId
+     * @param string $orderId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function order($orderId)
+    public function order(string $orderId)
     {
         return $this->httpPostJson('card/pay/getorder', ['order_id' => $orderId]);
     }
+
     /**
      * @param array $filters
      *
@@ -85,9 +97,10 @@ class CoinClient extends BaseClient
     {
         return $this->httpPostJson('card/pay/getorderlist', $filters);
     }
+
     /**
-     * @param $cardId
-     * @param $orderId
+     * @param string $cardId
+     * @param string $orderId
      * @param int    $quantity
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
@@ -95,8 +108,12 @@ class CoinClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function confirm($cardId, $orderId, $quantity)
+    public function confirm(string $cardId, string $orderId, int $quantity)
     {
-        return $this->httpPostJson('card/pay/confirm', ['card_id' => $cardId, 'order_id' => $orderId, 'quantity' => $quantity]);
+        return $this->httpPostJson('card/pay/confirm', [
+            'card_id' => $cardId,
+            'order_id' => $orderId,
+            'quantity' => $quantity,
+        ]);
     }
 }

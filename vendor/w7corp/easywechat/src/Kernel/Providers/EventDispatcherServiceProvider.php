@@ -8,11 +8,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Providers;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+
 /**
  * Class EventDispatcherServiceProvider.
  *
@@ -30,14 +32,16 @@ class EventDispatcherServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
-        !isset($pimple['events']) && ($pimple['events'] = function ($app) {
+        !isset($pimple['events']) && $pimple['events'] = function ($app) {
             $dispatcher = new EventDispatcher();
+
             foreach ($app->config->get('events.listen', []) as $event => $listeners) {
                 foreach ($listeners as $listener) {
                     $dispatcher->addListener($event, $listener);
                 }
             }
+
             return $dispatcher;
-        });
+        };
     }
 }

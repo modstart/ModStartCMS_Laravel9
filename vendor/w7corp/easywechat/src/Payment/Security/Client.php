@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Payment\Security;
 
 use EasyWeChat\Payment\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -27,7 +29,10 @@ class Client extends BaseClient
      */
     public function getPublicKey()
     {
-        $params = ['sign_type' => 'MD5'];
+        $params = [
+            'sign_type' => 'MD5',
+        ];
+
         return $this->safeRequest('https://fraud.mch.weixin.qq.com/risk/getpublickey', $params);
     }
 }

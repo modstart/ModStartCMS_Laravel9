@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\ShakeAround;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class PageClient.
  *
@@ -30,6 +32,7 @@ class PageClient extends BaseClient
     {
         return $this->httpPostJson('shakearound/page/add', $data);
     }
+
     /**
      * @param int   $pageId
      * @param array $data
@@ -39,10 +42,11 @@ class PageClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update($pageId, array $data)
+    public function update(int $pageId, array $data)
     {
         return $this->httpPostJson('shakearound/page/update', array_merge(['page_id' => $pageId], $data));
     }
+
     /**
      * Fetch batch of pages by pageIds.
      *
@@ -55,9 +59,14 @@ class PageClient extends BaseClient
      */
     public function listByIds(array $pageIds)
     {
-        $params = ['type' => 1, 'page_ids' => $pageIds];
+        $params = [
+            'type' => 1,
+            'page_ids' => $pageIds,
+        ];
+
         return $this->httpPostJson('shakearound/page/search', $params);
     }
+
     /**
      * Pagination to get batch of pages.
      *
@@ -69,11 +78,17 @@ class PageClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function list($begin, $count)
+    public function list(int $begin, int $count)
     {
-        $params = ['type' => 2, 'begin' => $begin, 'count' => $count];
+        $params = [
+            'type' => 2,
+            'begin' => $begin,
+            'count' => $count,
+        ];
+
         return $this->httpPostJson('shakearound/page/search', $params);
     }
+
     /**
      * delete a page.
      *
@@ -84,9 +99,12 @@ class PageClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete($pageId)
+    public function delete(int $pageId)
     {
-        $params = ['page_id' => $pageId];
+        $params = [
+            'page_id' => $pageId,
+        ];
+
         return $this->httpPostJson('shakearound/page/delete', $params);
     }
 }

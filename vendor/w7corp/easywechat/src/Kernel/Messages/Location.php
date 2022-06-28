@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
@@ -21,10 +22,17 @@ class Location extends Message
      * @var string
      */
     protected $type = 'location';
+
     /**
      * Properties.
      *
      * @var array
      */
-    protected $properties = ['latitude', 'longitude', 'scale', 'label', 'precision'];
+    protected $properties = [
+        'latitude',
+        'longitude',
+        'scale',
+        'label',
+        'precision',
+    ];
 }

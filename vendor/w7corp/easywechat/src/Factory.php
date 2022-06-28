@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat;
 
 /**
@@ -25,7 +26,7 @@ namespace EasyWeChat;
 class Factory
 {
     /**
-     * @param $name
+     * @param string $name
      * @param array  $config
      *
      * @return \EasyWeChat\Kernel\ServiceContainer
@@ -34,12 +35,14 @@ class Factory
     {
         $namespace = Kernel\Support\Str::studly($name);
         $application = "\\EasyWeChat\\{$namespace}\\Application";
+
         return new $application($config);
     }
+
     /**
      * Dynamically pass methods to the application.
      *
-     * @param $name
+     * @param string $name
      * @param array  $arguments
      *
      * @return mixed

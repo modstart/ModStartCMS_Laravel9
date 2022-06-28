@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Broadcast;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -30,9 +32,13 @@ class Client extends BaseClient
      */
     public function create(array $goodsInfo)
     {
-        $params = ['goodsInfo' => $goodsInfo];
+        $params = [
+            'goodsInfo' => $goodsInfo,
+        ];
+
         return $this->httpPostJson('wxaapi/broadcast/goods/add', $params);
     }
+
     /**
      * Reset audit.
      *
@@ -44,11 +50,16 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function resetAudit($auditId, $goodsId)
+    public function resetAudit(int $auditId, int $goodsId)
     {
-        $params = ['auditId' => $auditId, 'goodsId' => $goodsId];
+        $params = [
+            'auditId' => $auditId,
+            'goodsId' => $goodsId,
+        ];
+
         return $this->httpPostJson('wxaapi/broadcast/goods/resetaudit', $params);
     }
+
     /**
      * Resubmit audit goods.
      *
@@ -59,11 +70,15 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function resubmitAudit($goodsId)
+    public function resubmitAudit(int $goodsId)
     {
-        $params = ['goodsId' => $goodsId];
+        $params = [
+            'goodsId' => $goodsId,
+        ];
+
         return $this->httpPostJson('wxaapi/broadcast/goods/audit', $params);
     }
+
     /**
      * Delete broadcast goods.
      *
@@ -74,11 +89,15 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete($goodsId)
+    public function delete(int $goodsId)
     {
-        $params = ['goodsId' => $goodsId];
+        $params = [
+            'goodsId' => $goodsId,
+        ];
+
         return $this->httpPostJson('wxaapi/broadcast/goods/delete', $params);
     }
+
     /**
      * Update goods info.
      *
@@ -91,9 +110,13 @@ class Client extends BaseClient
      */
     public function update(array $goodsInfo)
     {
-        $params = ['goodsInfo' => $goodsInfo];
+        $params = [
+            'goodsInfo' => $goodsInfo,
+        ];
+
         return $this->httpPostJson('wxaapi/broadcast/goods/update', $params);
     }
+
     /**
      * Get goods information and review status.
      *
@@ -106,9 +129,13 @@ class Client extends BaseClient
      */
     public function getGoodsWarehouse(array $goodsIdArray)
     {
-        $params = ['goods_ids' => $goodsIdArray];
+        $params = [
+            'goods_ids' => $goodsIdArray,
+        ];
+
         return $this->httpPostJson('wxa/business/getgoodswarehouse', $params);
     }
+
     /**
      * Get goods list based on status
      *
@@ -121,6 +148,7 @@ class Client extends BaseClient
     {
         return $this->httpGet('wxaapi/broadcast/goods/getapproved', $params);
     }
+
     /**
      * Add goods to the designated live room.
      *
@@ -133,6 +161,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/addgoods', $params);
     }
+
     /**
      * Get Room List.
      *
@@ -143,11 +172,16 @@ class Client extends BaseClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @author onekb <1@1kb.ren>
      */
-    public function getRooms($start = 0, $limit = 10)
+    public function getRooms(int $start = 0, int $limit = 10)
     {
-        $params = ['start' => $start, 'limit' => $limit];
+        $params = [
+            'start' => $start,
+            'limit' => $limit,
+        ];
+
         return $this->httpPostJson('wxa/business/getliveinfo', $params);
     }
+
     /**
      * Get Playback List.
      *
@@ -159,11 +193,18 @@ class Client extends BaseClient
      * @throws \GuzzleHttp\Exception\GuzzleException
      * @author onekb <1@1kb.ren>
      */
-    public function getPlaybacks($roomId, $start = 0, $limit = 10)
+    public function getPlaybacks(int $roomId, int $start = 0, int $limit = 10)
     {
-        $params = ['action' => 'get_replay', 'room_id' => $roomId, 'start' => $start, 'limit' => $limit];
+        $params = [
+            'action' => 'get_replay',
+            'room_id' => $roomId,
+            'start' => $start,
+            'limit' => $limit,
+        ];
+
         return $this->httpPostJson('wxa/business/getliveinfo', $params);
     }
+
     /**
      * Create a live room.
      *
@@ -176,6 +217,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/create', $params);
     }
+
     /**
      * Delete a live room.
      *
@@ -187,6 +229,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/deleteroom', $params);
     }
+
     /**
      * Update a live room.
      *
@@ -198,6 +241,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/editroom', $params);
     }
+
     /**
      * Gets the live room push stream url.
      *
@@ -209,6 +253,7 @@ class Client extends BaseClient
     {
         return $this->httpGet('wxaapi/broadcast/room/getpushurl', $params);
     }
+
     /**
      * Gets the live room share qrcode.
      *
@@ -220,6 +265,7 @@ class Client extends BaseClient
     {
         return $this->httpGet('wxaapi/broadcast/room/getsharedcode', $params);
     }
+
     /**
      * Add a live room assistant.
      *
@@ -231,6 +277,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/addassistant', $params);
     }
+
     /**
      * Update a live room assistant.
      *
@@ -242,6 +289,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/modifyassistant', $params);
     }
+
     /**
      * Delete a live room assistant.
      *
@@ -253,6 +301,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/removeassistant', $params);
     }
+
     /**
      * Gets the assistant list.
      *
@@ -264,6 +313,7 @@ class Client extends BaseClient
     {
         return $this->httpGet('wxaapi/broadcast/room/getassistantlist', $params);
     }
+
     /**
      * Add the sub anchor.
      *
@@ -275,6 +325,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/addsubanchor', $params);
     }
+
     /**
      * Update the sub anchor.
      *
@@ -286,6 +337,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/modifysubanchor', $params);
     }
+
     /**
      * Delete the sub anchor.
      *
@@ -297,6 +349,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/deletesubanchor', $params);
     }
+
     /**
      * Gets the sub anchor info.
      *
@@ -308,6 +361,7 @@ class Client extends BaseClient
     {
         return $this->httpGet('wxaapi/broadcast/room/getsubanchor', $params);
     }
+
     /**
      * Turn official index on/off.
      *
@@ -319,6 +373,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/updatefeedpublic', $params);
     }
+
     /**
      * Turn playback status on/off.
      *
@@ -330,6 +385,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/updatereplay', $params);
     }
+
     /**
      * Turn customer service status on/off.
      *
@@ -341,6 +397,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/updatekf', $params);
     }
+
     /**
      * Turn global comments status on/off.
      *
@@ -352,6 +409,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/room/updatecomment', $params);
     }
+
     /**
      * Add member role.
      *
@@ -363,6 +421,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/role/addrole', $params);
     }
+
     /**
      * Delete member role.
      *
@@ -374,6 +433,7 @@ class Client extends BaseClient
     {
         return $this->httpPost('wxaapi/broadcast/role/deleterole', $params);
     }
+
     /**
      * Gets the role list.
      *
@@ -384,5 +444,96 @@ class Client extends BaseClient
     public function getRoleList(array $params)
     {
         return $this->httpGet('wxaapi/broadcast/role/getrolelist', $params);
+    }
+
+    /**
+     * Gets long-term subscribers.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function getFollowers(array $params)
+    {
+        return $this->httpPost('wxa/business/get_wxa_followers', $params);
+    }
+
+    /**
+     * Sending live broadcast start event to long-term subscribers.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function pushMessage(array $params)
+    {
+        return $this->httpPost('wxa/business/push_message', $params);
+    }
+
+    /**
+     * Change the status of goods on/off shelves in room.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function updateGoodsInRoom(array $params)
+    {
+        return $this->httpPost('wxaapi/broadcast/goods/onsale', $params);
+    }
+
+    /**
+     * Delete goods in room.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function deleteGoodsInRoom(array $params)
+    {
+        return $this->httpPost('wxaapi/broadcast/goods/deleteInRoom', $params);
+    }
+
+    /**
+     * Push goods in room.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function pushGoods(array $params)
+    {
+        return $this->httpPost('wxaapi/broadcast/goods/push', $params);
+    }
+
+    /**
+     * Change goods sort in room.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function sortGoods(array $params)
+    {
+        return $this->httpPost('wxaapi/broadcast/goods/sort', $params);
+    }
+
+    /**
+     * Download goods explanation video.
+     *
+     * @param array $params
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function downloadGoodsExplanationVideo(array $params)
+    {
+        return $this->httpPost('wxaapi/broadcast/goods/getVideo', $params);
     }
 }

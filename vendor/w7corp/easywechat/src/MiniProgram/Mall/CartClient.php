@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\Mall;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -22,7 +24,7 @@ class CartClient extends BaseClient
      * 导入收藏.
      *
      * @param array $params
-     * @param  $isTest
+     * @param bool  $isTest
      *
      * @return mixed
      *
@@ -33,6 +35,7 @@ class CartClient extends BaseClient
     {
         return $this->httpPostJson('mall/addshoppinglist', $params, ['is_test' => (int) $isTest]);
     }
+
     /**
      * 查询用户收藏信息.
      *
@@ -47,6 +50,7 @@ class CartClient extends BaseClient
     {
         return $this->httpPostJson('mall/queryshoppinglist', $params, ['type' => 'batchquery']);
     }
+
     /**
      * 查询用户收藏信息.
      *
@@ -61,10 +65,11 @@ class CartClient extends BaseClient
     {
         return $this->httpPostJson('mall/queryshoppinglist', $params, ['type' => 'getbypage']);
     }
+
     /**
      * 删除收藏.
      *
-     * @param $openid
+     * @param string $openid
      * @param array  $products
      *
      * @return mixed
@@ -77,6 +82,7 @@ class CartClient extends BaseClient
         if (empty($products)) {
             return $this->httpPostJson('mall/deletebizallshoppinglist', ['user_open_id' => $openid]);
         }
+
         return $this->httpPostJson('mall/deleteshoppinglist', ['user_open_id' => $openid, 'sku_product_list' => $products]);
     }
 }

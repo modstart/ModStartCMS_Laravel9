@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\RealtimeLog;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -21,7 +23,7 @@ class Client extends BaseClient
     /**
      * Real time log query.
      *
-     * @param $date
+     * @param string $date
      * @param int    $beginTime
      * @param int    $endTime
      * @param array  $options
@@ -31,9 +33,14 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function search($date, $beginTime, $endTime, array $options = [])
+    public function search(string $date, int $beginTime, int $endTime, array $options = [])
     {
-        $params = ['date' => $date, 'begintime' => $beginTime, 'endtime' => $endTime];
+        $params = [
+            'date' => $date,
+            'begintime' => $beginTime,
+            'endtime' => $endTime,
+        ];
+
         return $this->httpGet('wxaapi/userlog/userlog_search', $params + $options);
     }
 }

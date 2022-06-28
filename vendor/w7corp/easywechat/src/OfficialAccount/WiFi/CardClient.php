@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\WiFi;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class CardClient.
  *
@@ -32,6 +34,7 @@ class CardClient extends BaseClient
     {
         return $this->httpPostJson('bizwifi/couponput/set', $data);
     }
+
     /**
      * Get shop card coupon delivery information.
      *
@@ -42,7 +45,7 @@ class CardClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($shopId = 0)
+    public function get(int $shopId = 0)
     {
         return $this->httpPostJson('bizwifi/couponput/get', ['shop_id' => $shopId]);
     }

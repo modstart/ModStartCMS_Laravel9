@@ -8,16 +8,17 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
  * Class Video.
  *
- * @property $video
- * @property $title
- * @property $media_id
- * @property $description
- * @property $thumb_media_id
+ * @property string $video
+ * @property string $title
+ * @property string $media_id
+ * @property string $description
+ * @property string $thumb_media_id
  */
 class Video extends Media
 {
@@ -27,24 +28,38 @@ class Video extends Media
      * @var string
      */
     protected $type = 'video';
+
     /**
      * Properties.
      *
      * @var array
      */
-    protected $properties = ['title', 'description', 'media_id', 'thumb_media_id'];
+    protected $properties = [
+        'title',
+        'description',
+        'media_id',
+        'thumb_media_id',
+    ];
+
     /**
      * Video constructor.
      *
-     * @param $mediaId
+     * @param string $mediaId
      * @param array  $attributes
      */
-    public function __construct($mediaId, array $attributes = [])
+    public function __construct(string $mediaId, array $attributes = [])
     {
         parent::__construct($mediaId, 'video', $attributes);
     }
+
     public function toXmlArray()
     {
-        return ['Video' => ['MediaId' => $this->get('media_id'), 'Title' => $this->get('title'), 'Description' => $this->get('description')]];
+        return [
+            'Video' => [
+                'MediaId' => $this->get('media_id'),
+                'Title' => $this->get('title'),
+                'Description' => $this->get('description'),
+            ],
+        ];
     }
 }

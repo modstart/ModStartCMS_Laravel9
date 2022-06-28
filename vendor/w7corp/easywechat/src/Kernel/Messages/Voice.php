@@ -8,12 +8,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
  * Class Voice.
  *
- * @property $media_id
+ * @property string $media_id
  */
 class Voice extends Media
 {
@@ -23,10 +24,14 @@ class Voice extends Media
      * @var string
      */
     protected $type = 'voice';
+
     /**
      * Properties.
      *
      * @var array
      */
-    protected $properties = ['media_id', 'recognition'];
+    protected $properties = [
+        'media_id',
+        'recognition',
+    ];
 }

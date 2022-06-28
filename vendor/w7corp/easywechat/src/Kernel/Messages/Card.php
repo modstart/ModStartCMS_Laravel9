@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 /**
  * Card.php.
  *
@@ -17,6 +18,7 @@
  * @see      https://github.com/overtrue
  * @see      http://overtrue.me
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
@@ -30,18 +32,20 @@ class Card extends Message
      * @var string
      */
     protected $type = 'wxcard';
+
     /**
      * Properties.
      *
      * @var array
      */
     protected $properties = ['card_id'];
+
     /**
      * Media constructor.
      *
-     * @param $cardId
+     * @param string $cardId
      */
-    public function __construct($cardId)
+    public function __construct(string $cardId)
     {
         parent::__construct(['card_id' => $cardId]);
     }

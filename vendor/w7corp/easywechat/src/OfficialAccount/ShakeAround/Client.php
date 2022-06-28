@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\ShakeAround;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -30,6 +32,7 @@ class Client extends BaseClient
     {
         return $this->httpPostJson('shakearound/account/register', $data);
     }
+
     /**
      * Get audit status.
      *
@@ -41,31 +44,37 @@ class Client extends BaseClient
     {
         return $this->httpGet('shakearound/account/auditstatus');
     }
+
     /**
      * Get shake info.
      *
-     * @param $ticket
-     * @param   $needPoi
+     * @param string $ticket
+     * @param bool   $needPoi
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function user($ticket, $needPoi = false)
+    public function user(string $ticket, bool $needPoi = false)
     {
-        $params = ['ticket' => $ticket];
+        $params = [
+            'ticket' => $ticket,
+        ];
+
         if ($needPoi) {
             $params['need_poi'] = 1;
         }
+
         return $this->httpPostJson('shakearound/user/getshakeinfo', $params);
     }
+
     /**
-     * @param $ticket
+     * @param string $ticket
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
-    public function userWithPoi($ticket)
+    public function userWithPoi(string $ticket)
     {
         return $this->user($ticket, true);
     }

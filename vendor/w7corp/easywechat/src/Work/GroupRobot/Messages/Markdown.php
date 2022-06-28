@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\GroupRobot\Messages;
 
 /**
@@ -21,16 +22,18 @@ class Markdown extends Message
      * @var string
      */
     protected $type = 'markdown';
+
     /**
      * @var array
      */
     protected $properties = ['content'];
+
     /**
      * Markdown constructor.
      *
-     * @param $content
+     * @param string $content
      */
-    public function __construct($content)
+    public function __construct(string $content)
     {
         parent::__construct(compact('content'));
     }

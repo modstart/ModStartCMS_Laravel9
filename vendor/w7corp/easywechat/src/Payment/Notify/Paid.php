@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Payment\Notify;
 
 use Closure;
+
 class Paid extends Handler
 {
     /**
@@ -22,7 +24,10 @@ class Paid extends Handler
      */
     public function handle(Closure $closure)
     {
-        $this->strict(\call_user_func($closure, $this->getMessage(), [$this, 'fail']));
+        $this->strict(
+            \call_user_func($closure, $this->getMessage(), [$this, 'fail'])
+        );
+
         return $this->toResponse();
     }
 }

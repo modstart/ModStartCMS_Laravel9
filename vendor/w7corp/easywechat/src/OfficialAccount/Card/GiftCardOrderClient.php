@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\Card;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class GiftCardOrderClient.
  *
@@ -21,15 +23,19 @@ class GiftCardOrderClient extends BaseClient
     /**
      * 查询-单个礼品卡订单信息接口.
      *
-     * @param $orderId
+     * @param string $orderId
      *
      * @return mixed
      */
-    public function get($orderId)
+    public function get(string $orderId)
     {
-        $params = ['order_id' => $orderId];
+        $params = [
+            'order_id' => $orderId,
+        ];
+
         return $this->httpPostJson('card/giftcard/order/get', $params);
     }
+
     /**
      * 查询-批量查询礼品卡订单信息接口.
      *
@@ -37,25 +43,36 @@ class GiftCardOrderClient extends BaseClient
      * @param int    $endTime
      * @param int    $offset
      * @param int    $count
-     * @param $sortType
+     * @param string $sortType
      *
      * @return mixed
      */
-    public function list($beginTime, $endTime, $offset = 0, $count = 10, $sortType = 'ASC')
+    public function list(int $beginTime, int $endTime, int $offset = 0, int $count = 10, string $sortType = 'ASC')
     {
-        $params = ['begin_time' => $beginTime, 'end_time' => $endTime, 'sort_type' => $sortType, 'offset' => $offset, 'count' => $count];
+        $params = [
+            'begin_time' => $beginTime,
+            'end_time' => $endTime,
+            'sort_type' => $sortType,
+            'offset' => $offset,
+            'count' => $count,
+        ];
+
         return $this->httpPostJson('card/giftcard/order/batchget', $params);
     }
+
     /**
      * 退款接口.
      *
-     * @param $orderId
+     * @param string $orderId
      *
      * @return mixed
      */
-    public function refund($orderId)
+    public function refund(string $orderId)
     {
-        $params = ['order_id' => $orderId];
+        $params = [
+            'order_id' => $orderId,
+        ];
+
         return $this->httpPostJson('card/giftcard/order/refund', $params);
     }
 }

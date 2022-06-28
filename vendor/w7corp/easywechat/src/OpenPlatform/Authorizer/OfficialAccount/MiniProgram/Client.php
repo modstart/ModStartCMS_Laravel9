@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OpenPlatform\Authorizer\OfficialAccount\MiniProgram;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -30,36 +32,46 @@ class Client extends BaseClient
     {
         return $this->httpPostJson('cgi-bin/wxopen/wxamplinkget');
     }
+
     /**
      * 关联小程序.
      *
-     * @param $appId
-     * @param   $notifyUsers
-     * @param   $showProfile
+     * @param string $appId
+     * @param bool   $notifyUsers
+     * @param bool   $showProfile
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function link($appId, $notifyUsers = true, $showProfile = false)
+    public function link(string $appId, bool $notifyUsers = true, bool $showProfile = false)
     {
-        $params = ['appid' => $appId, 'notify_users' => (string) $notifyUsers, 'show_profile' => (string) $showProfile];
+        $params = [
+            'appid' => $appId,
+            'notify_users' => (string) $notifyUsers,
+            'show_profile' => (string) $showProfile,
+        ];
+
         return $this->httpPostJson('cgi-bin/wxopen/wxamplink', $params);
     }
+
     /**
      * 解除已关联的小程序.
      *
-     * @param $appId
+     * @param string $appId
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function unlink($appId)
+    public function unlink(string $appId)
     {
-        $params = ['appid' => $appId];
+        $params = [
+            'appid' => $appId,
+        ];
+
         return $this->httpPostJson('cgi-bin/wxopen/wxampunlink', $params);
     }
 }

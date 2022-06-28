@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OpenPlatform\Authorizer\Aggregate\Account;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -28,39 +30,53 @@ class Client extends BaseClient
      */
     public function create()
     {
-        $params = ['appid' => $this->app['config']['app_id']];
+        $params = [
+            'appid' => $this->app['config']['app_id'],
+        ];
+
         return $this->httpPostJson('cgi-bin/open/create', $params);
     }
+
     /**
      * 将公众号/小程序绑定到开放平台帐号下.
      *
-     * @param $openAppId 开放平台帐号appid
+     * @param string $openAppId 开放平台帐号appid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function bindTo($openAppId)
+    public function bindTo(string $openAppId)
     {
-        $params = ['appid' => $this->app['config']['app_id'], 'open_appid' => $openAppId];
+        $params = [
+            'appid' => $this->app['config']['app_id'],
+            'open_appid' => $openAppId,
+        ];
+
         return $this->httpPostJson('cgi-bin/open/bind', $params);
     }
+
     /**
      * 将公众号/小程序从开放平台帐号下解绑.
      *
-     * @param $openAppId 开放平台帐号appid
+     * @param string $openAppId 开放平台帐号appid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function unbindFrom($openAppId)
+    public function unbindFrom(string $openAppId)
     {
-        $params = ['appid' => $this->app['config']['app_id'], 'open_appid' => $openAppId];
+        $params = [
+            'appid' => $this->app['config']['app_id'],
+            'open_appid' => $openAppId,
+        ];
+
         return $this->httpPostJson('cgi-bin/open/unbind', $params);
     }
+
     /**
      * 获取公众号/小程序所绑定的开放平台帐号.
      *
@@ -71,7 +87,10 @@ class Client extends BaseClient
      */
     public function getBinding()
     {
-        $params = ['appid' => $this->app['config']['app_id']];
+        $params = [
+            'appid' => $this->app['config']['app_id'],
+        ];
+
         return $this->httpPostJson('cgi-bin/open/get', $params);
     }
 }

@@ -8,14 +8,15 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
  * Class Text.
  *
- * @property $title
- * @property $description
- * @property $url
+ * @property string $title
+ * @property string $description
+ * @property string $url
  */
 class TextCard extends Message
 {
@@ -25,10 +26,15 @@ class TextCard extends Message
      * @var string
      */
     protected $type = 'textcard';
+
     /**
      * Properties.
      *
      * @var array
      */
-    protected $properties = ['title', 'description', 'url'];
+    protected $properties = [
+        'title',
+        'description',
+        'url',
+    ];
 }

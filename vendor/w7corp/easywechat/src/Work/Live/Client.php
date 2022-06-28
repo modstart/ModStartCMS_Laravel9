@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\Live;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -28,11 +30,19 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getUserLivingId($userId, $beginTime, $endTime, $nextKey = '0', $limit = 100)
+    public function getUserLivingId(string $userId, int $beginTime, int $endTime, string $nextKey = '0', int $limit = 100)
     {
-        $params = ['userid' => $userId, 'begin_time' => $beginTime, 'end_time' => $endTime, 'next_key' => $nextKey, 'limit' => $limit];
+        $params = [
+            'userid' => $userId,
+            'begin_time' => $beginTime,
+            'end_time' => $endTime,
+            'next_key' => $nextKey,
+            'limit' => $limit
+        ];
+
         return $this->httpPostJson('cgi-bin/living/get_user_livingid', $params);
     }
+
     /**
      * 获取直播详情
      *
@@ -43,11 +53,15 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getLiving($livingId)
+    public function getLiving(string $livingId)
     {
-        $params = ['livingid' => $livingId];
+        $params = [
+            'livingid' => $livingId,
+        ];
+
         return $this->httpGet('cgi-bin/living/get_living_info', $params);
     }
+
     /**
      * 获取看直播统计
      *
@@ -58,9 +72,13 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getWatchStat($livingId, $nextKey = '0')
+    public function getWatchStat(string $livingId, string $nextKey = '0')
     {
-        $params = ['livingid' => $livingId, 'next_key' => $nextKey];
+        $params = [
+            'livingid' => $livingId,
+            'next_key' => $nextKey,
+        ];
+
         return $this->httpPostJson('cgi-bin/living/get_watch_stat', $params);
     }
 }

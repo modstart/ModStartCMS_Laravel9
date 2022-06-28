@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\WiFi;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class ShopClient.
  *
@@ -28,10 +30,11 @@ class ShopClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function get($shopId)
+    public function get(int $shopId)
     {
         return $this->httpPostJson('bizwifi/shop/get', ['shop_id' => $shopId]);
     }
+
     /**
      * Get a list of Wi-Fi shops.
      *
@@ -43,11 +46,16 @@ class ShopClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function list($page = 1, $size = 10)
+    public function list(int $page = 1, int $size = 10)
     {
-        $data = ['pageindex' => $page, 'pagesize' => $size];
+        $data = [
+            'pageindex' => $page,
+            'pagesize' => $size,
+        ];
+
         return $this->httpPostJson('bizwifi/shop/list', $data);
     }
+
     /**
      * Update shop Wi-Fi information.
      *
@@ -59,11 +67,13 @@ class ShopClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update($shopId, array $data)
+    public function update(int $shopId, array $data)
     {
         $data = array_merge(['shop_id' => $shopId], $data);
+
         return $this->httpPostJson('bizwifi/shop/update', $data);
     }
+
     /**
      * Clear shop network and equipment.
      *
@@ -75,12 +85,16 @@ class ShopClient extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function clearDevice($shopId, $ssid = null)
+    public function clearDevice(int $shopId, string $ssid = null)
     {
-        $data = ['shop_id' => $shopId];
+        $data = [
+            'shop_id' => $shopId,
+        ];
+
         if (!is_null($ssid)) {
             $data['ssid'] = $ssid;
         }
+
         return $this->httpPostJson('bizwifi/shop/clean', $data);
     }
 }

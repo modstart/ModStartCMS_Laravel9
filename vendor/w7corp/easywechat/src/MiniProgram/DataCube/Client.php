@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\DataCube;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -21,138 +23,181 @@ class Client extends BaseClient
     /**
      * Get summary trend.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function summaryTrend($from, $to)
+    public function summaryTrend(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappiddailysummarytrend', $from, $to);
     }
+
     /**
      * Get daily visit trend.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function dailyVisitTrend($from, $to)
+    public function dailyVisitTrend(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappiddailyvisittrend', $from, $to);
     }
+
     /**
      * Get weekly visit trend.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function weeklyVisitTrend($from, $to)
+    public function weeklyVisitTrend(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidweeklyvisittrend', $from, $to);
     }
+
     /**
      * Get monthly visit trend.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function monthlyVisitTrend($from, $to)
+    public function monthlyVisitTrend(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidmonthlyvisittrend', $from, $to);
     }
+
     /**
      * Get visit distribution.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function visitDistribution($from, $to)
+    public function visitDistribution(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidvisitdistribution', $from, $to);
     }
+
     /**
      * Get daily retain info.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function dailyRetainInfo($from, $to)
+    public function dailyRetainInfo(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappiddailyretaininfo', $from, $to);
     }
+
     /**
      * Get weekly retain info.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function weeklyRetainInfo($from, $to)
+    public function weeklyRetainInfo(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidweeklyretaininfo', $from, $to);
     }
+
     /**
      * Get monthly retain info.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function monthlyRetainInfo($from, $to)
+    public function monthlyRetainInfo(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidmonthlyretaininfo', $from, $to);
     }
+
     /**
      * Get visit page.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function visitPage($from, $to)
+    public function visitPage(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappidvisitpage', $from, $to);
     }
+
     /**
      * Get user portrait.
      *
-     * @param $from
-     * @param $to
+     * @param string $from
+     * @param string $to
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      */
-    public function userPortrait($from, $to)
+    public function userPortrait(string $from, string $to)
     {
         return $this->query('datacube/getweanalysisappiduserportrait', $from, $to);
     }
+
+    /**
+     * get performance data
+     * @param string $from
+     * @param string $to
+     * @param string $module
+     * @param string $networktype
+     * @param string $device_level
+     * @param string $device
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function devicePerformanceData(string $from, string $to, string $module, string $networktype = '-1', string $device_level = '-1', string $device = '-1')
+    {
+        $payload = [
+            'time' => [
+                'end_timestamp' => strtotime($to),
+                'begin_timestamp' => strtotime($from),
+            ],
+            'module' => $module,
+            'params' => [
+                ['field' => 'networktype',  'value' => $networktype],
+                ['field' => 'device_level', 'value' => $device_level],
+                ['field' => 'device',       'value' => $device],
+            ]
+        ];
+        return $this->httpPostJson('wxa/business/performance/boot', $payload);
+    }
+
     /**
      * Unify query.
      *
-     * @param $api
-     * @param $from
-     * @param $to
+     * @param string $api
+     * @param string $from
+     * @param string $to
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function query($api, $from, $to)
+    protected function query(string $api, string $from, string $to)
     {
-        $params = ['begin_date' => $from, 'end_date' => $to];
+        $params = [
+            'begin_date' => $from,
+            'end_date' => $to,
+        ];
+
         return $this->httpPostJson($api, $params);
     }
 }

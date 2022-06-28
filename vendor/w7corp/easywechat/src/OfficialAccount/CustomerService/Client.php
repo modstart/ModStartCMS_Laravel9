@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\OfficialAccount\CustomerService;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * Class Client.
  *
@@ -25,10 +27,11 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function lists()
+    public function list()
     {
         return $this->httpGet('cgi-bin/customservice/getkflist');
     }
+
     /**
      * List all online staffs.
      *
@@ -40,95 +43,115 @@ class Client extends BaseClient
     {
         return $this->httpGet('cgi-bin/customservice/getonlinekflist');
     }
+
     /**
      * Create a staff.
      *
-     * @param $account
-     * @param $nickname
+     * @param string $account
+     * @param string $nickname
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function create($account, $nickname)
+    public function create(string $account, string $nickname)
     {
-        $params = ['kf_account' => $account, 'nickname' => $nickname];
+        $params = [
+            'kf_account' => $account,
+            'nickname' => $nickname,
+        ];
+
         return $this->httpPostJson('customservice/kfaccount/add', $params);
     }
+
     /**
      * Update a staff.
      *
-     * @param $account
-     * @param $nickname
+     * @param string $account
+     * @param string $nickname
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function update($account, $nickname)
+    public function update(string $account, string $nickname)
     {
-        $params = ['kf_account' => $account, 'nickname' => $nickname];
+        $params = [
+            'kf_account' => $account,
+            'nickname' => $nickname,
+        ];
+
         return $this->httpPostJson('customservice/kfaccount/update', $params);
     }
+
     /**
      * Delete a staff.
      *
-     * @param $account
+     * @param string $account
      *
      * @return \Psr\Http\Message\ResponseInterface|\EasyWeChat\Kernel\Support\Collection|array|object|string
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function delete($account)
+    public function delete(string $account)
     {
         return $this->httpPostJson('customservice/kfaccount/del', [], ['kf_account' => $account]);
     }
+
     /**
      * Invite a staff.
      *
-     * @param $account
-     * @param $wechatId
+     * @param string $account
+     * @param string $wechatId
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function invite($account, $wechatId)
+    public function invite(string $account, string $wechatId)
     {
-        $params = ['kf_account' => $account, 'invite_wx' => $wechatId];
+        $params = [
+            'kf_account' => $account,
+            'invite_wx' => $wechatId,
+        ];
+
         return $this->httpPostJson('customservice/kfaccount/inviteworker', $params);
     }
+
     /**
      * Set staff avatar.
      *
-     * @param $account
-     * @param $path
+     * @param string $account
+     * @param string $path
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function setAvatar($account, $path)
+    public function setAvatar(string $account, string $path)
     {
         return $this->httpUpload('customservice/kfaccount/uploadheadimg', ['media' => $path], [], ['kf_account' => $account]);
     }
+
     /**
      * Get message builder.
      *
-     * @param \EasyWeChat\Kernel\Messages\Message|$message
+     * @param \EasyWeChat\Kernel\Messages\Message|string $message
      *
      * @return \EasyWeChat\OfficialAccount\CustomerService\Messenger
      */
     public function message($message)
     {
         $messageBuilder = new Messenger($this);
+
         return $messageBuilder->message($message);
     }
+
     /**
      * Send a message.
      *
@@ -143,34 +166,43 @@ class Client extends BaseClient
     {
         return $this->httpPostJson('cgi-bin/message/custom/send', $message);
     }
+
     /**
      * Show typing status.
      *
-     * @param $openid
+     * @param string $openid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function showTypingStatusToUser($openid)
+    public function showTypingStatusToUser(string $openid)
     {
-        return $this->httpPostJson('cgi-bin/message/custom/typing', ['touser' => $openid, 'command' => 'Typing']);
+        return $this->httpPostJson('cgi-bin/message/custom/typing', [
+            'touser' => $openid,
+            'command' => 'Typing',
+        ]);
     }
+
     /**
      * Hide typing status.
      *
-     * @param $openid
+     * @param string $openid
      *
      * @return mixed
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function hideTypingStatusToUser($openid)
+    public function hideTypingStatusToUser(string $openid)
     {
-        return $this->httpPostJson('cgi-bin/message/custom/typing', ['touser' => $openid, 'command' => 'CancelTyping']);
+        return $this->httpPostJson('cgi-bin/message/custom/typing', [
+            'touser' => $openid,
+            'command' => 'CancelTyping',
+        ]);
     }
+
     /**
      * Get messages history.
      *
@@ -184,9 +216,15 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function messages($startTime, $endTime, $msgId = 1, $number = 10000)
+    public function messages($startTime, $endTime, int $msgId = 1, int $number = 10000)
     {
-        $params = ['starttime' => is_numeric($startTime) ? $startTime : strtotime($startTime), 'endtime' => is_numeric($endTime) ? $endTime : strtotime($endTime), 'msgid' => $msgId, 'number' => $number];
+        $params = [
+            'starttime' => is_numeric($startTime) ? $startTime : strtotime($startTime),
+            'endtime' => is_numeric($endTime) ? $endTime : strtotime($endTime),
+            'msgid' => $msgId,
+            'number' => $number,
+        ];
+
         return $this->httpPostJson('customservice/msgrecord/getmsglist', $params);
     }
 }

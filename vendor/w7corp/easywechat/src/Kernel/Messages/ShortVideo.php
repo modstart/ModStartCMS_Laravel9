@@ -8,15 +8,16 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
  * Class ShortVideo.
  *
- * @property $title
- * @property $media_id
- * @property $description
- * @property $thumb_media_id
+ * @property string $title
+ * @property string $media_id
+ * @property string $description
+ * @property string $thumb_media_id
  */
 class ShortVideo extends Video
 {

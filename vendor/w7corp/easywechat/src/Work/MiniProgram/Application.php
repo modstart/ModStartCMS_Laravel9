@@ -8,11 +8,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\MiniProgram;
 
 use EasyWeChat\MiniProgram\Application as MiniProgram;
 use EasyWeChat\Work\Auth\AccessToken;
 use EasyWeChat\Work\MiniProgram\Auth\Client;
+
 /**
  * Class Application.
  *
@@ -30,10 +32,13 @@ class Application extends MiniProgram
      */
     public function __construct(array $config = [], array $prepends = [])
     {
-        parent::__construct($config, $prepends + ['access_token' => function ($app) {
-            return new AccessToken($app);
-        }, 'auth' => function ($app) {
-            return new Client($app);
-        }]);
+        parent::__construct($config, $prepends + [
+            'access_token' => function ($app) {
+                return new AccessToken($app);
+            },
+            'auth' => function ($app) {
+                return new Client($app);
+            },
+        ]);
     }
 }

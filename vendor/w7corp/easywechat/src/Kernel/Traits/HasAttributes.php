@@ -8,11 +8,13 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Traits;
 
 use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Support\Arr;
 use EasyWeChat\Kernel\Support\Str;
+
 /**
  * Trait Attributes.
  */
@@ -22,10 +24,12 @@ trait HasAttributes
      * @var array
      */
     protected $attributes = [];
+
     /**
      * @var bool
      */
     protected $snakeable = true;
+
     /**
      * Set Attributes.
      *
@@ -36,25 +40,29 @@ trait HasAttributes
     public function setAttributes(array $attributes = [])
     {
         $this->attributes = $attributes;
+
         return $this;
     }
+
     /**
      * Set attribute.
      *
-     * @param $attribute
-     * @param $value
+     * @param string $attribute
+     * @param string $value
      *
      * @return $this
      */
     public function setAttribute($attribute, $value)
     {
         Arr::set($this->attributes, $attribute, $value);
+
         return $this;
     }
+
     /**
      * Get attribute.
      *
-     * @param $attribute
+     * @param string $attribute
      * @param mixed  $default
      *
      * @return mixed
@@ -63,8 +71,9 @@ trait HasAttributes
     {
         return Arr::get($this->attributes, $attribute, $default);
     }
+
     /**
-     * @param $attribute
+     * @param string $attribute
      *
      * @return bool
      */
@@ -72,6 +81,7 @@ trait HasAttributes
     {
         return in_array($attribute, $this->getRequired(), true);
     }
+
     /**
      * @return array|mixed
      */
@@ -79,24 +89,28 @@ trait HasAttributes
     {
         return property_exists($this, 'required') ? $this->required : [];
     }
+
     /**
      * Set attribute.
      *
-     * @param $attribute
+     * @param string $attribute
      * @param mixed  $value
      *
      * @return $this
      */
     public function with($attribute, $value)
     {
-        $this->snakeable && ($attribute = Str::snake($attribute));
+        $this->snakeable && $attribute = Str::snake($attribute);
+
         $this->setAttribute($attribute, $value);
+
         return $this;
     }
+
     /**
      * Override parent set() method.
      *
-     * @param $attribute
+     * @param string $attribute
      * @param mixed  $value
      *
      * @return $this
@@ -104,12 +118,14 @@ trait HasAttributes
     public function set($attribute, $value)
     {
         $this->setAttribute($attribute, $value);
+
         return $this;
     }
+
     /**
      * Override parent get() method.
      *
-     * @param $attribute
+     * @param string $attribute
      * @param mixed  $default
      *
      * @return mixed
@@ -118,15 +134,17 @@ trait HasAttributes
     {
         return $this->getAttribute($attribute, $default);
     }
+
     /**
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    public function has($key)
+    public function has(string $key)
     {
         return Arr::has($this->attributes, $key);
     }
+
     /**
      * @param array $attributes
      *
@@ -135,10 +153,12 @@ trait HasAttributes
     public function merge(array $attributes)
     {
         $this->attributes = array_merge($this->attributes, $attributes);
+
         return $this;
     }
+
     /**
-     * @param array|$keys
+     * @param array|string $keys
      *
      * @return array
      */
@@ -146,6 +166,7 @@ trait HasAttributes
     {
         return Arr::only($this->attributes, $keys);
     }
+
     /**
      * Return all items.
      *
@@ -156,12 +177,14 @@ trait HasAttributes
     public function all()
     {
         $this->checkRequiredAttributes();
+
         return $this->attributes;
     }
+
     /**
      * Magic call.
      *
-     * @param $method
+     * @param string $method
      * @param array  $args
      *
      * @return $this
@@ -171,12 +194,14 @@ trait HasAttributes
         if (0 === stripos($method, 'with')) {
             return $this->with(substr($method, 4), array_shift($args));
         }
+
         throw new \BadMethodCallException(sprintf('Method "%s" does not exists.', $method));
     }
+
     /**
      * Magic get.
      *
-     * @param $property
+     * @param string $property
      *
      * @return mixed
      */
@@ -184,10 +209,11 @@ trait HasAttributes
     {
         return $this->get($property);
     }
+
     /**
      * Magic set.
      *
-     * @param $property
+     * @param string $property
      * @param mixed  $value
      *
      * @return $this
@@ -196,10 +222,11 @@ trait HasAttributes
     {
         return $this->with($property, $value);
     }
+
     /**
      * Whether or not an data exists by key.
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
@@ -207,6 +234,7 @@ trait HasAttributes
     {
         return isset($this->attributes[$key]);
     }
+
     /**
      * Check required attributes.
      *

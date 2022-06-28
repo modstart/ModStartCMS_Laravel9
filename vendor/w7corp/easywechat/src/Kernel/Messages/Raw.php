@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Messages;
 
 /**
@@ -19,33 +20,37 @@ class Raw extends Message
      * @var string
      */
     protected $type = 'raw';
+
     /**
      * Properties.
      *
      * @var array
      */
     protected $properties = ['content'];
+
     /**
      * Constructor.
      *
-     * @param $content
+     * @param string $content
      */
-    public function __construct($content)
+    public function __construct(string $content)
     {
         parent::__construct(['content' => strval($content)]);
     }
+
     /**
      * @param array $appends
-     * @param  $withType
+     * @param bool  $withType
      *
      * @return array
      */
-    public function transformForJsonRequest(array $appends = [], $withType = true)
+    public function transformForJsonRequest(array $appends = [], $withType = true): array
     {
-        return !empty(json_decode($this->content, true)) ? json_decode($this->content, true) : [];
+        return json_decode($this->content, true) ?? [];
     }
+
     public function __toString()
     {
-        return !empty($this->get('content')) ? $this->get('content') : '';
+        return $this->get('content') ?? '';
     }
 }

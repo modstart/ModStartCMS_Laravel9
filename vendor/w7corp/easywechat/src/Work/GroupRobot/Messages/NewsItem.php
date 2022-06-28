@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\GroupRobot\Messages;
 
 /**
@@ -21,12 +22,24 @@ class NewsItem extends Message
      * @var string
      */
     protected $type = 'news';
+
     /**
      * @var array
      */
-    protected $properties = ['title', 'description', 'url', 'image'];
+    protected $properties = [
+        'title',
+        'description',
+        'url',
+        'image',
+    ];
+
     public function toJsonArray()
     {
-        return ['title' => $this->get('title'), 'description' => $this->get('description'), 'url' => $this->get('url'), 'picurl' => $this->get('image')];
+        return [
+            'title' => $this->get('title'),
+            'description' => $this->get('description'),
+            'url' => $this->get('url'),
+            'picurl' => $this->get('image'),
+        ];
     }
 }

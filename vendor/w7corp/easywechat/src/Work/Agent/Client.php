@@ -8,9 +8,11 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Work\Agent;
 
 use EasyWeChat\Kernel\BaseClient;
+
 /**
  * This is WeWork Agent Client.
  *
@@ -27,11 +29,15 @@ class Client extends BaseClient
      *
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function get($agentId)
+    public function get(int $agentId)
     {
-        $params = ['agentid' => $agentId];
+        $params = [
+            'agentid' => $agentId,
+        ];
+
         return $this->httpGet('cgi-bin/agent/get', $params);
     }
+
     /**
      * Set agent.
      *
@@ -43,10 +49,11 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function set($agentId, array $attributes)
+    public function set(int $agentId, array $attributes)
     {
         return $this->httpPostJson('cgi-bin/agent/set', array_merge(['agentid' => $agentId], $attributes));
     }
+
     /**
      * Get agent list.
      *

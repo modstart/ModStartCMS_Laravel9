@@ -8,6 +8,7 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\Kernel\Support;
 
 /*
@@ -15,36 +16,42 @@ namespace EasyWeChat\Kernel\Support;
  *
  * @author overtrue <i@overtrue.me>
  */
+
 /**
  * Generate a signature.
  *
  * @param array  $attributes
- * @param $key
- * @param $encryptMethod
+ * @param string $key
+ * @param string $encryptMethod
  *
  * @return string
  */
 function generate_sign(array $attributes, $key, $encryptMethod = 'md5')
 {
     ksort($attributes);
+
     $attributes['key'] = $key;
+
     return strtoupper(call_user_func_array($encryptMethod, [urldecode(http_build_query($attributes))]));
 }
+
 /**
- * @param $signType
- * @param $secretKey
+ * @param string $signType
+ * @param string $secretKey
  *
  * @return \Closure|string
  */
-function get_encrypt_method($signType, $secretKey = '')
+function get_encrypt_method(string $signType, string $secretKey = '')
 {
     if ('HMAC-SHA256' === $signType) {
-        return function ($str) use($secretKey) {
+        return function ($str) use ($secretKey) {
             return hash_hmac('sha256', $str, $secretKey);
         };
     }
+
     return 'md5';
 }
+
 /**
  * Get client ip.
  *
@@ -58,8 +65,10 @@ function get_client_ip()
         // for php-cli(phpunit etc.)
         $ip = defined('PHPUNIT_RUNNING') ? '127.0.0.1' : gethostbyname(gethostname());
     }
+
     return filter_var($ip, FILTER_VALIDATE_IP) ?: '127.0.0.1';
 }
+
 /**
  * Get current server ip.
  *
@@ -75,8 +84,10 @@ function get_server_ip()
         // for php-cli(phpunit etc.)
         $ip = defined('PHPUNIT_RUNNING') ? '127.0.0.1' : gethostbyname(gethostname());
     }
+
     return filter_var($ip, FILTER_VALIDATE_IP) ?: '127.0.0.1';
 }
+
 /**
  * Return current url.
  *
@@ -85,15 +96,18 @@ function get_server_ip()
 function current_url()
 {
     $protocol = 'http://';
-    if (!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS'] || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : 'http') === 'https') {
+
+    if ((!empty($_SERVER['HTTPS']) && 'off' !== $_SERVER['HTTPS']) || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? 'http') === 'https') {
         $protocol = 'https://';
     }
-    return $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+    return $protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 }
+
 /**
  * Return random string.
  *
- * @param $length
+ * @param string $length
  *
  * @return string
  */
@@ -101,9 +115,10 @@ function str_random($length)
 {
     return Str::random($length);
 }
+
 /**
- * @param $content
- * @param $publicKey
+ * @param string $content
+ * @param string $publicKey
  *
  * @return string
  */
@@ -111,5 +126,6 @@ function rsa_public_encrypt($content, $publicKey)
 {
     $encrypted = '';
     openssl_public_encrypt($content, $encrypted, openssl_pkey_get_public($publicKey), OPENSSL_PKCS1_OAEP_PADDING);
+
     return base64_encode($encrypted);
 }

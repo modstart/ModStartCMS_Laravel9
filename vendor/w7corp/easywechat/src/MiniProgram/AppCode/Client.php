@@ -8,10 +8,12 @@
  * This source file is subject to the MIT license that is bundled
  * with this source code in the file LICENSE.
  */
+
 namespace EasyWeChat\MiniProgram\AppCode;
 
 use EasyWeChat\Kernel\BaseClient;
 use EasyWeChat\Kernel\Http\StreamResponse;
+
 /**
  * Class Client.
  *
@@ -22,45 +24,54 @@ class Client extends BaseClient
     /**
      * Get AppCode.
      *
-     * @param $path
+     * @param string $path
      * @param array  $optional
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
-    public function get($path, array $optional = [])
+    public function get(string $path, array $optional = [])
     {
-        $params = array_merge(['path' => $path], $optional);
+        $params = array_merge([
+            'path' => $path,
+        ], $optional);
+
         return $this->getStream('wxa/getwxacode', $params);
     }
+
     /**
      * Get AppCode unlimit.
      *
-     * @param $scene
+     * @param string $scene
      * @param array  $optional
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
-    public function getUnlimit($scene, array $optional = [])
+    public function getUnlimit(string $scene, array $optional = [])
     {
-        $params = array_merge(['scene' => $scene], $optional);
+        $params = array_merge([
+            'scene' => $scene,
+        ], $optional);
+
         return $this->getStream('wxa/getwxacodeunlimit', $params);
     }
+
     /**
      * Create QrCode.
      *
-     * @param   $path
+     * @param string   $path
      * @param int|null $width
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
-    public function getQrCode($path, $width = null)
+    public function getQrCode(string $path, int $width = null)
     {
         return $this->getStream('cgi-bin/wxaapp/createwxaqrcode', compact('path', 'width'));
     }
+
     /**
      * Get stream.
      *
-     * @param $endpoint
+     * @param string $endpoint
      * @param array  $params
      *
      * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
@@ -68,12 +79,14 @@ class Client extends BaseClient
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function getStream($endpoint, array $params)
+    protected function getStream(string $endpoint, array $params)
     {
         $response = $this->requestRaw($endpoint, 'POST', ['json' => $params]);
+
         if (false !== stripos($response->getHeaderLine('Content-disposition'), 'attachment')) {
             return StreamResponse::buildFromPsrResponse($response);
         }
+
         return $this->castResponseToType($response, $this->app['config']->get('response_type'));
     }
 }
