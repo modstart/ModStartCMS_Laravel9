@@ -14,6 +14,7 @@ use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Request;
 use ModStart\Core\Input\Response;
+use ModStart\Core\Util\ColorUtil;
 use ModStart\Core\Util\CRUDUtil;
 use ModStart\Core\Util\RandomUtil;
 use ModStart\Field\AbstractField;
@@ -27,6 +28,7 @@ use ModStart\Repository\Filter\RepositoryFilter;
 use ModStart\Support\Concern\HasFields;
 use ModStart\Widget\TextDialogRequest;
 use Module\Member\Config\MemberAdminList;
+use Module\Member\Config\MemberOauth;
 use Module\Member\Provider\MemberAdminShowPanel\MemberAdminShowPanelProvider;
 use Module\Member\Type\MemberStatus;
 use Module\Member\Util\MemberGroupUtil;
@@ -40,6 +42,7 @@ class MemberController extends Controller
 
     protected function crud(AdminCRUDBuilder $builder)
     {
+
         $builder
             ->init('member_user')
             ->field(function ($builder) {
@@ -72,6 +75,26 @@ class MemberController extends Controller
                     ->listable(false)->showable(false)->required()->defaultValue(RandomUtil::lowerString(8));
                 $builder->text('email', '邮箱');
                 $builder->text('phone', '手机');
+                if (MemberOauth::hasEnableItems()) {
+                    $builder->display('_oauth', '授权')->hookRendering(function (AbstractField $field, $item, $index) {
+                        $oauthList = [];
+                        $oauthRecords = MemberUtil::listOauths($item->id);
+                        foreach ($oauthRecords as $oauthRecord) {
+                            $color = null;
+                            $title = $oauthRecord['type'];
+                            $oauth = MemberOauth::getByOauthKey($oauthRecord['type']);
+                            if ($oauth) {
+                                $color = $oauth->color();
+                                $title = $oauth->title();
+                            }
+                            if (empty($color)) {
+                                $color = ColorUtil::pick($oauthRecord['type']);
+                            }
+                            $oauthList[] = '<a style="color:' . $color . ';" href="javascript:;" data-tip-popover="' . $title . '"><i class="iconfont icon-dot"></i></a>';
+                        }
+                        return join('', $oauthList);
+                    });
+                }
                 $builder->type('status', '状态')->type(MemberStatus::class, [
                     MemberStatus::NORMAL => 'success',
                     MemberStatus::FORBIDDEN => 'danger',
@@ -84,6 +107,8 @@ class MemberController extends Controller
                     $builder->date('vipExpire', 'VIP过期')->required();
                 }
                 $builder->display('created_at', '注册时间');
+                $builder->canBatchSelect(true);
+                $builder->batchOperatePrepend('<button class="btn" data-batch-confirm="确认禁用 %d 个用户？" data-batch-operate="' . modstart_admin_url('member/status_forbidden') . '"><i class="iconfont icon-warning"></i> 禁用</button>');
             })
             ->repositoryFilter(function (RepositoryFilter $filter) {
                 $filter->where(['isDeleted' => false]);
@@ -110,7 +135,7 @@ class MemberController extends Controller
                         break;
                 }
             })
-            ->title('用户')
+            ->title('用户管理')
             ->canShow(false)
             ->canDelete(true);
     }
@@ -198,6 +223,13 @@ class MemberController extends Controller
     {
         AdminPermission::demoCheck();
         MemberUtil::delete(CRUDUtil::id());
+        return Response::redirect(CRUDUtil::jsGridRefresh());
+    }
+
+    public function statusForbidden()
+    {
+        AdminPermission::demoCheck();
+        MemberUtil::updateStatus(CRUDUtil::ids(), MemberStatus::FORBIDDEN);
         return Response::redirect(CRUDUtil::jsGridRefresh());
     }
 }

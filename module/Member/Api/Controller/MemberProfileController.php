@@ -293,9 +293,9 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         $type = $input->getTrimString('type');
         $oauth = MemberOauth::getOrFail($type);
         BizException::throwsIfEmpty('授权方式不存在', $oauth);
-        $openId = MemberUtil::getOauthOpenId(MemberUser::id(), $oauth->name());
+        $openId = MemberUtil::getOauthOpenId(MemberUser::id(), $oauth->oauthKey());
         if ($openId) {
-            MemberUtil::forgetOauth($oauth->name(), $openId);
+            MemberUtil::forgetOauth($oauth->oauthKey(), $openId);
         }
         return Response::generate(0, '解绑成功', null, '[reload]');
     }

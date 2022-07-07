@@ -544,6 +544,11 @@ class MemberUtil
         return ModelUtil::get('member_oauth', $where);
     }
 
+    public static function listOauths($memberUserId)
+    {
+        return ModelUtil::all('member_oauth', ['memberUserId' => $memberUserId], ['*'], ['type', 'asc']);
+    }
+
     public static function putOauth($memberUserId, $oauthType, $openId, $info = [])
     {
         $where = ['memberUserId' => $memberUserId, 'type' => $oauthType];
@@ -582,6 +587,17 @@ class MemberUtil
     public static function paginate($page, $pageSize, $option = [])
     {
         return ModelUtil::paginate('member_user', $page, $pageSize, $option);
+    }
+
+    public static function updateStatus($memberUserIds, $status)
+    {
+        if (!is_array($memberUserIds)) {
+            $memberUserIds = [$memberUserIds];
+        }
+        if (empty($memberUserIds)) {
+            return;
+        }
+        ModelUtil::model('member_user')->whereIn('id', $memberUserIds)->update(['status' => $status]);
     }
 
     public static function delete($memberUserId)
