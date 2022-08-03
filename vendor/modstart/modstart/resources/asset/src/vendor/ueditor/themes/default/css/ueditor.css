@@ -12,6 +12,10 @@
   url('./../font/iconfont.ttf?t=1651572942270') format('truetype');
 }
 
+.edui-default {
+  accent-color: #333;
+}
+
 /* common layer */
 .edui-default .edui-box {
     border: none;
@@ -585,6 +589,19 @@ div.edui-box {
 .edui-default .edui-toolbar .edui-state-disabled .edui-icon {
     opacity: 0.3;
     filter: alpha(opacity = 30);
+}
+
+.edui-default .edui-toolbar-button-custom{
+  display: inline-block !important;
+  line-height: 30px;
+  vertical-align: middle;
+  padding: 0 10px;
+  border-radius: 3px;
+  margin: 0 5px;
+}
+
+.edui-default .edui-toolbar-button-custom:hover{
+  background: #EEE;
 }
 
 /* toolbar icons */

@@ -185,7 +185,7 @@ class AuthController extends ModuleBaseController
         $userInfo = $ret['data']['userInfo'];
         $view = $input->getBoolean('view', false);
         if ($view) {
-            Session::put('oauthViewOpenId_' . $oauthType, $userInfo['data']['openid']);
+            Session::put('oauthViewOpenId_' . $oauthType, $userInfo['openid']);
             return Response::generateSuccess();
         }
         Session::put('oauthUserInfo', $userInfo);
@@ -461,6 +461,7 @@ class AuthController extends ModuleBaseController
             }
         }
         $memberUser = null;
+        $loginMsg = null;
         if (!$memberUser) {
             $ret = MemberUtil::login($username, null, null, $password);
             if (0 == $ret['code']) {
@@ -480,7 +481,8 @@ class AuthController extends ModuleBaseController
             }
         }
         if (!$memberUser) {
-            return Response::generate(ResponseCodes::CAPTCHA_ERROR, '登录失败:用户或密码错误');
+            $failedTip = Session::pull('memberUserLoginFailedTip', null);
+            return Response::generate(ResponseCodes::CAPTCHA_ERROR, '登录失败:用户或密码错误' . ($failedTip ? '，' . $failedTip : ''));
         }
         Session::put('memberUserId', $memberUser['id']);
         EventUtil::fire(new MemberUserLoginedEvent($memberUser['id']));
