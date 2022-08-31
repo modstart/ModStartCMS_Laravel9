@@ -76,7 +76,7 @@ class ModuleServiceProvider extends ServiceProvider
                             'url' => '\Module\Cms\Admin\Controller\CatController@index',
                         ],
                         [
-                            'title' => '基础信息',
+                            'title' => '基础设置',
                             'url' => '\Module\Cms\Admin\Controller\ConfigController@basic',
                         ],
                         [
