@@ -13,6 +13,7 @@ use ModStart\Core\Input\Response;
 use ModStart\Core\Util\AgentUtil;
 use ModStart\Core\Util\ArrayUtil;
 use ModStart\Core\Util\EncodeUtil;
+use ModStart\Core\Util\RandomUtil;
 use ModStart\Data\DataManager;
 use ModStart\Data\Event\DataFileUploadedEvent;
 use Module\Member\Events\MemberUserLoginAttemptEvent;
@@ -234,6 +235,25 @@ class MemberUtil
         return Response::generateSuccessData($memberUser);
     }
 
+    public static function suggestUsernameNickname($memberUserId, $prefix = '用户', $randomLength = 6)
+    {
+        $suggestName = $prefix . RandomUtil::string($randomLength);
+        for ($i = 0; $i < 20; $i++) {
+            $found = ModelUtil::model('member_user')
+                ->where(['username' => $suggestName])
+                ->orWhere(['nickname' => $suggestName])
+                ->first();
+            if (empty($found)) {
+                break;
+            }
+            $suggestName = $suggestName . Str::random(1);
+        }
+        ModelUtil::update('member_user', $memberUserId, [
+            'username' => $suggestName,
+            'nickname' => $suggestName,
+        ]);
+    }
+
     public static function registerUsernameQuick($username)
     {
         $suggestionUsername = $username;
@@ -330,6 +350,8 @@ class MemberUtil
                     return Response::generate(-1, '用户名格式不正确');
                 }
                 break;
+            case 'nickname':
+                break;
             default :
                 return Response::generate(-1, '未能识别的类型' . $type);
         }
@@ -364,6 +386,16 @@ class MemberUtil
     public static function getByPhone($phone)
     {
         return ModelUtil::get('member_user', ['phone' => $phone]);
+    }
+
+    public static function changeNickname($memberUserId, $nickname)
+    {
+        $ret = self::uniqueCheck('nickname', $nickname, $memberUserId);
+        if (Response::isError($ret)) {
+            return $ret;
+        }
+        ModelUtil::update('member_user', $memberUserId, ['nickname' => $nickname]);
+        return Response::generate(0, 'ok');
     }
 
     

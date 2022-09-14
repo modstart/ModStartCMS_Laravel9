@@ -303,8 +303,12 @@ class AuthController extends ModuleBaseController
         $redirect = Session::get('oauthRedirect', modstart_web_url('member'));
         $this->api->checkRedirectSafety($redirect);
         if (Request::isPost()) {
+            $input = InputPackage::buildFromInput();
             $ret = $this->api->oauthBind($oauthType);
             if ($ret['code']) {
+                if ($input->getTrimString('captcha')) {
+                    return Response::send(-1, $ret['msg'], null, '[js]$("[data-captcha]").click()');
+                }
                 return Response::send(-1, $ret['msg']);
             }
             Session::forget('oauthRedirect');
@@ -331,6 +335,30 @@ class AuthController extends ModuleBaseController
             'oauthUserInfo' => $oauthUserInfo,
             'redirect' => $redirect,
         ]);
+    }
+
+    public function oauthBindCaptcha()
+    {
+        return $this->api->oauthBindCaptchaRaw();
+    }
+
+    public function oauthBindCaptchaVerify()
+    {
+        $ret = $this->api->oauthBindCaptchaVerify();
+        if ($ret['code']) {
+            return Response::send(-1, $ret['msg'], null, '[js]$("[data-captcha]").click()');
+        }
+        return Response::send(0, $ret['msg']);
+    }
+
+    public function oauthBindEmailVerify()
+    {
+        return Response::sendFromGenerate($this->api->oauthBindEmailVerify());
+    }
+
+    public function oauthBindPhoneVerify()
+    {
+        return Response::sendFromGenerate($this->api->oauthBindPhoneVerify());
     }
 
     public function oauthProxy()

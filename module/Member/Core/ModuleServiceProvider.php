@@ -12,9 +12,9 @@ use ModStart\Layout\Row;
 use ModStart\Module\ModuleManager;
 use Module\Member\Config\MemberHomeIcon;
 use Module\Member\Config\MemberMenu;
-use Module\Member\Listener\MemberVipPayListener;
 use Module\Member\Provider\MemberDeleteScheduleProvider;
 use Module\Member\Provider\VerifySmsTemplateProvider;
+use Module\PayCenter\Biz\PayCenterBiz;
 use Module\Vendor\Admin\Config\AdminWidgetDashboard;
 use Module\Vendor\Admin\Config\AdminWidgetLink;
 use Module\Vendor\Provider\Schedule\ScheduleProvider;
@@ -121,7 +121,11 @@ class ModuleServiceProvider extends ServiceProvider
             ]);
         });
 
-        $events->subscribe(MemberVipPayListener::class);
+        if (modstart_module_enabled('PayCenter')) {
+            PayCenterBiz::register(MemberMoneyChargePayCenterBiz::class);
+            PayCenterBiz::register(MemberVipPayCenterBiz::class);
+        }
+
         AdminMenu::register(function () {
             return [
                 [

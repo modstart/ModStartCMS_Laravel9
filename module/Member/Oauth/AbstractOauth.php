@@ -45,6 +45,7 @@ abstract class AbstractOauth
 
     abstract public function processRedirect($param);
 
+    
     abstract public function processLogin($param);
 
     public function processTryLogin($param)

@@ -20,7 +20,12 @@ class ConfigController extends Controller
                 ->when('=', true, function (Form $form) use ($captchaType) {
                     $form->select('loginCaptchaProvider', '登录验证码类型')->options($captchaType);
                 });
-            $builder->switch('Member_LoginPhoneEnable', '启用手机快捷登录');
+            $builder->switch('Member_LoginPhoneEnable', '启用手机快捷登录')
+                ->when('=', true, function (Form $form) {
+                    $form->text('Member_LoginPhoneNameSuggest', '快捷注册用户名前缀')
+                        ->defaultValue('用户')
+                        ->help('默认为"用户"，用户注册后自动设置用户名和昵称为 "用户xxxxxx"');
+                });
             $builder->select('Member_LoginDefault', '默认登录方式')->options([
                 'default' => '用户名密码登录',
                 'phone' => '手机快捷登录',
@@ -35,6 +40,10 @@ class ConfigController extends Controller
                         'phone' => '手机快捷注册',
                     ]);
                 });
+            if (modstart_module_enabled('MemberOauth')) {
+                $builder->switch('Member_OauthBindPhoneEnable', '授权登录绑定手机');
+                $builder->switch('Member_OauthBindEmailEnable', '授权登录绑定邮箱');
+            }
             $builder->button('', '保存')->forSubmit();
         });
         $builder->layoutPanel('找回密码', function ($builder) {
@@ -96,6 +105,7 @@ class ConfigController extends Controller
             $form->number('Member_MoneyCashTaxRate', '用户提现手续费')->help('如 1.00 表示手续费为 1.00%');
             $form->richHtml('Member_MoneyCashDescription', '用户提现说明');
         });
+        $builder->switch('Member_MoneyChargeEnable', '开启钱包充值');
         $builder->richHtml('Member_MoneyChargeDesc', '钱包充值说明');
         $builder->formClass('wide');
         return $builder->perform();

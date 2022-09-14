@@ -134,6 +134,13 @@ div.edui-box {
     cursor: default;
 }
 
+.edui-default span.edui-popup-action-item {
+  margin-right: 5px;
+}
+.edui-default span.edui-popup-action-item:last-child {
+  margin-right: 0;
+}
+
 /* 工具栏 */
 .edui-default .edui-toolbar {
     cursor: default;
@@ -1348,7 +1355,7 @@ div.edui-box {
 .edui-default .edui-dialog-buttons .edui-button .edui-button-body {
     height: 30px;
     font-size: 12px;
-    line-height: 30px;
+    line-height: 28px;
     cursor: pointer;
     border-radius: 4px;
     text-align: center;
@@ -1449,9 +1456,16 @@ div.edui-box {
 
 /*wordImage-dialog*/
 .edui-default .edui-for-wordimage .edui-dialog-content {
-    width: 620px;
-    height: 380px;
-    overflow: hidden;
+  width: 620px;
+  height: 380px;
+  overflow: hidden;
+}
+
+/*formula-dialog*/
+.edui-default .edui-for-formula .edui-dialog-content {
+  width: 620px;
+  height: 300px;
+  overflow: hidden;
 }
 
 /*attachment-dialog*/
