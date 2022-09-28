@@ -190,6 +190,7 @@ class AuthController extends ModuleBaseController
         if (modstart_config('Member_OauthBindEmailEnable')) {
             $update['emailVerified'] = true;
         }
+        $update['registerIp'] = Request::ip();
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }
@@ -700,6 +701,7 @@ class AuthController extends ModuleBaseController
         MemberUtil::suggestUsernameNickname($memberUserId, modstart_config('Member_LoginPhoneNameSuggest', '用户'));
         $update = [];
         $update['phoneVerified'] = true;
+        $update['registerIp'] = Request::ip();
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }
@@ -816,6 +818,7 @@ class AuthController extends ModuleBaseController
         if (modstart_config('registerEmailEnable')) {
             $update['emailVerified'] = true;
         }
+        $update['registerIp'] = Request::ip();
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }
