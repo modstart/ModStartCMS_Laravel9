@@ -37,7 +37,7 @@
         <div class="box" data-member-login-box>
             <div class="nav">
                 <a href="javascript:;" class="active">登录</a>
-                @if(!modstart_config('registerDisable',false))
+                @if(!modstart_config('registerDisable',false) && !modstart_config('Member_LoginPhoneAutoRegister', false))
                     ·
                     <a href="{{$__msRoot}}register?redirect={{!empty($redirect)?urlencode($redirect):''}}">注册</a>
                 @endif
@@ -80,6 +80,11 @@
                         <div class="field">
                             <button type="submit" class="btn btn-primary btn-lg btn-block">登录</button>
                             <input type="hidden" name="redirect" value="{{empty($redirect)?'':$redirect}}">
+                            @if(modstart_config('Member_LoginPhoneAutoRegister', false))
+                                <div class="ub-text-muted">
+                                    未注册的手机号，我们将自动帮您注册账号
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </form>

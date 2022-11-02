@@ -1,0 +1,27 @@
+{
+    "name": "DataWebdav",
+    "title": "WebDav云存储",
+    "env": [
+        "laravel5",
+        "laravel9"
+    ],
+    "tags": [
+        "云存储",
+        "WebDav"
+    ],
+    "types": [
+        "Arch"
+    ],
+    "require": [
+        "Vendor:>=3.5.0"
+    ],
+    "suggest": [],
+    "version": "1.1.0",
+    "modstartVersion": ">=3.6.0",
+    "author": "ModStart",
+    "description": "支持WebDav文件存储的驱动",
+    "providers": [
+    ],
+    "config": {
+    }
+}

@@ -11,22 +11,36 @@ use ModStart\Field\AutoRenderedFieldValue;
 class MemberCmsUtil
 {
     
-    public static function showFromId($memberUserId)
+    public static function showFromId($memberUserId, $field = null)
     {
         if (!$memberUserId) {
             return AutoRenderedFieldValue::make('<span class="ub-text-muted">-</span>');
         }
         $memberUser = ModelUtil::getWithCache('member_user', ['id' => $memberUserId]);
-        return self::show($memberUser);
+        return self::show($memberUser, $field);
     }
 
     
-    public static function show($memberUser)
+    public static function show($memberUser, $field = null)
     {
         if (!empty($memberUser)) {
-            return AutoRenderedFieldValue::make('<a href="javascript:;" class="ub-icon-text" data-dialog-request="' . action('\\Module\\Member\\Admin\\Controller\\MemberController@show', ['_id' => $memberUser['id']]) . '">
+            if (null === $field) {
+                $field = ['username'];
+            }
+            if (!is_array($field)) {
+                $field = [$field];
+            }
+            $text = '<未知用户>';
+            foreach ($field as $f) {
+                if (!empty($memberUser[$f])) {
+                    $text = $memberUser[$f];
+                    break;
+                }
+            }
+            return AutoRenderedFieldValue::make('<a href="javascript:;" class="ub-icon-text" data-dialog-request="'
+                . action('\\Module\\Member\\Admin\\Controller\\MemberController@show', ['_id' => $memberUser['id']]) . '">
             <img class="icon" src="' . AssetsUtil::fixOrDefault($memberUser['avatar'], 'asset/image/avatar.png') . '" />
-            <span class="text">' . htmlspecialchars($memberUser['username']) . '</span></a>');
+            <span class="text">' . htmlspecialchars($text) . '</span></a>');
         }
         return AutoRenderedFieldValue::make('');
     }

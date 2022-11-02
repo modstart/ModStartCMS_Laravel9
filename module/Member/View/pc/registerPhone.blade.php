@@ -12,10 +12,6 @@
 @section('bodyAppend')
     @parent
     {!! \ModStart\Core\Hook\ModStartHook::fireInView('MemberRegisterPageBodyAppend'); !!}
-@endsection
-
-@section('bodyAppend')
-    @parent
     {{\ModStart\ModStart::js('asset/common/commonVerify.js')}}
     <script>
         window.__memberCheckCaptcha = function (){
