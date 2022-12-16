@@ -142,6 +142,9 @@ class MemberUtil
 
     public static function viewName($memberUser)
     {
+        if ($memberUser && is_numeric($memberUser)) {
+            return self::getViewName($memberUser);
+        }
         if (empty($memberUser)) {
             return '-';
         }

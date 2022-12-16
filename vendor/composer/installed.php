@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '4f4e55fcfaa1e7a34a2678c8bbef3827875f229c',
+        'reference' => '060f435a6b7553ffbaae3d2341ec8187710addcc',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -151,7 +151,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../ezyang/htmlpurifier',
             'aliases' => array(),
-            'reference' => '1ab79098bbbdc616f27132779355a7cb86be442b',
+            'reference' => 'abcca0f778a9717d9c1b8d1020cec86a2ec657d2',
             'dev_requirement' => false,
         ),
         'fruitcake/laravel-cors' => array(
@@ -433,7 +433,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '4f4e55fcfaa1e7a34a2678c8bbef3827875f229c',
+            'reference' => '060f435a6b7553ffbaae3d2341ec8187710addcc',
             'dev_requirement' => false,
         ),
         'laravel/sanctum' => array(
