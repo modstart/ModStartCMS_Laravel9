@@ -31,7 +31,7 @@ trait ProviderTrait
             }
         }
         if ($hasOrder) {
-            usort(self::$list, function ($o1, $o2) {
+            @usort(self::$list, function ($o1, $o2) {
                 if ($o1->order() == $o2->order()) {
                     return 0;
                 }

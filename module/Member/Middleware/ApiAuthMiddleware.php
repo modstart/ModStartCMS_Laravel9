@@ -27,6 +27,9 @@ class ApiAuthMiddleware
                         $memberUser = null;
                         break;
                 }
+                                if ($memberUser['isDeleted']) {
+                    $memberUser = null;
+                }
             }
         }
         if ($memberUserId && !$memberUser) {
