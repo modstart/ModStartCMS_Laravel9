@@ -16,8 +16,14 @@ var run = function () {
             }
             // console.log('visible', o);
             $o.attr('data-inited', '1');
-            var value = parseInt($(o).attr('data-count-up-number'));
-            var ins = new CountUp(o, value);
+            var value = $(o).attr('data-count-up-number');
+            console.log('value', value);
+            var opt = {}
+            if (value && value.indexOf('.') >= 0) {
+                opt.decimalPlaces = value.split('.')[1].length;
+            }
+            var ins = new CountUp(o, value, opt);
+            // console.log('ins.error',ins.error)
             if (ins.error) {
                 $(o).html(value);
                 return;
