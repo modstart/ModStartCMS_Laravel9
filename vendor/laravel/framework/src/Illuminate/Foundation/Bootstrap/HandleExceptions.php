@@ -36,7 +36,7 @@ class HandleExceptions
      */
     public function bootstrap(Application $app)
     {
-        self::$reservedMemory = str_repeat('x', 10240);
+        self::$reservedMemory = str_repeat('x', 32768);
 
         static::$app = $app;
 
@@ -67,11 +67,11 @@ class HandleExceptions
      */
     public function handleError($level, $message, $file = '', $line = 0, $context = [])
     {
-        if (error_reporting() & $level) {
-            if ($this->isDeprecation($level)) {
-                return $this->handleDeprecation($message, $file, $line);
-            }
+        if ($this->isDeprecation($level)) {
+            return $this->handleDeprecationError($message, $file, $line, $level);
+        }
 
+        if (error_reporting() & $level) {
             throw new ErrorException($message, 0, $level, $file, $line);
         }
     }
@@ -83,10 +83,29 @@ class HandleExceptions
      * @param  string  $file
      * @param  int  $line
      * @return void
+     *
+     * @deprecated Use handleDeprecationError instead.
      */
     public function handleDeprecation($message, $file, $line)
     {
-        if (! class_exists(LogManager::class)) {
+        $this->handleDeprecationError($message, $file, $line);
+    }
+
+    /**
+     * Reports a deprecation to the "deprecations" logger.
+     *
+     * @param  string  $message
+     * @param  string  $file
+     * @param  int  $line
+     * @param  int  $level
+     * @return void
+     */
+    public function handleDeprecationError($message, $file, $line, $level = E_DEPRECATED)
+    {
+        if (! class_exists(LogManager::class)
+            || ! static::$app->hasBeenBootstrapped()
+            || static::$app->runningUnitTests()
+        ) {
             return;
         }
 
@@ -98,10 +117,16 @@ class HandleExceptions
 
         $this->ensureDeprecationLoggerIsConfigured();
 
-        with($logger->channel('deprecations'), function ($log) use ($message, $file, $line) {
-            $log->warning(sprintf('%s in %s on line %s',
-                $message, $file, $line
-            ));
+        $options = static::$app['config']->get('logging.deprecations') ?? [];
+
+        with($logger->channel('deprecations'), function ($log) use ($message, $file, $line, $level, $options) {
+            if ($options['trace'] ?? false) {
+                $log->warning((string) new ErrorException($message, 0, $level, $file, $line));
+            } else {
+                $log->warning(sprintf('%s in %s on line %s',
+                    $message, $file, $line
+                ));
+            }
         });
     }
 
@@ -119,7 +144,9 @@ class HandleExceptions
 
             $this->ensureNullLogDriverIsConfigured();
 
-            $driver = $config->get('logging.deprecations') ?? 'null';
+            $options = $config->get('logging.deprecations');
+
+            $driver = is_array($options) ? $options['channel'] : ($options ?? 'null');
 
             $config->set('logging.channels.deprecations', $config->get("logging.channels.{$driver}"));
         });
@@ -156,9 +183,9 @@ class HandleExceptions
      */
     public function handleException(Throwable $e)
     {
-        try {
-            self::$reservedMemory = null;
+        self::$reservedMemory = null;
 
+        try {
             $this->getExceptionHandler()->report($e);
         } catch (Exception $e) {
             //
@@ -200,6 +227,8 @@ class HandleExceptions
      */
     public function handleShutdown()
     {
+        self::$reservedMemory = null;
+
         if (! is_null($error = error_get_last()) && $this->isFatal($error['type'])) {
             $this->handleException($this->fatalErrorFromPhpError($error, 0));
         }

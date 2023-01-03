@@ -148,11 +148,12 @@ class Tecmz
     }
 
     
-    public function express($type, $no)
+    public function express($type, $no, $phone = null)
     {
         $post = [];
         $post['type'] = $type;
         $post['no'] = $no;
+        $post['phone'] = $phone;
         return $this->request('/express', $post);
     }
 
@@ -280,6 +281,9 @@ class Tecmz
 
     private function callFileConvertQueue($type, $url, $name = null, $param = [])
     {
+        if (is_array($url)) {
+            $url = json_encode($url, JSON_UNESCAPED_UNICODE);
+        }
         $post = [];
         $post['url'] = $url;
         $post['name'] = $name;
@@ -448,6 +452,54 @@ class Tecmz
     public function psdToImageQuery($jobId)
     {
         return $this->callFileConvertQuery('psd_to_image', $jobId);
+    }
+
+    
+    public function pdfToWordQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('pdf_to_word', $url, $name, $param);
+    }
+
+    
+    public function pdfToWordQuery($jobId)
+    {
+        return $this->callFileConvertQuery('pdf_to_word', $jobId);
+    }
+
+    
+    public function pdfToExcelQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('pdf_to_excel', $url, $name, $param);
+    }
+
+    
+    public function pdfToExcelQuery($jobId)
+    {
+        return $this->callFileConvertQuery('pdf_to_excel', $jobId);
+    }
+
+    
+    public function imageToWordQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('image_to_word', $url, $name, $param);
+    }
+
+    
+    public function imageToWordQuery($jobId)
+    {
+        return $this->callFileConvertQuery('image_to_word', $jobId);
+    }
+
+    
+    public function imageToExcelQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('image_to_excel', $url, $name, $param);
+    }
+
+    
+    public function imageToExcelQuery($jobId)
+    {
+        return $this->callFileConvertQuery('image_to_excel', $jobId);
     }
 
 }
