@@ -85,6 +85,11 @@ class MemberUtil
         return $keepFields;
     }
 
+    public static function fixAvatar($avatar)
+    {
+        return AssetsUtil::fixFullOrDefault($avatar, 'asset/image/avatar.png');
+    }
+
     public static function getBasic($id, $keepFields = null)
     {
         $keepFields = self::processBasicFields($keepFields);
@@ -95,7 +100,7 @@ class MemberUtil
         if (empty($item['nickname'])) {
             $item['nickname'] = $item['username'];
         }
-        $item['avatar'] = AssetsUtil::fixFullOrDefault($item['avatar'], 'asset/image/avatar.png');
+        $item['avatar'] = self::fixAvatar($item['avatar']);
         $result = [];
         foreach ($keepFields as $keepField) {
             if (isset($item[$keepField])) {
@@ -680,11 +685,13 @@ class MemberUtil
 
     public static function updateNewChatMsgStatus($memberUserId)
     {
-        ModelUtil::update('member_user', ['id' => $memberUserId], [
-            'newChatMsgCount' => ModelUtil::sum('member_chat', 'unreadMsgCount', [
-                'memberUserId' => $memberUserId,
-            ])
-        ]);
+        if (modstart_module_enabled('MemberChat')) {
+            ModelUtil::update('member_user', ['id' => $memberUserId], [
+                'newChatMsgCount' => ModelUtil::sum('member_chat', 'unreadMsgCount', [
+                    'memberUserId' => $memberUserId,
+                ])
+            ]);
+        }
     }
 
     public static function paginate($page, $pageSize, $option = [])

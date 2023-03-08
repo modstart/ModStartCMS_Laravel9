@@ -8,11 +8,15 @@ use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\Response;
 use Module\Member\Type\MemberMessageStatus;
 
+
 class MemberMessageUtil
 {
 
     public static function getUnreadMessageCount($userId)
     {
+        if (empty($userId)) {
+            return 0;
+        }
         return ModelUtil::count('member_message', ['userId' => $userId, 'status' => MemberMessageStatus::UNREAD]);
     }
 
@@ -22,11 +26,22 @@ class MemberMessageUtil
             return;
         }
         ModelUtil::model('member_message')->where(['userId' => $userId])->whereIn('id', $ids)->update(['status' => MemberMessageStatus::READ]);
+        foreach ($ids as $id) {
+            self::updateMessageCount($id);
+        }
     }
 
     public function setMemberMessageReadAll($userId)
     {
         ModelUtil::model('member_message')->where(['userId' => $userId])->update(['status' => MemberMessageStatus::READ]);
+        self::updateMessageCount($userId);
+    }
+
+    public static function updateMessageCount($userId)
+    {
+        MemberUtil::update($userId, [
+            'messageCount' => self::getUnreadMessageCount($userId),
+        ]);
     }
 
     public static function paginate($userId, $page, $pageSize, $option = [])
@@ -58,11 +73,13 @@ class MemberMessageUtil
             $ids = [$ids];
         }
         ModelUtil::model('member_message')->whereIn('id', $ids)->where(['userId' => $userId])->delete();
+        self::updateMessageCount($userId);
     }
 
     public static function deleteAll($userId)
     {
         ModelUtil::model('member_message')->where(['userId' => $userId])->delete();
+        self::updateMessageCount($userId);
     }
 
     public static function update($userId, $ids = [], $update = [])
@@ -74,18 +91,22 @@ class MemberMessageUtil
             $ids = [$ids];
         }
         ModelUtil::model('member_message')->whereIn('id', $ids)->where(['userId' => $userId])->update($update);
+        self::updateMessageCount($userId);
     }
 
     public static function updateRead($userId, $ids = [])
     {
         self::update($userId, $ids, ['status' => MemberMessageStatus::READ]);
+        self::updateMessageCount($userId);
     }
 
     public static function updateReadAll($userId)
     {
         ModelUtil::model('member_message')->where(['userId' => $userId])->update(['status' => MemberMessageStatus::READ]);
+        self::updateMessageCount($userId);
     }
 
+    
     public static function send($userId, $content, $fromId = 0)
     {
         ModelUtil::insert('member_message', [
@@ -94,6 +115,7 @@ class MemberMessageUtil
             'status' => MemberMessageStatus::UNREAD,
             'content' => $content,
         ]);
+        self::updateMessageCount($userId);
         return Response::generate(0, null);
     }
 
