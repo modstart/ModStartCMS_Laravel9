@@ -2,6 +2,7 @@
 
 namespace Module\Member\Util;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
@@ -21,6 +22,7 @@ use Module\Member\Events\MemberUserLoginAttemptEvent;
 use Module\Member\Events\MemberUserLoginFailedEvent;
 use Module\Member\Type\MemberMessageStatus;
 use Module\Member\Type\MemberStatus;
+use Module\Vendor\Type\DeviceType;
 
 class MemberUtil
 {
@@ -54,13 +56,13 @@ class MemberUtil
             $memberUser['nickname'] = $memberUser['username'];
         }
         if (empty($memberUser['avatar'])) {
-            $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.png', false);
+            $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.svg', false);
         }
         if (empty($memberUser['avatarMedium'])) {
-            $memberUser['avatarMedium'] = AssetsUtil::fixFull('asset/image/avatar.png', false);
+            $memberUser['avatarMedium'] = AssetsUtil::fixFull('asset/image/avatar.svg', false);
         }
         if (empty($memberUser['avatarBig'])) {
-            $memberUser['avatarBig'] = AssetsUtil::fixFull('asset/image/avatar.png', false);
+            $memberUser['avatarBig'] = AssetsUtil::fixFull('asset/image/avatar.svg', false);
         }
     }
 
@@ -87,7 +89,7 @@ class MemberUtil
 
     public static function fixAvatar($avatar)
     {
-        return AssetsUtil::fixFullOrDefault($avatar, 'asset/image/avatar.png');
+        return AssetsUtil::fixFullOrDefault($avatar, 'asset/image/avatar.svg');
     }
 
     public static function getBasic($id, $keepFields = null)
@@ -135,7 +137,7 @@ class MemberUtil
             'nickname' => empty($memberUser['nickname']) ? $memberUser['username'] : $memberUser['nickname'],
             'created_at' => $memberUser['created_at'],
             'signature' => isset($memberUser['signature']) ? $memberUser['signature'] : null,
-            'avatar' => AssetsUtil::fixFullOrDefault($memberUser['avatar'], 'asset/image/avatar.png'),
+            'avatar' => AssetsUtil::fixFullOrDefault($memberUser['avatar'], 'asset/image/avatar.svg'),
         ];
     }
 
@@ -148,7 +150,7 @@ class MemberUtil
                 'nickname' => empty($item['nickname']) ? $item['username'] : $item['nickname'],
                 'created_at' => $item['created_at'],
                 'signature' => isset($item['signature']) ? $item['signature'] : null,
-                'avatar' => AssetsUtil::fixFullOrDefault($item['avatar'], 'asset/image/avatar.png'),
+                'avatar' => AssetsUtil::fixFullOrDefault($item['avatar'], 'asset/image/avatar.svg'),
             ];
         }, $memberUsers);
     }
@@ -509,32 +511,30 @@ class MemberUtil
         $imageMedium = (string)Image::make($avatarData)->resize(200, 200)->encode($avatarExt, 75);
         $image = (string)Image::make($avatarData)->resize(50, 50)->encode($avatarExt, 75);
 
-        if (class_exists('ModStart\Data\Event\DataFileUploadedEvent')) {
-            DataFileUploadedEvent::setParam('imageCompressIgnore', true);
-            DataFileUploadedEvent::setParam('imageWatermarkIgnore', true);
-        }
-        $retBig = DataManager::upload('image', 'U' . $userId . '_AvatarBig.' . $avatarExt, $imageBig);
+        $uploadParam = [
+            'eventOpt' => [
+                DataFileUploadedEvent::OPT_IMAGE_COMPRESS_IGNORE => true,
+                DataFileUploadedEvent::OPT_IMAGE_WATERMARK_IGNORE => true,
+            ]
+        ];
+        $retBig = DataManager::upload('image', 'U' . $userId . '_AvatarBig.' . $avatarExt, $imageBig, null, $uploadParam);
         if ($retBig['code']) {
             return Response::generate(-1, '头像存储失败（' . $retBig['msg'] . '）');
         }
-        $retMedium = DataManager::upload('image', 'U' . $userId . '_AvatarMiddle.' . $avatarExt, $imageMedium);
+        $retMedium = DataManager::upload('image', 'U' . $userId . '_AvatarMiddle.' . $avatarExt, $imageMedium, null, $uploadParam);
         if ($retMedium['code']) {
             DataManager::deleteById($retBig['data']['id']);
             if ($retBig['code']) {
                 return Response::generate(-1, '头像存储失败（' . $retMedium['msg'] . '）');
             }
         }
-        $ret = DataManager::upload('image', 'U_' . $userId . '_Avatar.' . $avatarExt, $image);
+        $ret = DataManager::upload('image', 'U_' . $userId . '_Avatar.' . $avatarExt, $image, null, $uploadParam);
         if ($ret['code']) {
             DataManager::deleteById($retBig['data']['id']);
             DataManager::deleteById($retMedium['data']['id']);
             if ($retBig['code']) {
                 return Response::generate(-1, '头像存储失败（' . $ret['msg'] . '）');
             }
-        }
-        if (class_exists('ModStart\Data\Event\DataFileUploadedEvent')) {
-            DataFileUploadedEvent::forgetParam('imageCompressIgnore');
-            DataFileUploadedEvent::forgetParam('imageWatermarkIgnore');
         }
         self::update($memberUser['id'], [
             'avatarBig' => $retBig['data']['fullPath'],
@@ -583,12 +583,15 @@ class MemberUtil
         if (is_array($records)) {
             ModelUtil::join($records, $memberUserIdKey, $memberUserMergeKey, 'member_user', 'id');
             foreach ($records as $k => $v) {
+                if (empty($v[$memberUserMergeKey])) {
+                    continue;
+                }
                 $memberUser = ArrayUtil::keepKeys($v[$memberUserMergeKey], $keepFields);
                 if (empty($memberUser['nickname'])) {
                     $memberUser['nickname'] = $memberUser['username'];
                 }
                 if (empty($memberUser['avatar'])) {
-                    $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.png');
+                    $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.svg');
                 } else {
                     $memberUser['avatar'] = AssetsUtil::fixFull($memberUser['avatar']);
                 }
@@ -597,12 +600,15 @@ class MemberUtil
         } else {
             ModelUtil::joinItems($records, $memberUserIdKey, $memberUserMergeKey, 'member_user', 'id');
             foreach ($records as $item) {
+                if (empty($item->{$memberUserMergeKey})) {
+                    continue;
+                }
                 $memberUser = ArrayUtil::keepKeys($item->{$memberUserMergeKey}, $keepFields);
                 if (empty($memberUser['nickname'])) {
                     $memberUser['nickname'] = $memberUser['username'];
                 }
                 if (empty($memberUser['avatar'])) {
-                    $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.png');
+                    $memberUser['avatar'] = AssetsUtil::fixFull('asset/image/avatar.svg');
                 } else {
                     $memberUser['avatar'] = AssetsUtil::fixFull($memberUser['avatar']);
                 }
@@ -737,6 +743,21 @@ class MemberUtil
             'email' => null,
         ]);
         ModelUtil::transactionCommit();
+    }
+
+    public static function fireLogin($memberUserId)
+    {
+        $ip = Request::ip();
+        ModelUtil::update('member_user', $memberUserId, [
+            'lastLoginTime' => Carbon::now(),
+            'lastLoginIp' => $ip,
+        ]);
+        ModelUtil::insert('member_login_log', [
+            'memberUserId' => $memberUserId,
+            'deviceType' => DeviceType::current(),
+            'ip' => $ip,
+            'userAgent' => AgentUtil::getUserAgent(),
+        ]);
     }
 
 }

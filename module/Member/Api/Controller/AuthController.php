@@ -5,10 +5,12 @@ namespace Module\Member\Api\Controller;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Request;
 use ModStart\Core\Input\Response;
+use ModStart\Core\Util\AgentUtil;
 use ModStart\Core\Util\CurlUtil;
 use ModStart\Core\Util\EventUtil;
 use ModStart\Core\Util\FileUtil;
@@ -22,11 +24,12 @@ use Module\Member\Oauth\AbstractOauth;
 use Module\Member\Provider\RegisterProcessor\AbstractMemberRegisterProcessorProvider;
 use Module\Member\Provider\RegisterProcessor\MemberRegisterProcessorProvider;
 use Module\Member\Util\MemberUtil;
+use Module\Member\Util\SecurityUtil;
 use Module\Vendor\Email\MailSendJob;
-use Module\Vendor\Provider\Captcha\CaptchaProvider;
 use Module\Vendor\Session\SessionUtil;
 use Module\Vendor\Sms\SmsUtil;
 use Module\Vendor\Support\ResponseCodes;
+use Module\Vendor\Type\DeviceType;
 
 
 
@@ -84,6 +87,7 @@ class AuthController extends ModuleBaseController
         BizException::throwsIfResponseError($ret);
         if ($ret['data']['memberUserId'] > 0) {
             Session::put('memberUserId', $ret['data']['memberUserId']);
+            MemberUtil::fireLogin($ret['data']['memberUserId']);
             Session::forget('oauthUserInfo');
             return Response::generateSuccessData(['memberUserId' => $ret['data']['memberUserId']]);
         }
@@ -119,6 +123,7 @@ class AuthController extends ModuleBaseController
         BizException::throwsIfResponseError($ret);
         if ($ret['data']['memberUserId'] > 0) {
             Session::put('memberUserId', $ret['data']['memberUserId']);
+            MemberUtil::fireLogin($ret['data']['memberUserId']);
             Session::forget('oauthUserInfo');
             return Response::generateSuccessData(['memberUserId' => $ret['data']['memberUserId']]);
         }
@@ -144,11 +149,11 @@ class AuthController extends ModuleBaseController
         if (!Session::get('oauthBindCaptchaPass', false)) {
             if (!CaptchaFacade::check($captcha)) {
                 SessionUtil::atomicProduce('oauthBindCaptchaPassCount', 1);
-                return Response::generate(-1, '图片验证失败');
+                return Response::generate(-1, '请重新进行安全验证');
             }
         }
         if (!SessionUtil::atomicConsume('oauthBindCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
         if (modstart_config('Member_OauthBindPhoneEnable')) {
             if (empty($phone)) {
@@ -212,6 +217,7 @@ class AuthController extends ModuleBaseController
             }
         }
         Session::put('memberUserId', $memberUserId);
+        MemberUtil::fireLogin($memberUserId);
         Session::forget('oauthUserInfo');
         return Response::generate(0, null);
     }
@@ -467,6 +473,7 @@ class AuthController extends ModuleBaseController
             $memberUser = MemberUtil::get($ret['data']['id']);
         }
         Session::put('memberUserId', $memberUser['id']);
+        MemberUtil::fireLogin($memberUser['id']);
                 return Response::generate(0, 'ok');
     }
 
@@ -512,11 +519,11 @@ class AuthController extends ModuleBaseController
         }
 
         if (modstart_config('loginCaptchaEnable', false)) {
-            $captchaProvider = modstart_config('loginCaptchaProvider', null);
+            $captchaProvider = SecurityUtil::loginCaptchaProvider();
             if ($captchaProvider) {
-                $ret = CaptchaProvider::get($captchaProvider)->validate();
+                $ret = $captchaProvider->validate();
                 if (Response::isError($ret)) {
-                    return $ret;
+                    return Response::generate(-1, $ret['msg']);
                 }
             } else {
                 if (!CaptchaFacade::check($input->getTrimString('captcha'))) {
@@ -549,6 +556,7 @@ class AuthController extends ModuleBaseController
             return Response::generate(ResponseCodes::CAPTCHA_ERROR, '登录失败:用户或密码错误' . ($failedTip ? '，' . $failedTip : ''));
         }
         Session::put('memberUserId', $memberUser['id']);
+        MemberUtil::fireLogin($memberUser['id']);
         EventUtil::fire(new MemberUserLoginedEvent($memberUser['id']));
         return Response::generateSuccess();
     }
@@ -623,6 +631,7 @@ class AuthController extends ModuleBaseController
         Session::forget('loginPhoneVerifyTime');
         Session::forget('loginPhone');
         Session::put('memberUserId', $memberUser['id']);
+        MemberUtil::fireLogin($memberUser['id']);
         EventUtil::fire(new MemberUserLoginedEvent($memberUser));
         return Response::generate(0, null);
     }
@@ -640,9 +649,17 @@ class AuthController extends ModuleBaseController
             return Response::generate(-1, '手机为空或格式不正确');
         }
 
-        $captcha = $input->getTrimString('captcha');
-        if (!CaptchaFacade::check($captcha)) {
-            return Response::generate(-1, '图片验证码错误');
+        $provider = SecurityUtil::loginCaptchaProvider();
+        if ($provider) {
+            $ret = $provider->validate();
+            if (Response::isError($ret)) {
+                return $ret;
+            }
+        } else {
+            $captcha = $input->getTrimString('captcha');
+            if (!CaptchaFacade::check($captcha)) {
+                return Response::generate(-1, '图片验证码错误');
+            }
         }
 
         $memberUser = MemberUtil::getByPhone($phone);
@@ -742,6 +759,7 @@ class AuthController extends ModuleBaseController
             $provider->postProcess($memberUserId);
         }
         Session::put('memberUserId', $memberUserId);
+        MemberUtil::fireLogin($memberUserId);
         EventUtil::fire(new MemberUserLoginedEvent($memberUserId));
         return Response::generate(0, '注册成功', [
             'id' => $memberUserId,
@@ -786,11 +804,11 @@ class AuthController extends ModuleBaseController
         if (!Session::get('registerCaptchaPass', false)) {
             if (!CaptchaFacade::check($captcha)) {
                 SessionUtil::atomicProduce('registerCaptchaPassCount', 1);
-                return Response::generate(-1, '图片验证失败');
+                return Response::generate(-1, '请重新进行安全验证');
             }
         }
         if (!SessionUtil::atomicConsume('registerCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
 
         if (modstart_config('registerPhoneEnable')) {
@@ -880,10 +898,10 @@ class AuthController extends ModuleBaseController
         }
 
         if (!Session::get('registerCaptchaPass', false)) {
-            return Response::generate(-1, '请先验证图片验证码');
+            return Response::generate(-1, '请先进行安全验证');
         }
         if (!SessionUtil::atomicConsume('registerCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
 
         $memberUser = MemberUtil::getByEmail($email);
@@ -926,10 +944,10 @@ class AuthController extends ModuleBaseController
         }
 
         if (!Session::get('registerCaptchaPass', false)) {
-            return Response::generate(-1, '请先验证图片验证码');
+            return Response::generate(-1, '请先进行安全验证');
         }
         if (!SessionUtil::atomicConsume('registerCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
 
         $memberUser = MemberUtil::getByPhone($phone);
@@ -960,11 +978,19 @@ class AuthController extends ModuleBaseController
     
     public function registerCaptchaVerify()
     {
-        $input = InputPackage::buildFromInput();
-        $captcha = $input->getTrimString('captcha');
-        if (!CaptchaFacade::check($captcha)) {
-            SessionUtil::atomicRemove('registerCaptchaPassCount');
-            return Response::generate(ResponseCodes::CAPTCHA_ERROR, '验证码错误');
+        $provider = SecurityUtil::registerCaptchaProvider();
+        if ($provider) {
+            $ret = $provider->validate();
+            if (Response::isError($ret)) {
+                return $ret;
+            }
+        } else {
+            $input = InputPackage::buildFromInput();
+            $captcha = $input->getTrimString('captcha');
+            if (!CaptchaFacade::check($captcha)) {
+                SessionUtil::atomicRemove('registerCaptchaPassCount');
+                return Response::generate(ResponseCodes::CAPTCHA_ERROR, '验证码错误');
+            }
         }
         Session::put('registerCaptchaPass', true);
         $registerCaptchaPassCount = 1;
@@ -1026,10 +1052,10 @@ class AuthController extends ModuleBaseController
         }
 
         if (!Session::get('oauthBindCaptchaPass', false)) {
-            return Response::generate(-1, '请先验证图片验证码');
+            return Response::generate(-1, '请先进行安全验证');
         }
         if (!SessionUtil::atomicConsume('oauthBindCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
 
         $memberUser = MemberUtil::getByEmail($email);
@@ -1069,10 +1095,10 @@ class AuthController extends ModuleBaseController
         }
 
         if (!Session::get('oauthBindCaptchaPass', false)) {
-            return Response::generate(-1, '请先验证图片验证码');
+            return Response::generate(-1, '请先进行安全验证');
         }
         if (!SessionUtil::atomicConsume('oauthBindCaptchaPassCount')) {
-            return Response::generate(-1, '请重新输入图片验证码');
+            return Response::generate(-1, '请进行安全验证');
         }
 
         $memberUser = MemberUtil::getByPhone($phone);

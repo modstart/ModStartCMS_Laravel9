@@ -147,7 +147,7 @@
     border-radius: var(--size-radius);
 
     &.no-bg {
-        background: transparent;
+        background-color: transparent;
 
         .head {
             padding: 0.5rem 0;
@@ -291,6 +291,7 @@
         padding-bottom: 0.5rem;
         border-radius: 0.25rem;
         overflow: hidden;
+        border: 1px solid var(--color-body-bg);
 
         &:hover {
             box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 5%);
@@ -310,7 +311,7 @@
             background: no-repeat center;
             background-size: cover;
             border-radius: 0.25rem 0.25rem 0 0;
-            transition: all 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out;
 
             &:after {
                 content: '';
@@ -614,11 +615,13 @@
             .title {
                 font-size: var(--font-size);
                 padding: 0.25rem 0;
-                display: inline-block;
+                display: block;
+                padding: 0.5rem 0;
+                line-height: 1rem;
             }
 
             .right {
-                padding: 0.25rem;
+                padding: 0.5rem 0.25rem;
             }
         }
 
@@ -648,7 +651,7 @@
 
             .cover {
                 border-radius: 0.25rem;
-                transition: all 0.6s ease-in-out;
+                transition: transform 0.6s ease-in-out;
             }
         }
 
@@ -777,6 +780,9 @@
         }
 
         .image {
+            .cover {
+                border-radius: 0.1rem;
+            }
         }
 
         .text {
@@ -784,6 +790,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                border-radius: 0.1rem;
 
                 .content {
                     color: #111;
@@ -861,7 +868,7 @@
 
             .cover {
                 border-radius: 0.2rem 0.2rem 0 0;
-                transition: all 0.6s;
+                transition: transform 0.6s;
             }
         }
 
@@ -943,7 +950,7 @@
         margin: 0 0 0.5rem 0;
         border-radius: var(--size-radius);
         overflow: hidden;
-        transition: all 0.3s;
+        transition: box-shadow 0.3s;
 
         &.vertical {
             .cover {
@@ -975,7 +982,7 @@
             background: no-repeat center;
             background-size: cover;
             border-radius: var(--size-radius) var(--size-radius) 0 0;
-            transition: all 0.3s;
+            transition: transform 0.3s;
             position: relative;
 
             &:after {
