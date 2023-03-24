@@ -19,9 +19,11 @@ class ComplexFields extends AbstractField
     {
         $this->addVariables([
             'fields' => [
-                // ['name' => 'Foo', 'title' => 'FooTitle', 'type' => 'switch', 'defaultValue' => false],
-                // ['name' => 'Bar', 'title' => 'BarTitle', 'type' => 'switch', 'defaultValue' => false],
+                // ['name' => 'xxx', 'title' => '开关', 'type' => 'switch', 'defaultValue' => false],
+                // ['name' => 'xxx', 'title' => '文本', 'type' => 'text', 'defaultValue' => ''],
+                // ['name' => 'xxx', 'title' => '图标', 'type' => 'icon', 'defaultValue' => 'iconfont icon-home'],
             ],
+            'iconServer' => modstart_admin_url('widget/icon'),
         ]);
     }
 
@@ -30,9 +32,15 @@ class ComplexFields extends AbstractField
         $fields = $this->getVariable('fields');
         $defaultValue = [];
         foreach ($fields as $item) {
-            $defaultValue[$item['name']] = $item['defaultValue'];
+            $defaultValue[$item['name']] = isset($f['defaultValue']) ? $f['defaultValue'] : null;
         }
         return $defaultValue;
+    }
+
+    public function iconServer($server)
+    {
+        $this->addVariables(['iconServer' => $server]);
+        return $this;
     }
 
     public function fields($value)

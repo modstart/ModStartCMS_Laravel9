@@ -105,10 +105,12 @@ class MemberController extends Controller
                     MemberStatus::NORMAL => 'success',
                     MemberStatus::FORBIDDEN => 'danger',
                 ])->required();
-                                if (ModuleManager::getModuleConfigBoolean('Member', 'groupEnable', false)) {
+                                $groupEnable = ModuleManager::getModuleConfigBoolean('Member', 'groupEnable', false);
+                if ($groupEnable) {
                     $builder->radio('groupId', '分组')->options(MemberGroupUtil::mapIdTitle())->required();
                 }
-                if (ModuleManager::getModuleConfigBoolean('Member', 'vipEnable', false)) {
+                $vipEnable = ModuleManager::getModuleConfigBoolean('Member', 'vipEnable', false);
+                if ($vipEnable) {
                     $builder->radio('vipId', 'VIP')->options(MemberVipUtil::mapTitle())->required();
                     $builder->date('vipExpire', 'VIP过期');
                 }
