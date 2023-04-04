@@ -24,6 +24,7 @@ use ModStart\Core\Util\RandomUtil;
 use ModStart\Core\Util\TimeUtil;
 use ModStart\Field\AbstractField;
 use ModStart\Field\AutoRenderedFieldValue;
+use ModStart\Field\Select;
 use ModStart\Field\Type\FieldRenderMode;
 use ModStart\Form\Form;
 use ModStart\Grid\Displayer\ItemOperate;
@@ -141,7 +142,7 @@ class MemberController extends Controller
                 $itemOperate->prepend(
                     TextDialogRequest::make(
                         'primary',
-                        '用户信息',
+                        '查看',
                         modstart_admin_url('member/show', ['_id' => $item->id])
                     )->width('90%')->height('90%')->render()
                 );
@@ -149,8 +150,13 @@ class MemberController extends Controller
             ->title('用户管理')
             ->canShow(false)
             ->canDelete(true)
-            ->canExport(ModuleManager::getModuleConfigBoolean('Member', 'exportEnable'))
-            ->textEdit('修改账号');
+            ->canEdit(false)
+            ->canExport(ModuleManager::getModuleConfigBoolean('Member', 'exportEnable'));
+    }
+
+    public function selectRemote()
+    {
+        return Select::optionRemoteHandleModel('member_user', 'id', 'username');
     }
 
     public function add(AdminDialogPage $page)
@@ -240,7 +246,7 @@ class MemberController extends Controller
         });
         $form->item($memberUser)->fillFields();
         $form->showSubmit(false)->showReset(false);
-        return $page->pageTitle('创建用户')->body($form)->handleForm($form, function (Form $form) use ($memberUser) {
+        return $page->pageTitle('修改信息')->body($form)->handleForm($form, function (Form $form) use ($memberUser) {
             AdminPermission::demoCheck();
             $data = $form->dataForming();
             $basic = ArrayUtil::keepKeys($data, [
@@ -260,7 +266,7 @@ class MemberController extends Controller
                 $profile['vipExpire'] = null;
             }
             MemberUtil::update($memberUser['id'], $profile);
-            return Response::redirect(CRUDUtil::jsDialogCloseAndParentGridRefresh());
+            return Response::redirect(CRUDUtil::jsDialogCloseAndParentRefresh());
         });
     }
 

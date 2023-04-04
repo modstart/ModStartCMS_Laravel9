@@ -21,14 +21,13 @@
 }
 
 .ub-lister-search {
-    overflow: hidden;
-    position: relative;
+    // overflow: hidden;
+    // position: relative;
 
     .field-more-expand {
         display: none;
-        overflow: hidden;
-        clear: both;
-
+        // overflow: hidden;
+        // clear: both;
     }
 
     .field-more-expand__active {
@@ -36,10 +35,10 @@
     }
 
     .field {
-        float: left;
-        display: flex;
+        //float: left;
+        display: inline-flex;
         margin: 0 0.5rem 0.5rem 0;
-        overflow: hidden;
+        // overflow: hidden;
         min-width: 9rem;
 
         &.auto {
@@ -86,7 +85,8 @@
             border: 0.05rem solid #EEE;
             border-radius: 0.15rem;
             padding: 0 0.5rem;
-            line-height: 1.45rem;
+            line-height: 1.5rem;
+            height: 1.6rem;
             vertical-align: middle;
             background: #FFF;
             margin-bottom: 0;
@@ -143,6 +143,17 @@
 
         td {
             font-size: 12px;
+            padding: 0.1rem;
+        }
+
+        tbody {
+            tr {
+                &:last-child {
+                    td {
+                        border-bottom: none;
+                    }
+                }
+            }
         }
     }
 
@@ -193,8 +204,8 @@
     }
 
     &.hover {
-        tbody{
-            tr:hover{
+        tbody {
+            tr:hover {
                 td {
                     background: #F4F8FB;
                 }

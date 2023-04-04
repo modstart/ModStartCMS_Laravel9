@@ -1,7 +1,7 @@
 const jquery = require('jquery');
-const Base = require('./../lib/basePC');
+const Base = require('./../lib/base');
 const Form = require('./../lib/form');
-const Dialog = require('./../lib/dialogPC');
+const Dialog = require('./../lib/dialog');
 const Lister = require('./../lib/lister');
 const Util = require('./../lib/util');
 const Url = require('./../lib/url');
@@ -18,6 +18,24 @@ jquery.fn.isInViewport = function () {
     var viewportBottom = viewportTop + $(window).height();
 
     return elementBottom > viewportTop && elementTop < viewportBottom;
+};
+
+jquery.fn.serializeJson = function () {
+    var serializeObj = {};
+    var array = this.serializeArray();
+    var str = this.serialize();
+    $(array).each(function () {
+        if (serializeObj[this.name]) {
+            if ($.isArray(serializeObj[this.name])) {
+                serializeObj[this.name].push(this.value);
+            } else {
+                serializeObj[this.name] = [serializeObj[this.name], this.value];
+            }
+        } else {
+            serializeObj[this.name] = this.value;
+        }
+    });
+    return serializeObj;
 };
 
 const Header = {

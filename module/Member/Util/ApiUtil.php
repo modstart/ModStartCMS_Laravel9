@@ -45,6 +45,7 @@ class ApiUtil
                 $data['Member_VipEnable'] = ModuleManager::getModuleConfigBoolean('Member', 'vipEnable');
 
                 $data['Member_MoneyEnable'] = ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable');
+        $data['Member_MoneyChargeEnable'] = modstart_config('Member_MoneyChargeEnable', false);
         $data['Member_MoneyCashEnable'] = modstart_config('Member_MoneyCashEnable', false);
         $data['Member_CreditEnable'] = ModuleManager::getModuleConfigBoolean('Member', 'creditEnable');
 

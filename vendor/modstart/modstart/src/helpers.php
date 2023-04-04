@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\View;
 use ModStart\Admin\Config\AdminConfig;
 use ModStart\Core\Input\Request;
 use ModStart\ModStart;
@@ -49,6 +50,15 @@ function modstart_admin_url($url = '', $param = [])
         $prefix .= '/';
     }
     return $prefix . $url;
+}
+
+/**
+ * 判断是否为Tab
+ * @return boolean
+ */
+function modstart_admin_is_tab()
+{
+    return boolval(View::shared('_isTab'));
 }
 
 /**
@@ -241,7 +251,7 @@ function modstart_config($key = null, $default = '', $useCache = true)
         if (true === $default || false === $default) {
             return boolval($v);
         }
-        if (0 === $default) {
+        if (is_int($default)) {
             return intval($v);
         }
         if (is_array($default)) {
@@ -249,6 +259,7 @@ function modstart_config($key = null, $default = '', $useCache = true)
             if (null === $v) {
                 return $default;
             }
+            return $v;
         }
         return $v;
     } catch (Exception $e) {

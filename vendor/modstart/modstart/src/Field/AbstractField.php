@@ -17,6 +17,7 @@ use ModStart\Field\Type\FieldRenderMode;
 use ModStart\Form\Form;
 use ModStart\Grid\Grid;
 use ModStart\ModStart;
+use ModStart\Repository\EmptyItem;
 use ModStart\Support\Concern\HasFluentAttribute;
 
 /**
@@ -500,6 +501,12 @@ class AbstractField implements Renderable
     public function addVariables(array $variables = [])
     {
         $this->variables = array_merge($this->variables, $variables);
+        return $this;
+    }
+
+    public function setVariable($key, $value)
+    {
+        $this->variables[$key] = $value;
         return $this;
     }
 

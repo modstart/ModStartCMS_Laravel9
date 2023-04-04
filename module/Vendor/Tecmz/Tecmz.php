@@ -200,15 +200,22 @@ class Tecmz
     }
 
     
-    public function imageCompress($format, $imageData)
+    public function imageCompress($format, $imageData = null, $imageUrl = null, $name = null, $param = [])
     {
         $ret = $this->request('/image_compress/prepare', []);
-        if (Response::isError($ret)) {
+                if (Response::isError($ret)) {
             return $ret;
         }
         $post = [];
         $post['format'] = $format;
-        $post['imageData'] = base64_encode($imageData);
+        if (!empty($imageData)) {
+            $post['imageData'] = base64_encode($imageData);
+        }
+        if (!empty($imageUrl)) {
+            $post['imageUrl'] = $imageUrl;
+        }
+        $post['name'] = $name;
+        $post['param'] = json_encode($param, JSON_UNESCAPED_UNICODE);
         $server = $ret['data']['server'];
                 $ret = CurlUtil::postJSONBody($server, $post);
                 if (Response::isError($ret)) {
@@ -515,5 +522,30 @@ class Tecmz
     {
         return $this->callFileConvertQuery('doc_to_html', $jobId);
     }
+
+    
+    public function pdfToTextQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('pdf_to_text', $url, $name, $param);
+    }
+
+    
+    public function pdfToTextQuery($jobId)
+    {
+        return $this->callFileConvertQuery('pdf_to_text', $jobId);
+    }
+
+    
+    public function docSmartPreviewQueue($url, $name = null, $param = [])
+    {
+        return $this->callFileConvertQueue('doc_smart_preview', $url, $name, $param);
+    }
+
+    
+    public function docSmartPreviewQuery($jobId)
+    {
+        return $this->callFileConvertQuery('doc_smart_preview', $jobId);
+    }
+
 
 }

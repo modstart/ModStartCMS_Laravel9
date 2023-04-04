@@ -38,12 +38,12 @@ abstract class AbstractFilter
      */
     protected $id;
     /**
-     * Label of field.
-     *
+     * 名称
      * @var string
      */
     protected $label;
     /**
+     * 字段名
      * @var string
      */
     protected $column;
@@ -113,7 +113,7 @@ abstract class AbstractFilter
     /**
      * 获取字段
      *
-     * @return mixed|$this
+     * @return $this|Filter\Field\AbstractFilterField|Filter\Field\Select
      */
     public function field($value = null)
     {
@@ -121,6 +121,7 @@ abstract class AbstractFilter
             return $this->field;
         }
         $this->field = $value;
+        return $this;
     }
 
     /**

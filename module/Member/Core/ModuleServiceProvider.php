@@ -8,14 +8,19 @@ use ModStart\Admin\Config\AdminMenu;
 use ModStart\Admin\Widget\DashboardItemA;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Util\ColorUtil;
+use ModStart\Data\Event\DataUploadedEvent;
+use ModStart\Data\Event\DataUploadingEvent;
 use ModStart\Layout\Row;
 use ModStart\Module\ModuleManager;
 use Module\Member\Auth\MemberUser;
 use Module\Member\Config\MemberHomeIcon;
 use Module\Member\Config\MemberMenu;
+use Module\Member\Model\MemberDataStatistic;
+use Module\Member\Provider\MemberAdminShowPanel\MemberAdminShowPanelProvider;
 use Module\Member\Provider\MemberDeleteScheduleProvider;
 use Module\Member\Provider\VerifySmsTemplateProvider;
 use Module\Member\Util\MemberCreditUtil;
+use Module\Member\Util\MemberDataStatisticUtil;
 use Module\Member\Util\MemberMoneyUtil;
 use Module\PayCenter\Biz\PayCenterBiz;
 use Module\Vendor\Admin\Config\AdminWidgetDashboard;
@@ -158,6 +163,20 @@ class ModuleServiceProvider extends ServiceProvider
         if (modstart_module_enabled('PayCenter')) {
             PayCenterBiz::register(MemberMoneyChargePayCenterBiz::class);
             PayCenterBiz::register(MemberVipPayCenterBiz::class);
+        }
+
+        if (ModuleManager::getModuleConfig('Member', 'dataStatisticEnable', false)) {
+            MemberAdminShowPanelProvider::register(MemberDataStatisticAdminShowPanelProvider::class);
+            if (class_exists(DataUploadingEvent::class)) {
+                DataUploadingEvent::listen('member_upload', function (DataUploadingEvent $e) {
+                    MemberDataStatisticUtil::checkQuota($e->userId);
+                });
+            }
+            if (class_exists(DataUploadedEvent::class)) {
+                DataUploadedEvent::listen('member_upload', function (DataUploadedEvent $e) {
+                    MemberDataStatistic::updateMemberUserUsedSize($e->userId);
+                });
+            }
         }
 
         AdminMenu::register(function () {
