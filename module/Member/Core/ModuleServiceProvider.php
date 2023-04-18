@@ -23,9 +23,9 @@ use Module\Member\Util\MemberCreditUtil;
 use Module\Member\Util\MemberDataStatisticUtil;
 use Module\Member\Util\MemberMoneyUtil;
 use Module\PayCenter\Biz\PayCenterBiz;
-use Module\Vendor\Admin\Config\AdminWidgetDashboard;
-use Module\Vendor\Admin\Config\AdminWidgetLink;
-use Module\Vendor\Provider\Schedule\ScheduleProvider;
+use Module\Vendor\Admin\Widget\AdminWidgetDashboard;
+use Module\Vendor\Admin\Widget\AdminWidgetLink;
+use Module\Vendor\Provider\Schedule\ScheduleBiz;
 use Module\Vendor\Provider\SmsTemplate\SmsTemplateProvider;
 
 class ModuleServiceProvider extends ServiceProvider
@@ -34,10 +34,10 @@ class ModuleServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events)
     {
         MemberMenu::register(function () {
-            $moneyEnable = ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable');
-            $creditEnable = ModuleManager::getModuleConfigBoolean('Member', 'creditEnable');
+            $moneyEnable = ModuleManager::getModuleConfig('Member', 'moneyEnable',false);
+            $creditEnable = ModuleManager::getModuleConfig('Member', 'creditEnable',false);
             $creditName = '我的' . ModuleManager::getModuleConfig('Member', 'creditName', '积分');
-            $addressEnable = ModuleManager::getModuleConfigBoolean('Member', 'addressEnable');
+            $addressEnable = ModuleManager::getModuleConfig('Member', 'addressEnable',false);
             return [
                 [
                     'icon' => 'details',
@@ -87,11 +87,11 @@ class ModuleServiceProvider extends ServiceProvider
         });
 
         SmsTemplateProvider::register(VerifySmsTemplateProvider::class);
-        ScheduleProvider::register(MemberDeleteScheduleProvider::class);
+        ScheduleBiz::register(MemberDeleteScheduleProvider::class);
 
         MemberHomeIcon::register(function () {
-            $moneyEnable = ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable');
-            $creditEnable = ModuleManager::getModuleConfigBoolean('Member', 'creditEnable');
+            $moneyEnable = ModuleManager::getModuleConfig('Member', 'moneyEnable',false);
+            $creditEnable = ModuleManager::getModuleConfig('Member', 'creditEnable',false);
             $creditName = '我的' . ModuleManager::getModuleConfig('Member', 'creditName', '积分');
             return [
                 [
@@ -154,9 +154,9 @@ class ModuleServiceProvider extends ServiceProvider
                 ['注册', modstart_web_url('register')],
                 ['登录', modstart_web_url('login')],
                 ['找回密码', modstart_web_url('retrieve')],
-                ModuleManager::getModuleConfigBoolean('Member', 'vipEnable') ? ['开通VIP', modstart_web_url('member_vip')] : null,
-                ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable') ? ['用户钱包', modstart_web_url('member_money')] : null,
-                ModuleManager::getModuleConfigBoolean('Member', 'creditEnable') ? ['用户积分', modstart_web_url('login')] : null,
+                ModuleManager::getModuleConfig('Member', 'vipEnable',false) ? ['开通VIP', modstart_web_url('member_vip')] : null,
+                ModuleManager::getModuleConfig('Member', 'moneyEnable',false) ? ['用户钱包', modstart_web_url('member_money')] : null,
+                ModuleManager::getModuleConfig('Member', 'creditEnable',false) ? ['用户积分', modstart_web_url('login')] : null,
             ]);
         });
 
@@ -180,10 +180,10 @@ class ModuleServiceProvider extends ServiceProvider
         }
 
         AdminMenu::register(function () {
-            $moneyEnable = ModuleManager::getModuleConfigBoolean('Member', 'moneyEnable');
-            $creditEnable = ModuleManager::getModuleConfigBoolean('Member', 'creditEnable');
-            $vipEnable = ModuleManager::getModuleConfigBoolean('Member', 'vipEnable');
-            $groupEnable = ModuleManager::getModuleConfigBoolean('Member', 'groupEnable');
+            $moneyEnable = ModuleManager::getModuleConfig('Member', 'moneyEnable',false);
+            $creditEnable = ModuleManager::getModuleConfig('Member', 'creditEnable',false);
+            $vipEnable = ModuleManager::getModuleConfig('Member', 'vipEnable',false);
+            $groupEnable = ModuleManager::getModuleConfig('Member', 'groupEnable',false);
             return [
                 [
                     'title' => '用户中心',
@@ -233,10 +233,6 @@ class ModuleServiceProvider extends ServiceProvider
                                 $moneyEnable ? [
                                     'title' => '钱包设置',
                                     'url' => '\Module\Member\Admin\Controller\ConfigController@money',
-                                ] : null,
-                                $vipEnable ? [
-                                    'title' => '用户VIP设置',
-                                    'url' => '\Module\Member\Admin\Controller\ConfigController@vip',
                                 ] : null,
                                 $vipEnable ? [
                                     'title' => '用户VIP等级',

@@ -6,6 +6,7 @@ namespace Module\Nav\Render;
 
 use Illuminate\Support\Facades\View;
 
+
 class NavRender
 {
     public static function position($position)

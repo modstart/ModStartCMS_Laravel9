@@ -4,10 +4,10 @@
             @if(\Module\Member\Auth\MemberUser::id())
                 <a href="{{modstart_web_url('member')}}"><i class="iconfont icon-user"></i> {{\Module\Member\Auth\MemberUser::get('username')}}</a>
             @else
-                <a href="{{modstart_web_url('login')}}">登录</a>
-                @if(!modstart_config('registerDisable',false))
-                    <a href="{{modstart_web_url('register')}}">注册</a>
-                @endif
+                <a href="{{modstart_web_url('login',['redirect'=>\ModStart\Core\Input\Request::currentPageUrl()])}}">
+                    <i class="iconfont icon-user"></i> 
+                    登录
+                </a>
             @endif
         </div>
         <div class="logo">
@@ -25,7 +25,7 @@
                     </form>
                 </div>
             </div>
-            {!! \Module\Nav\Render\NavRender::position('head') !!}
+            {!! \Module\Nav\View\NavView::position('head') !!}
         </div>
         <a class="nav-toggle" href="javascript:;" onclick="MS.header.trigger()">
             <i class="show iconfont icon-list"></i>

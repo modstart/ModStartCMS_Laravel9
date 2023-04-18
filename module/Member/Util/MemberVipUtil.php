@@ -3,16 +3,18 @@
 
 namespace Module\Member\Util;
 
+use Illuminate\Support\Facades\Cache;
+use ModStart\Core\Assets\AssetsUtil;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Input\Response;
 use ModStart\Module\ModuleManager;
-use Module\Vendor\Cache\CacheUtil;
+use Module\Vendor\Util\CacheUtil;
 
 class MemberVipUtil
 {
     public static function isEnable()
     {
-        return ModuleManager::getModuleConfigBoolean('Member', 'vipEnable');
+        return ModuleManager::getModuleConfig('Member', 'vipEnable', false);
     }
 
     public static function allWithGuest()
@@ -127,7 +129,13 @@ class MemberVipUtil
         return $records;
     }
 
+    
     public static function getDefaultVip()
+    {
+        return self::defaultVip();
+    }
+
+    public static function defaultVip()
     {
         foreach (self::map() as $vipId => $vip) {
             if (!empty($vip['isDefault'])) {
@@ -137,6 +145,13 @@ class MemberVipUtil
         return null;
     }
 
+
+    public static function defaultVipId()
+    {
+        $vip = self::defaultVip();
+        return $vip ? $vip['id'] : null;
+    }
+
     public static function get($vipId, $key = null)
     {
         $map = self::map();
@@ -144,12 +159,12 @@ class MemberVipUtil
             if (isset($map[$vipId])) {
                 return $map[$vipId];
             }
-            return self::getDefaultVip();
+            return self::defaultVip();
         } else {
             if (isset($map[$vipId][$key])) {
                 return $map[$vipId][$key];
             }
-            $vip = self::getDefaultVip();
+            $vip = self::defaultVip();
             if (isset($vip[$key])) {
                 return $vip[$key];
             }
@@ -206,9 +221,20 @@ class MemberVipUtil
 
     }
 
+    public static function rights()
+    {
+        return Cache::rememberForever('MemberVipRights', function () {
+            $records = ModelUtil::all('member_vip_right', [], ['*'], ['sort', 'asc']);
+            AssetsUtil::recordsFixFullOrDefault($records, 'image');
+            ModelUtil::decodeRecordsJson($records, ['vipIds']);
+            return $records;
+        });
+    }
+
     public static function clearCache()
     {
         CacheUtil::forget('MemberVipList');
         CacheUtil::forget('MemberVipMap');
+        CacheUtil::forget('MemberVipRights');
     }
 }

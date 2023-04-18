@@ -12,6 +12,7 @@ use ModStart\Core\Input\Response;
 use ModStart\Core\Util\CurlUtil;
 use ModStart\Core\Util\EventUtil;
 use ModStart\Core\Util\FileUtil;
+use ModStart\Core\Util\StrUtil;
 use ModStart\Misc\Captcha\CaptchaFacade;
 use ModStart\Module\ModuleBaseController;
 use Module\Member\Config\MemberOauth;
@@ -23,9 +24,9 @@ use Module\Member\Provider\RegisterProcessor\AbstractMemberRegisterProcessorProv
 use Module\Member\Provider\RegisterProcessor\MemberRegisterProcessorProvider;
 use Module\Member\Util\MemberUtil;
 use Module\Member\Util\SecurityUtil;
-use Module\Vendor\Email\MailSendJob;
-use Module\Vendor\Session\SessionUtil;
-use Module\Vendor\Sms\SmsSendJob;
+use Module\Vendor\Job\MailSendJob;
+use Module\Vendor\Util\SessionUtil;
+use Module\Vendor\Job\SmsSendJob;
 use Module\Vendor\Support\ResponseCodes;
 
 
@@ -193,7 +194,7 @@ class AuthController extends ModuleBaseController
         if (modstart_config('Member_OauthBindEmailEnable')) {
             $update['emailVerified'] = true;
         }
-        $update['registerIp'] = Request::ip();
+        $update['registerIp'] = StrUtil::mbLimit(Request::ip(), 20);
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }
@@ -609,7 +610,7 @@ class AuthController extends ModuleBaseController
             MemberUtil::autoSetUsernameNickname($memberUserId, modstart_config('Member_LoginPhoneNameSuggest', '用户'));
             $update = [];
             $update['phoneVerified'] = true;
-            $update['registerIp'] = Request::ip();
+            $update['registerIp'] = StrUtil::mbLimit(Request::ip(), 20);
             if (!empty($update)) {
                 MemberUtil::update($memberUserId, $update);
             }
@@ -745,7 +746,7 @@ class AuthController extends ModuleBaseController
         MemberUtil::autoSetUsernameNickname($memberUserId, modstart_config('Member_LoginPhoneNameSuggest', '用户'));
         $update = [];
         $update['phoneVerified'] = true;
-        $update['registerIp'] = Request::ip();
+        $update['registerIp'] = StrUtil::mbLimit(Request::ip(), 20);
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }
@@ -863,7 +864,7 @@ class AuthController extends ModuleBaseController
         if (modstart_config('registerEmailEnable')) {
             $update['emailVerified'] = true;
         }
-        $update['registerIp'] = Request::ip();
+        $update['registerIp'] = StrUtil::mbLimit(Request::ip(), 20);
         if (!empty($update)) {
             MemberUtil::update($memberUserId, $update);
         }

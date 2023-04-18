@@ -4,11 +4,13 @@
         @if($tip)
             <a class="ub-text-muted" href="javascript:;" data-tip-popover="{{$tip}}"><i class="iconfont icon-warning"></i></a>
         @endif
-        {{$label}}:
+        {{$label}}
     </div>
     <div class="field layui-form" lay-filter="{{$id}}Radio">
         @foreach($options as $k=>$v)
-            <input type="radio" value="{{$k}}" name="{{$name}}" @if(($value && $k==$value)||(!$value && $k==$defaultValue)) checked @endif title="{{$v}}">
+            @if(!empty($vertical)) <div> @endif
+            <input type="radio" value="{{$k}}" name="{{$name}}" @if(($value && $k==$value)||(!$value && $k==$defaultValue)) checked @endif title="{{$v}}" />
+            @if(!empty($vertical)) </div> @endif
         @endforeach
         @if(!empty($help))
             <div class="help">{!! $help !!}</div>
