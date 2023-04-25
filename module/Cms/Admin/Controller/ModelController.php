@@ -231,7 +231,6 @@ class ModelController extends Controller
             AdminPermission::demoCheck();
             return $form->formRequest(function (Form $form) use ($record) {
                 $data = $form->dataForming();
-                ModelUtil::transactionBegin();
                 if ($record) {
                     ModelUtil::update('cms_model', $record['id'], ArrayUtil::keepKeys($data, [
                         'title', 'enable', 'form', 'mode', 'listTemplate', 'detailTemplate', 'pageTemplate',
@@ -240,7 +239,6 @@ class ModelController extends Controller
                     $data = ModelUtil::insert('cms_model', $data);
                     CmsModelUtil::create($data);
                 }
-                ModelUtil::transactionCommit();
                 CmsModelUtil::clearCache();
                 return Response::redirect(CRUDUtil::jsDialogCloseAndParentGridRefresh());
             });
