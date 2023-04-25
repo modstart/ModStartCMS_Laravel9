@@ -86,7 +86,6 @@ class ModelController extends Controller
 
             $f = CmsField::getByNameOrFail($data['fieldType']);
             $data = $f->prepareDataOrFail($data);
-            ModelUtil::transactionBegin();
             $data['fieldData'] = json_encode($data['fieldData'], JSON_UNESCAPED_UNICODE);
             if ($id) {
                 ModelUtil::update('cms_model_field', $id, $data);
@@ -99,7 +98,6 @@ class ModelController extends Controller
                 $data['fieldData'] = json_decode($data['fieldData'], true);
                 CmsModelUtil::addField($model, $data);
             }
-            ModelUtil::transactionCommit();
             CmsModelUtil::clearCache();
             return Response::generateSuccess();
         }
