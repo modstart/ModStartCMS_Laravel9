@@ -130,8 +130,8 @@ class ModelController extends Controller
         $id = CRUDUtil::id();
         $record = ModelUtil::get('cms_model_field', $id);
         BizException::throwsIfEmpty('记录不存在', $record);
-        ModelUtil::transactionBegin();
         CmsModelUtil::deleteField($model, $record);
+        ModelUtil::transactionBegin();
         ModelUtil::delete('cms_model_field', $id);
         ModelUtil::transactionCommit();
         CmsModelUtil::clearCache();
