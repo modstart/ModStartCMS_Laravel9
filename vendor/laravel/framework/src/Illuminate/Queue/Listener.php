@@ -88,6 +88,10 @@ class Listener
 
         while (true) {
             $this->runProcess($process, $options->memory);
+
+            if ($options->rest) {
+                sleep($options->rest);
+            }
         }
     }
 
@@ -157,6 +161,7 @@ class Listener
             "--memory={$options->memory}",
             "--sleep={$options->sleep}",
             "--tries={$options->maxTries}",
+            $options->force ? '--force' : null,
         ], function ($value) {
             return ! is_null($value);
         });

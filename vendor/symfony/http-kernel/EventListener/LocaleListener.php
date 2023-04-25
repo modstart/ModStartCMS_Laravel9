@@ -29,9 +29,9 @@ use Symfony\Component\Routing\RequestContextAwareInterface;
  */
 class LocaleListener implements EventSubscriberInterface
 {
-    private $router;
+    private ?RequestContextAwareInterface $router;
     private string $defaultLocale;
-    private $requestStack;
+    private RequestStack $requestStack;
     private bool $useAcceptLanguageHeader;
     private array $enabledLocales;
 
@@ -68,17 +68,17 @@ class LocaleListener implements EventSubscriberInterface
     {
         if ($locale = $request->attributes->get('_locale')) {
             $request->setLocale($locale);
-        } elseif ($this->useAcceptLanguageHeader && $this->enabledLocales && ($preferredLanguage = $request->getPreferredLanguage($this->enabledLocales))) {
-            $request->setLocale($preferredLanguage);
+        } elseif ($this->useAcceptLanguageHeader) {
+            if ($preferredLanguage = $request->getPreferredLanguage($this->enabledLocales)) {
+                $request->setLocale($preferredLanguage);
+            }
             $request->attributes->set('_vary_by_language', true);
         }
     }
 
     private function setRouterContext(Request $request)
     {
-        if (null !== $this->router) {
-            $this->router->getContext()->setParameter('_locale', $request->getLocale());
-        }
+        $this->router?->getContext()->setParameter('_locale', $request->getLocale());
     }
 
     public static function getSubscribedEvents(): array

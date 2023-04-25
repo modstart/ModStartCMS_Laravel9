@@ -33,8 +33,8 @@ class DebugHandlersListener implements EventSubscriberInterface
 {
     private string|object|null $earlyHandler;
     private ?\Closure $exceptionHandler;
-    private $logger;
-    private $deprecationLogger;
+    private ?LoggerInterface $logger;
+    private ?LoggerInterface $deprecationLogger;
     private array|int|null $levels;
     private ?int $throwAt;
     private bool $scream;
@@ -51,11 +51,11 @@ class DebugHandlersListener implements EventSubscriberInterface
      */
     public function __construct(callable $exceptionHandler = null, LoggerInterface $logger = null, array|int|null $levels = \E_ALL, ?int $throwAt = \E_ALL, bool $scream = true, bool $scope = true, LoggerInterface $deprecationLogger = null)
     {
-        $handler = set_exception_handler('var_dump');
+        $handler = set_exception_handler('is_int');
         $this->earlyHandler = \is_array($handler) ? $handler[0] : null;
         restore_exception_handler();
 
-        $this->exceptionHandler = null === $exceptionHandler || $exceptionHandler instanceof \Closure ? $exceptionHandler : \Closure::fromCallable($exceptionHandler);
+        $this->exceptionHandler = null === $exceptionHandler ? null : $exceptionHandler(...);
         $this->logger = $logger;
         $this->levels = $levels ?? \E_ALL;
         $this->throwAt = \is_int($throwAt) ? $throwAt : (null === $throwAt ? null : ($throwAt ? \E_ALL : null));
@@ -77,7 +77,7 @@ class DebugHandlersListener implements EventSubscriberInterface
         }
         $this->firstCall = $this->hasTerminatedWithException = false;
 
-        $handler = set_exception_handler('var_dump');
+        $handler = set_exception_handler('is_int');
         $handler = \is_array($handler) ? $handler[0] : null;
         restore_exception_handler();
 

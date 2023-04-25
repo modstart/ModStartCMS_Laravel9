@@ -34,9 +34,9 @@ final class TranslationPullCommand extends Command
 {
     use TranslationTrait;
 
-    private $providerCollection;
-    private $writer;
-    private $reader;
+    private TranslationProviderCollection $providerCollection;
+    private TranslationWriterInterface $writer;
+    private TranslationReaderInterface $reader;
     private string $defaultLocale;
     private array $transPaths;
     private array $enabledLocales;
@@ -64,9 +64,8 @@ final class TranslationPullCommand extends Command
         if ($input->mustSuggestOptionValuesFor('domains')) {
             $provider = $this->providerCollection->get($input->getArgument('provider'));
 
-            if ($provider && method_exists($provider, 'getDomains')) {
-                $domains = $provider->getDomains();
-                $suggestions->suggestValues($domains);
+            if (method_exists($provider, 'getDomains')) {
+                $suggestions->suggestValues($provider->getDomains());
             }
 
             return;
@@ -83,9 +82,6 @@ final class TranslationPullCommand extends Command
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure()
     {
         $keys = $this->providerCollection->keys();
@@ -120,9 +116,6 @@ EOF
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
@@ -141,7 +134,7 @@ EOF
 
         switch ($format) {
             case 'xlf20': $xliffVersion = '2.0';
-            // no break
+                // no break
             case 'xlf12': $format = 'xlf';
         }
 
@@ -159,7 +152,7 @@ EOF
 
         if ($force) {
             foreach ($providerTranslations->getCatalogues() as $catalogue) {
-                $operation = new TargetOperation((new MessageCatalogue($catalogue->getLocale())), $catalogue);
+                $operation = new TargetOperation(new MessageCatalogue($catalogue->getLocale()), $catalogue);
                 if ($intlIcu) {
                     $operation->moveMessagesToIntlDomainsIfPossible();
                 }

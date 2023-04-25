@@ -6,7 +6,7 @@
 
 {!! \ModStart\ModStart::js('asset/common/lazyLoad.js') !!}
 @section('bodyContent')
-    <div class="ub-container ub-content margin-top margin-bottom-remove">
+    <div class="ub-content">
         <div class="panel-b">
             <div class="bg" style="background-image:url({{$record['cover']}});"></div>
             <div class="mask"></div>
@@ -60,7 +60,7 @@
                                 您没有权限访问该栏目
                             </div>
                         @else
-                            <div class="content ub-html" style="font-size:0.8rem;">
+                            <div class="content ub-html lg">
                                 {!! \ModStart\Core\Util\HtmlUtil::replaceImageSrcToLazyLoad($record['_data']['content'],'data-src',true) !!}
                             </div>
                         @endif

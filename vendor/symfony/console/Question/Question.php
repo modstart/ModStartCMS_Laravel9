@@ -152,7 +152,7 @@ class Question
         } elseif ($values instanceof \Traversable) {
             $valueCache = null;
             $callback = static function () use ($values, &$valueCache) {
-                return $valueCache ?? $valueCache = iterator_to_array($values, false);
+                return $valueCache ??= iterator_to_array($values, false);
             };
         } else {
             $callback = null;
@@ -178,11 +178,14 @@ class Question
      */
     public function setAutocompleterCallback(callable $callback = null): static
     {
+        if (1 > \func_num_args()) {
+            trigger_deprecation('symfony/console', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
+        }
         if ($this->hidden && null !== $callback) {
             throw new LogicException('A hidden question cannot use the autocompleter.');
         }
 
-        $this->autocompleterCallback = null === $callback || $callback instanceof \Closure ? $callback : \Closure::fromCallable($callback);
+        $this->autocompleterCallback = null === $callback ? null : $callback(...);
 
         return $this;
     }
@@ -194,7 +197,10 @@ class Question
      */
     public function setValidator(callable $validator = null): static
     {
-        $this->validator = null === $validator || $validator instanceof \Closure ? $validator : \Closure::fromCallable($validator);
+        if (1 > \func_num_args()) {
+            trigger_deprecation('symfony/console', '6.2', 'Calling "%s()" without any arguments is deprecated, pass null explicitly instead.', __METHOD__);
+        }
+        $this->validator = null === $validator ? null : $validator(...);
 
         return $this;
     }
@@ -246,7 +252,7 @@ class Question
      */
     public function setNormalizer(callable $normalizer): static
     {
-        $this->normalizer = $normalizer instanceof \Closure ? $normalizer : \Closure::fromCallable($normalizer);
+        $this->normalizer = $normalizer(...);
 
         return $this;
     }

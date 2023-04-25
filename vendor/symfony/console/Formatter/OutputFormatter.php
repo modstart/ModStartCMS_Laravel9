@@ -23,7 +23,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
 {
     private bool $decorated;
     private array $styles = [];
-    private $styleStack;
+    private OutputFormatterStyleStack $styleStack;
 
     public function __clone()
     {
@@ -81,41 +81,26 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         $this->styleStack = new OutputFormatterStyleStack();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDecorated(bool $decorated)
     {
         $this->decorated = $decorated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function isDecorated(): bool
     {
         return $this->decorated;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setStyle(string $name, OutputFormatterStyleInterface $style)
     {
         $this->styles[strtolower($name)] = $style;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasStyle(string $name): bool
     {
         return isset($this->styles[strtolower($name)]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getStyle(string $name): OutputFormatterStyleInterface
     {
         if (!$this->hasStyle($name)) {
@@ -125,19 +110,17 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         return $this->styles[strtolower($name)];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function format(?string $message): ?string
     {
         return $this->formatAndWrap($message, 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function formatAndWrap(?string $message, int $width)
     {
+        if (null === $message) {
+            return '';
+        }
+
         $offset = 0;
         $output = '';
         $openTagRegex = '[a-z](?:[^\\\\<>]*+ | \\\\.)*';
@@ -157,7 +140,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
             $offset = $pos + \strlen($text);
 
             // opening tag?
-            if ($open = '/' != $text[1]) {
+            if ($open = '/' !== $text[1]) {
                 $tag = $matches[1][$i][0];
             } else {
                 $tag = $matches[3][$i][0] ?? '';
@@ -252,7 +235,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         $text = $prefix.preg_replace('~([^\\n]{'.$width.'})\\ *~', "\$1\n", $text);
         $text = rtrim($text, "\n").($matches[1] ?? '');
 
-        if (!$currentLineLength && '' !== $current && "\n" !== substr($current, -1)) {
+        if (!$currentLineLength && '' !== $current && !str_ends_with($current, "\n")) {
             $text = "\n".$text;
         }
 

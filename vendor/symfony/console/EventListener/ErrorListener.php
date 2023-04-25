@@ -24,7 +24,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class ErrorListener implements EventSubscriberInterface
 {
-    private $logger;
+    private ?LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger = null)
     {
@@ -79,7 +79,7 @@ class ErrorListener implements EventSubscriberInterface
 
     private static function getInputString(ConsoleEvent $event): ?string
     {
-        $commandName = $event->getCommand() ? $event->getCommand()->getName() : null;
+        $commandName = $event->getCommand()?->getName();
         $input = $event->getInput();
 
         if ($input instanceof \Stringable) {

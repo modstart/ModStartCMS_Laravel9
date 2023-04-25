@@ -7,7 +7,7 @@
 {!! \ModStart\ModStart::js('asset/common/lazyLoad.js') !!}
 @section('bodyContent')
 
-    <div class="ub-content ub-container margin-top margin-bottom-remove">
+    <div class="ub-content">
         <div class="panel-a"
              @if($cat['bannerBg'])
              style="background-image:url({{\ModStart\Core\Assets\AssetsUtil::fix($cat['bannerBg'])}});"
@@ -15,11 +15,13 @@
              style="background-image:var(--color-primary-gradient-bg);"
             @endif
         >
-            <h1 class="title animated fadeInUp">
-                {{$record['title']}}
-            </h1>
-            <div class="sub-title animated fadeInUp">
-                {{$record['summary']}}
+            <div class="box">
+                <h1 class="title animated fadeInUp">
+                    {{$record['title']}}
+                </h1>
+                <div class="sub-title animated fadeInUp">
+                    {{$record['summary']}}
+                </div>
             </div>
         </div>
     </div>
@@ -77,7 +79,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="content ub-html" style="font-size:0.8rem;">
+                            <div class="content ub-html lg">
                                 {!! \ModStart\Core\Util\HtmlUtil::replaceImageSrcToLazyLoad($record['_data']['content'],'data-src',true) !!}
                             </div>
                         </div>

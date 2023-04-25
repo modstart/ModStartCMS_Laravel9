@@ -23,7 +23,7 @@ use Symfony\Component\Mime\Message;
  */
 class EnvelopeListener implements EventSubscriberInterface
 {
-    private $sender = null;
+    private ?Address $sender = null;
 
     /**
      * @var Address[]|null
@@ -51,7 +51,7 @@ class EnvelopeListener implements EventSubscriberInterface
             $message = $event->getMessage();
             if ($message instanceof Message) {
                 if (!$message->getHeaders()->has('Sender') && !$message->getHeaders()->has('From')) {
-                    $message->getHeaders()->addMailboxHeader('Sender', $this->sender->getAddress());
+                    $message->getHeaders()->addMailboxHeader('Sender', $this->sender);
                 }
             }
         }

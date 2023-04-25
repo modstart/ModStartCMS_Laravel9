@@ -26,7 +26,7 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class CompiledUrlMatcherDumper extends MatcherDumper
 {
-    private $expressionLanguage;
+    private ExpressionLanguage $expressionLanguage;
     private ?\Exception $signalingException = null;
 
     /**
@@ -34,9 +34,6 @@ class CompiledUrlMatcherDumper extends MatcherDumper
      */
     private array $expressionLanguageProviders = [];
 
-    /**
-     * {@inheritdoc}
-     */
     public function dump(array $options = []): string
     {
         return <<<EOF
@@ -115,7 +112,7 @@ EOF;
             }
 
             $checkConditionCode = <<<EOF
-    static function (\$condition, \$context, \$request) { // \$checkCondition
+    static function (\$condition, \$context, \$request, \$params) { // \$checkCondition
         switch (\$condition) {
 {$this->indent(implode("\n", $conditions), 3)}
         }
@@ -332,7 +329,7 @@ EOF;
                     if ($hasTrailingSlash = '/' !== $regex && '/' === $regex[-1]) {
                         $regex = substr($regex, 0, -1);
                     }
-                    $hasTrailingVar = (bool) preg_match('#\{\w+\}/?$#', $route->getPath());
+                    $hasTrailingVar = (bool) preg_match('#\{[\w\x80-\xFF]+\}/?$#', $route->getPath());
 
                     $tree->addRoute($regex, [$name, $regex, $state->vars, $route, $hasTrailingSlash, $hasTrailingVar]);
                 }
@@ -426,8 +423,8 @@ EOF;
         }
 
         if ($condition = $route->getCondition()) {
-            $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request']);
-            $condition = $conditions[$condition] ?? $conditions[$condition] = (str_contains($condition, '$request') ? 1 : -1) * \count($conditions);
+            $condition = $this->getExpressionLanguage()->compile($condition, ['context', 'request', 'params']);
+            $condition = $conditions[$condition] ??= (str_contains($condition, '$request') ? 1 : -1) * \count($conditions);
         } else {
             $condition = null;
         }

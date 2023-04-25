@@ -15,10 +15,11 @@ namespace League\CommonMark\Xml;
 
 use League\CommonMark\ConverterInterface;
 use League\CommonMark\Environment\EnvironmentInterface;
+use League\CommonMark\Exception\CommonMarkException;
 use League\CommonMark\Output\RenderedContentInterface;
 use League\CommonMark\Parser\MarkdownParser;
 use League\CommonMark\Parser\MarkdownParserInterface;
-use League\CommonMark\Renderer\MarkdownRendererInterface;
+use League\CommonMark\Renderer\DocumentRendererInterface;
 
 final class MarkdownToXmlConverter implements ConverterInterface
 {
@@ -26,7 +27,7 @@ final class MarkdownToXmlConverter implements ConverterInterface
     private MarkdownParserInterface $parser;
 
     /** @psalm-readonly */
-    private MarkdownRendererInterface $renderer;
+    private DocumentRendererInterface $renderer;
 
     public function __construct(EnvironmentInterface $environment)
     {
@@ -37,7 +38,7 @@ final class MarkdownToXmlConverter implements ConverterInterface
     /**
      * Converts Markdown to XML
      *
-     * @throws \RuntimeException
+     * @throws CommonMarkException
      */
     public function convert(string $input): RenderedContentInterface
     {
@@ -49,7 +50,7 @@ final class MarkdownToXmlConverter implements ConverterInterface
      *
      * @see MarkdownToXmlConverter::convert()
      *
-     * @throws \RuntimeException
+     * @throws CommonMarkException
      */
     public function __invoke(string $input): RenderedContentInterface
     {

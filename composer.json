@@ -13,7 +13,7 @@
         "bacon/bacon-qr-code": "^2.0",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^9.0",
+        "laravel/framework": "9.52.6",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
         "modstart/modstart-laravel9": "dev-master",
@@ -64,6 +64,10 @@
         {
             "type": "composer",
             "url": "https://modstart.com/composer_9"
+        },
+        {
+            "type": "composer",
+            "url": "https://packagist.org"
         }
     ]
 }

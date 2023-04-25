@@ -16,6 +16,7 @@ declare(strict_types=1);
 
 namespace League\CommonMark\Util;
 
+use League\CommonMark\Exception\InvalidArgumentException;
 use League\CommonMark\Extension\CommonMark\Node\Block\HtmlBlock;
 
 /**
@@ -104,13 +105,13 @@ final class RegexHelper
     public static function matchAt(string $regex, string $string, int $offset = 0): ?int
     {
         $matches = [];
-        $string  = \mb_substr($string, $offset, null, 'utf-8');
+        $string  = \mb_substr($string, $offset, null, 'UTF-8');
         if (! \preg_match($regex, $string, $matches, \PREG_OFFSET_CAPTURE)) {
             return null;
         }
 
         // PREG_OFFSET_CAPTURE always returns the byte offset, not the char offset, which is annoying
-        $charPos = \mb_strlen(\mb_strcut($string, 0, $matches[0][1], 'utf-8'), 'utf-8');
+        $charPos = \mb_strlen(\mb_strcut($string, 0, $matches[0][1], 'UTF-8'), 'UTF-8');
 
         return $offset + $charPos;
     }
@@ -161,7 +162,7 @@ final class RegexHelper
      *
      * @phpstan-param HtmlBlock::TYPE_* $type
      *
-     * @throws \InvalidArgumentException if an invalid type is given
+     * @throws InvalidArgumentException if an invalid type is given
      *
      * @psalm-pure
      */
@@ -183,7 +184,7 @@ final class RegexHelper
             case HtmlBlock::TYPE_7_MISC_ELEMENT:
                 return '/^(?:' . self::PARTIAL_OPENTAG . '|' . self::PARTIAL_CLOSETAG . ')\\s*$/i';
             default:
-                throw new \InvalidArgumentException('Invalid HTML block type');
+                throw new InvalidArgumentException('Invalid HTML block type');
         }
     }
 
@@ -196,7 +197,7 @@ final class RegexHelper
      *
      * @phpstan-param HtmlBlock::TYPE_* $type
      *
-     * @throws \InvalidArgumentException if an invalid type is given
+     * @throws InvalidArgumentException if an invalid type is given
      *
      * @psalm-pure
      */
@@ -214,7 +215,7 @@ final class RegexHelper
             case HtmlBlock::TYPE_5_CDATA:
                 return '/\]\]>/';
             default:
-                throw new \InvalidArgumentException('Invalid HTML block type');
+                throw new InvalidArgumentException('Invalid HTML block type');
         }
     }
 

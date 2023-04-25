@@ -25,7 +25,7 @@ final class DelayedEnvelope extends Envelope
 {
     private bool $senderSet = false;
     private bool $recipientsSet = false;
-    private $message;
+    private Message $message;
 
     public function __construct(Message $message)
     {
@@ -86,11 +86,11 @@ final class DelayedEnvelope extends Envelope
         if ($sender = $headers->get('Sender')) {
             return $sender->getAddress();
         }
-        if ($from = $headers->get('From')) {
-            return $from->getAddresses()[0];
-        }
         if ($return = $headers->get('Return-Path')) {
             return $return->getAddress();
+        }
+        if ($from = $headers->get('From')) {
+            return $from->getAddresses()[0];
         }
 
         throw new LogicException('Unable to determine the sender of the message.');

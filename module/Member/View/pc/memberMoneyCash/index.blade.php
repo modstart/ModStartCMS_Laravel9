@@ -48,7 +48,7 @@
                 <div class="title">提现说明</div>
             </div>
             <div class="body">
-                <div class="ub-html">
+                <div class="ub-html lg">
                     {!! modstart_config('Member_MoneyCashDescription') !!}
                 </div>
             </div>
@@ -56,6 +56,12 @@
     @endif
     <div class="ub-panel">
         <div class="head">
+            <div class="more">
+                <a class="tw-ml-2" href="{{modstart_web_url('member_money/cash/log')}}">
+                    <i class="iconfont icon-time"></i>
+                    提现记录
+                </a>
+            </div>
             <div class="title">钱包提现</div>
         </div>
         <div class="body">

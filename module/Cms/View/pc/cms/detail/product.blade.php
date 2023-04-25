@@ -7,7 +7,7 @@
 {!! \ModStart\ModStart::js('asset/common/lazyLoad.js') !!}
 @section('bodyContent')
 
-    <div class="ub-container ub-content margin-top margin-bottom-remove">
+    <div class="ub-content">
         <div class="panel-b">
             <div class="bg" style="background-image:url({{$record['cover']}});"></div>
             <div class="mask"></div>
@@ -83,7 +83,7 @@
                     </div>
                 @else
                     <div class="tw-bg-white tw-rounded">
-                        <div class="ub-html" style="font-size:0.8rem;padding:1rem;">
+                        <div class="ub-html lg" style="padding:1rem;">
                             {!! \ModStart\Core\Util\HtmlUtil::replaceImageSrcToLazyLoad($record['_data']['content'],'data-src',true) !!}
                         </div>
                     </div>

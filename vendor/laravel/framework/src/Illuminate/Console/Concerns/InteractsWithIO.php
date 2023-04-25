@@ -16,6 +16,15 @@ use Symfony\Component\Console\Question\Question;
 trait InteractsWithIO
 {
     /**
+     * The console components factory.
+     *
+     * @var \Illuminate\Console\View\Components\Factory
+     *
+     * @internal This property is not meant to be used or overwritten outside the framework.
+     */
+    protected $components;
+
+    /**
      * The input interface implementation.
      *
      * @var \Symfony\Component\Console\Input\InputInterface
@@ -198,7 +207,7 @@ trait InteractsWithIO
      *
      * @param  string  $question
      * @param  array  $choices
-     * @param  string|null  $default
+     * @param  string|int|null  $default
      * @param  mixed|null  $attempts
      * @param  bool  $multiple
      * @return string|array
@@ -355,17 +364,18 @@ trait InteractsWithIO
      * Write a string in an alert box.
      *
      * @param  string  $string
+     * @param  int|string|null  $verbosity
      * @return void
      */
-    public function alert($string)
+    public function alert($string, $verbosity = null)
     {
         $length = Str::length(strip_tags($string)) + 12;
 
-        $this->comment(str_repeat('*', $length));
-        $this->comment('*     '.$string.'     *');
-        $this->comment(str_repeat('*', $length));
+        $this->comment(str_repeat('*', $length), $verbosity);
+        $this->comment('*     '.$string.'     *', $verbosity);
+        $this->comment(str_repeat('*', $length), $verbosity);
 
-        $this->newLine();
+        $this->comment('', $verbosity);
     }
 
     /**

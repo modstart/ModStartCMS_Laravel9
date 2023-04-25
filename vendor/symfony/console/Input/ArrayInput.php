@@ -34,9 +34,6 @@ class ArrayInput extends Input
         parent::__construct($definition);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFirstArgument(): ?string
     {
         foreach ($this->parameters as $param => $value) {
@@ -50,9 +47,6 @@ class ArrayInput extends Input
         return null;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasParameterOption(string|array $values, bool $onlyParams = false): bool
     {
         $values = (array) $values;
@@ -74,9 +68,6 @@ class ArrayInput extends Input
         return false;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getParameterOption(string|array $values, string|bool|int|float|array|null $default = false, bool $onlyParams = false): mixed
     {
         $values = (array) $values;
@@ -115,16 +106,13 @@ class ArrayInput extends Input
                     $params[] = $param.('' != $val ? $glue.$this->escapeToken($val) : '');
                 }
             } else {
-                $params[] = \is_array($val) ? implode(' ', array_map([$this, 'escapeToken'], $val)) : $this->escapeToken($val);
+                $params[] = \is_array($val) ? implode(' ', array_map($this->escapeToken(...), $val)) : $this->escapeToken($val);
             }
         }
 
         return implode(' ', $params);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function parse()
     {
         foreach ($this->parameters as $key => $value) {

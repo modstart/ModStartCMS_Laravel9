@@ -8,7 +8,7 @@
 @section('bodyContent')
 
     <div style="max-width:800px;margin:0 auto;">
-        <div class="ub-container ub-content margin-top margin-bottom-remove">
+        <div class="ub-content">
             <div class="panel-b">
                 <div class="bg" style="background-image:url({{$record['cover']}});"></div>
                 <div class="mask"></div>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <div class="content">
-                        <div class="ub-html" style="padding:1rem;font-size:0.8rem;">
+                        <div class="ub-html lg" style="padding:1rem;">
                             {!! \ModStart\Core\Util\HtmlUtil::replaceImageSrcToLazyLoad($record['_data']['content'],'data-src',true) !!}
                         </div>
                     </div>

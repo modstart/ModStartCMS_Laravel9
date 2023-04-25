@@ -27,7 +27,7 @@ final class Transports implements TransportInterface
      * @var array<string, TransportInterface>
      */
     private array $transports = [];
-    private $default;
+    private TransportInterface $default;
 
     /**
      * @param iterable<string, TransportInterface> $transports
@@ -47,7 +47,7 @@ final class Transports implements TransportInterface
     public function send(RawMessage $message, Envelope $envelope = null): ?SentMessage
     {
         /** @var Message $message */
-        if (RawMessage::class === \get_class($message) || !$message->getHeaders()->has('X-Transport')) {
+        if (RawMessage::class === $message::class || !$message->getHeaders()->has('X-Transport')) {
             return $this->default->send($message, $envelope);
         }
 
@@ -59,7 +59,13 @@ final class Transports implements TransportInterface
             throw new InvalidArgumentException(sprintf('The "%s" transport does not exist (available transports: "%s").', $transport, implode('", "', array_keys($this->transports))));
         }
 
-        return $this->transports[$transport]->send($message, $envelope);
+        try {
+            return $this->transports[$transport]->send($message, $envelope);
+        } catch (\Throwable $e) {
+            $headers->addTextHeader('X-Transport', $transport);
+
+            throw $e;
+        }
     }
 
     public function __toString(): string
