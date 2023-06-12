@@ -5,6 +5,7 @@ namespace Module\Cms\Field;
 
 
 use ModStart\Core\Input\InputPackage;
+use ModStart\Core\Input\Response;
 use ModStart\Field\AutoRenderedFieldValue;
 use ModStart\Form\Form;
 use ModStart\Support\Concern\HasFields;
@@ -15,14 +16,22 @@ abstract class AbstractCmsField
 
     abstract public function title();
 
+    
     public function prepareDataOrFail($data)
     {
         return $data;
     }
 
+    
     public function prepareInputOrFail($field, InputPackage $input)
     {
         return $input->getTrimString($field['name']);
+    }
+
+    
+    public function validateInputValue($field, $value, $data)
+    {
+        return Response::generateSuccess();
     }
 
     public function serializeValue($value, $data)

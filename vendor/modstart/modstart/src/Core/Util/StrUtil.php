@@ -118,7 +118,6 @@ class StrUtil
         return str_replace($chars, '', $value);
     }
 
-
     public static function limit($text, $limit = 100, $end = '...')
     {
         return Str::limit($text, $limit, $end);
@@ -127,12 +126,32 @@ class StrUtil
     /**
      * @Util 按照UTF8编码裁减字符串（汉字和英文都占1个宽度）
      * @param $text string 待裁剪字符串
-     * @param $limit int
+     * @param $limit int 裁剪长度
      * @return string
      */
     public static function mbLimit($text, $limit)
     {
         return Str::limit($text, $limit, '');
+    }
+
+    /**
+     * @Util 按照UTF8编码裁减字符串（汉字占3个宽度、英文都占1个宽度）
+     * @param $text string 待裁剪字符串
+     * @param $limit int 裁剪长度
+     */
+    public static function mbLimitChars($text, $limit)
+    {
+        $chars = mb_str_split($text, 1, 'UTF-8');
+        $count = 0;
+        $str = '';
+        foreach ($chars as $char) {
+            $count += strlen($char);
+            if ($count > $limit) {
+                break;
+            }
+            $str .= $char;
+        }
+        return $str;
     }
 
     /**
@@ -212,6 +231,15 @@ class StrUtil
         }
 
         return $result;
+    }
+
+    public static function split($text, $spliter = ',', $spliterReplaces = ['，', ';', '；'])
+    {
+        $text = str_replace($spliterReplaces, $spliter, $text);
+        $values = explode($spliter, $text);
+        $values = array_map('trim', $values);
+        $values = array_filter($values);
+        return $values;
     }
 
 }
