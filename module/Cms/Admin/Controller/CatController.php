@@ -100,7 +100,7 @@ class CatController extends Controller
                 $builder->display('created_at', L('Created At'))->listable(false);
                 $builder->display('updated_at', L('Updated At'))->listable(false);
             })
-                        ->asTree($pid)
+                        ->asTree()
                                     ->gridFilter(function (GridFilter $filter) {
                 $filter->eq('id', L('ID'));
                 $filter->like('title', L('Title'));
