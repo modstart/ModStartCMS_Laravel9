@@ -8,7 +8,7 @@
     </div>
     <div class="field">
         <div>
-            <textarea id="{{$id}}Editor" name="{{$name}}" style="height:0px;overflow:hidden;">{!! htmlspecialchars($value) !!}</textarea>
+            <textarea id="{{$id}}Editor" name="{{$name}}" style="height:0px;overflow:hidden;">{!! htmlspecialchars(null===$value?$defaultValue:$value) !!}</textarea>
         </div>
         @if(!empty($help))
             <div class="help">{!! $help !!}</div>
@@ -17,20 +17,26 @@
 </div>
 <script>
     $(function () {
+        var option = {
+            topOffset: 0
+        };
+        @if(!empty($editorOption));
+            option = Object.assign(option,{!! json_encode($editorOption) !!});
+        @endif
         @if($editorMode=='simple')
-        window.api.editor.simple('{{$id}}Editor', {
-            server: "{{$server}}",
-            ready: function () {
-                $('#{{$id}}').trigger('editor-ready');
-            }
-        }, {topOffset: 0});
+            window.api.editor.simple('{{$id}}Editor', {
+                server: "{{$server}}",
+                ready: function () {
+                    $('#{{$id}}').trigger('editor-ready');
+                }
+            }, option);
         @else
-        window.api.editor.basic('{{$id}}Editor', {
-            server: "{{$server}}",
-            ready: function () {
-                $('#{{$id}}').trigger('editor-ready');
-            }
-        }, {topOffset: 0});
+            window.api.editor.basic('{{$id}}Editor', {
+                server: "{{$server}}",
+                ready: function () {
+                    $('#{{$id}}').trigger('editor-ready');
+                }
+            }, option);
         @endif
     });
 </script>

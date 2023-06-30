@@ -27,15 +27,9 @@ return [
         ],
         'Banner' => [
             'enable' => true,
-            'config' => [
-                'position' => '[{"k":"home","v":"首页"}]',
-            ],
         ],
         'Partner' => [
             'enable' => true,
-            'config' => [
-                'position' => '[{"k":"home","v":"首页"}]',
-            ],
         ],
         'Member' => [
             'enable' => true,

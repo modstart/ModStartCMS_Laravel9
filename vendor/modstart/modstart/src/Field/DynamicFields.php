@@ -7,6 +7,7 @@ namespace ModStart\Field;
 use Illuminate\Support\Facades\View;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\InputPackage;
+use ModStart\Core\Util\RenderUtil;
 use ModStart\Core\Util\StrUtil;
 use ModStart\Field\Type\DynamicFieldsType;
 
@@ -17,7 +18,6 @@ use ModStart\Field\Type\DynamicFieldsType;
  */
 class DynamicFields extends AbstractField
 {
-    protected $value = [];
     protected $width = 300;
     protected $listable = false;
 
@@ -30,6 +30,9 @@ class DynamicFields extends AbstractField
 
     public function unserializeValue($value, AbstractField $field)
     {
+        if (null === $value) {
+            return $value;
+        }
         $value = @json_decode($value, true);
         if (empty($value)) {
             $value = [];
@@ -90,12 +93,26 @@ class DynamicFields extends AbstractField
         return $value;
     }
 
-    public static function renderAllFormVue($fields, $param = [])
+    public static function renderAllFormFieldVue($fields, $param = [])
     {
-        return View::make('modstart::core.field.dynamicFields.formVue', [
+        return View::make('modstart::core.field.dynamicFields.formFieldVue', [
             'fields' => $fields,
             'param' => $param,
         ])->render();
+    }
+
+    public static function renderAllFormVue($fields, $param = [])
+    {
+        BizException::throwsIf('param[name] must required', !isset($param['name']));
+        $fieldsData = self::getDefaultValueObject($fields);
+        if (!empty($param['values'])) {
+            $fieldsData = array_merge($fieldsData, self::fetchValueObject($fields, $param['values']));
+        }
+        return RenderUtil::view('modstart::core.field.dynamicFields.formVue', [
+            'fields' => $fields,
+            'fieldsData' => $fieldsData,
+            'param' => $param,
+        ]);
     }
 
     public static function fetchValueObject($fields, $values, $param = [])
@@ -123,6 +140,15 @@ class DynamicFields extends AbstractField
     public static function renderAllDetailTableTr($fields, $valueObject, $param = [])
     {
         return View::make('modstart::core.field.dynamicFields.detailTableTr', [
+            'fields' => $fields,
+            'valueObject' => $valueObject,
+            'param' => $param,
+        ])->render();
+    }
+
+    public static function renderAllDetailTable($fields, $valueObject, $param = [])
+    {
+        return View::make('modstart::core.field.dynamicFields.detailTable', [
             'fields' => $fields,
             'valueObject' => $valueObject,
             'param' => $param,

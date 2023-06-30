@@ -15,13 +15,6 @@ use ModStart\Field\Type\CustomFieldType;
  */
 class CustomField extends AbstractField
 {
-    protected $value = [
-        'type' => '',
-        'title' => '',
-        'data' => [
-            'option' => [],
-        ],
-    ];
     protected $listable = false;
 
     protected function setup()
@@ -32,6 +25,9 @@ class CustomField extends AbstractField
 
     public function unserializeValue($value, AbstractField $field)
     {
+        if (null === $value) {
+            return $value;
+        }
         $value = @json_decode($value, true);
         if (empty($value)) {
             $value = [];
@@ -298,9 +294,9 @@ class CustomField extends AbstractField
     }
 
 
-    public static function renderAllFormVue($fields, $param = [])
+    public static function renderAllFormFieldVue($fields, $param = [])
     {
-        return View::make('modstart::core.field.customField.formVue', [
+        return View::make('modstart::core.field.customField.formFieldVue', [
             'fields' => $fields,
             'param' => $param,
         ])->render();

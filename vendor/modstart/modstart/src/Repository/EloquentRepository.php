@@ -15,6 +15,7 @@ use Illuminate\Support\Str;
 use ModStart\Core\Dao\DynamicModel;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Exception\ResultException;
+use ModStart\Core\Type\SortAddPosition;
 use ModStart\Core\Type\SortDirection;
 use ModStart\Core\Util\ReUtil;
 use ModStart\Core\Util\TreeUtil;
@@ -179,6 +180,7 @@ class EloquentRepository extends Repository
         // var_dump($model->getQueries());exit();
         // var_dump($model->grid()->isDynamicModel());exit();
         $joins = $model->grid()->gridFilterJoins();
+        // var_dump($joins);
         if (!empty($joins)) {
             $methodMap = [
                 'left' => 'leftJoin',
@@ -219,6 +221,7 @@ class EloquentRepository extends Repository
         $query = $this->newQuery();
         // var_dump($this->relations);exit();
         // $this->relations = ['doc','memberUser'];
+        // var_dump($this->relations);exit();
         if ($this->relations) {
             $query->with($this->relations);
         }
@@ -264,6 +267,8 @@ class EloquentRepository extends Repository
             }
             $query = call_user_func_array([$query, $value['method']], $value['arguments'] ? $value['arguments'] : []);
         });
+        // var_dump($query);
+        // var_dump($this->relations);exit();
         return $query;
     }
 
@@ -299,7 +304,7 @@ class EloquentRepository extends Repository
     /**
      * 设置关联数据排序.
      *
-     * @param Grid\Model $model
+     * @param Model $model
      * @param string $column
      * @param string $type
      *
@@ -345,7 +350,7 @@ class EloquentRepository extends Repository
      * 获取分页参数.
      *
      * @param \ModStart\Grid\Model $model
-     * @param array|null $paginate
+     * @param array|Model|null $paginate
      *
      * @return array
      */
@@ -374,7 +379,7 @@ class EloquentRepository extends Repository
      *
      * @param Form $form
      *
-     * @return array
+     * @return Model
      */
     public function editing(Form $form)
     {
@@ -394,7 +399,7 @@ class EloquentRepository extends Repository
      *
      * @param Detail $show
      *
-     * @return array
+     * @return Model
      */
     public function show(Detail $detail)
     {
@@ -410,14 +415,35 @@ class EloquentRepository extends Repository
         return $this->model;
     }
 
-    private function getMaxValue($field, Form $form)
+    private function prepareExistsSort($field, Form $form)
     {
         $query = $this->newQuery();
         $form->repositoryFilter()->executeQueries($query);
+        $form->scopeExecuteQueries($query);
         if ($this->isSoftDeletes) {
             $query->withTrashed();
         }
-        return $query->with($this->getRelations())->max($field);
+        $query->update([$field => DB::raw("`$field` + 1")]);
+    }
+
+    private function getNextSortValue($field, Form $form)
+    {
+        switch ($form->sortAddPosition()) {
+            case SortAddPosition::HEAD:
+                $value = 1;
+                break;
+            case SortAddPosition::TAIL:
+            default:
+                $query = $this->newQuery();
+                $form->repositoryFilter()->executeQueries($query);
+                $form->scopeExecuteQueries($query);
+                if ($this->isSoftDeletes) {
+                    $query->withTrashed();
+                }
+                $value = intval($query->with($this->getRelations())->max($field)) + 1;
+                break;
+        }
+        return $value;
     }
 
     public function add(Form $form)
@@ -438,16 +464,21 @@ class EloquentRepository extends Repository
                     if ($model->getAttribute($this->getTreePidColumn())) {
                         BizException::throwsIf(L('Parent Item Not Exists'), !TreeUtil::modelItemAddAble($model, $model->getAttribute($this->getTreePidColumn()), $this->getKeyName()));
                     }
-                    $model->setAttribute($this->getTreeSortColumn(), $this->getMaxValue($this->getTreeSortColumn(), $form) + 1);
+                    $model->setAttribute($this->getTreeSortColumn(), $this->getNextSortValue($this->getTreeSortColumn(), $form));
                 }
                 if ($form->canSort()) {
                     $sortColumn = $this->getSortColumn();
                     if (empty($model->getAttribute($sortColumn))) {
-                        $model->setAttribute($sortColumn, $this->getMaxValue($sortColumn, $form) + 1);
+                        $model->setAttribute($sortColumn, $this->getNextSortValue($sortColumn, $form));
                     }
                 }
                 foreach ($form->scopeAddedParam() as $k => $v) {
                     $model->setAttribute($k, $v);
+                }
+                switch ($form->sortAddPosition()) {
+                    case SortAddPosition::HEAD:
+                        $this->prepareExistsSort($this->getSortColumn(), $form);
+                        break;
                 }
                 $result = $model->save();
                 $this->updateRelation($form, $model, $relations, $relationKeyMap);
@@ -546,6 +577,7 @@ class EloquentRepository extends Repository
         $direction = $this->getArgument('direction');
         $query = $this->newQuery();
         $form->repositoryFilter()->executeQueries($query);
+        $form->scopeExecuteQueries($query);
         if ($this->isSoftDeletes) {
             $query->withTrashed();
         }
@@ -554,6 +586,7 @@ class EloquentRepository extends Repository
             ->find($form->itemId(), $this->getFormColumns());
         $queryAll = $this->newQuery();
         $form->repositoryFilter()->executeQueries($queryAll);
+        $form->scopeExecuteQueries($queryAll);
         if ($this->isSoftDeletes) {
             $queryAll->withTrashed();
         }

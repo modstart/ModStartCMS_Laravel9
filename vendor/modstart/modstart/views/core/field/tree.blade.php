@@ -1,4 +1,4 @@
-<div class="line">
+<div class="line" id="{{$id}}">
     <div class="label">
         {!! in_array('required',$rules)?'<span class="ub-text-danger ub-text-bold">*</span>':'' !!}
         @if($tip)
@@ -9,7 +9,7 @@
     <div class="field">
         <input type="hidden"
                name="{{$name}}"
-               value='{{json_encode($value)}}'/>
+               value='{{json_encode(null==$value?($defaultValue?$defaultValue:[]):$value)}}'/>
         <div style="border:1px solid #DDD;border-radius:3px;padding:0 0 0.5rem 0;background:#FFF;">
             <div id="{{$name}}Tree"></div>
         </div>
