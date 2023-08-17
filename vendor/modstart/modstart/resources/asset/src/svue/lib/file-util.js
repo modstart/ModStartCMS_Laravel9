@@ -1,6 +1,13 @@
 const FileSaver = require('file-saver');
 
 export const FileUtil = {
+    blobToBase64(blob, callback) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            callback(e.target.result);
+        };
+        reader.readAsDataURL(blob);
+    },
     base64toBlob(b64Data, contentType = '', sliceSize = 512) {
         const byteCharacters = atob(b64Data);
         const byteArrays = [];
@@ -44,10 +51,9 @@ export const FileUtil = {
         xhr.send();
     },
     download(filename, content, type) {
-        // type = type || "text/plain;charset=utf-8"
         type = type || 'application/octet-stream'
         let blob
-        if ('object' === typeof content) {
+        if (content instanceof Blob) {
             blob = content
         } else {
             blob = new Blob([content], {type});

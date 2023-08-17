@@ -95,6 +95,7 @@ class AgentUtil
         '/ZoominfoBot/i' => 'Other',
         '/PetalBot/i' => 'Other',
         '/SurdotlyBot/i' => 'Other',
+        '/DataForSeoBot/i' => 'Other',
         '/linkfluence/i' => 'Other',
         '/SeznamBot/i' => 'Other',
         '/Ruby/i' => 'Other',
@@ -110,6 +111,8 @@ class AgentUtil
         '/node\\-fetch/i' => 'Other',
         '/okhttp/i' => 'Other',
         '/msray/i' => 'Other',
+        '/linkdexbot/i' => 'Other',
+        '/GPTBot/i' => 'Other',
         '/crawler/i' => 'Other',
         '/curl\\/\\d+\\.\\d+\\./i' => 'Other',
         '/Java\\/\\d+\\.\\d+\\./i' => 'Other',
@@ -120,6 +123,8 @@ class AgentUtil
         '/facebookexternalhit/i' => 'Other',
         '/coccocbot\\-web/i' => 'Other',
         '/Dataprovider\\.com/i' => 'Other',
+        '/Wordupindexinfo/i' => 'Other',
+        '/researchscan/i' => 'Other',
         '/spider/i' => 'Other',
     ];
 
