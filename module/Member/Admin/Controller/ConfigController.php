@@ -24,7 +24,7 @@ class ConfigController extends Controller
         $captchaType = array_merge(['' => '默认'], CaptchaProvider::nameTitleMap());
         $builder->pageTitle('用户设置');
         $builder->layoutPanel('登录', function ($builder) use ($captchaType) {
-            
+            /** @var HasFields $builder */
             $builder->switch('loginCaptchaEnable', '启用登录验证码')
                 ->when('=', true, function (Form $form) use ($captchaType) {
                     $form->select('loginCaptchaProvider', '登录验证码类型')->options($captchaType)
@@ -57,7 +57,7 @@ class ConfigController extends Controller
 
         });
         $builder->layoutPanel('注册', function ($builder) use ($captchaType) {
-            
+            /** @var HasFields $builder */
             $builder->select('Member_RegisterCaptchaProvider', '注册验证码类型')->options($captchaType)
                 ->help('用于 普通注册（/register）、手机快捷注册（/register_phone） 的人机验证');
             $builder->switch('registerDisable', '禁用注册')
@@ -92,7 +92,7 @@ class ConfigController extends Controller
             $builder->switch('Member_ProfilePhoneEnable', '开启手机绑定')->help('启用后用户中心增加手机绑定页面');
             $builder->switch('Member_LoginRedirectCheckEnable', '登录后跳转安全验证')
                 ->when('=', true, function ($builder) {
-                    
+                    /** @var $builder HasFields */
                     $builder->textarea('Member_LoginRedirectWhiteList', '白名单')->placeholder('请输入域名白名单，每行一个，如：www.example.com');
                 });
             $builder->switch('Member_DeleteEnable', '启用自助注销账号')
@@ -101,10 +101,10 @@ class ConfigController extends Controller
         });
         if (ModuleManager::getModuleConfig('Member', 'dataStatisticEnable', false)) {
             $builder->layoutPanel('存储上传', function ($builder) {
-                
+                /** @var $builder HasFields */
                 $builder->switch('Member_DataStatisticEnable', '开启上传限制')
                     ->when('=', true, function ($builder) {
-                        
+                        /** @var $builder HasFields */
                         $builder->number('Member_DataStatisticDefaultLimit', '默认空间大小')
                             ->help('用户的默认空间大小，单位MB，默认为1024')
                             ->defaultValue(1024);

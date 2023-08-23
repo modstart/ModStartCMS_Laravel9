@@ -8,7 +8,11 @@ use Module\Member\Util\MemberUtil;
 
 class ModifyMemberUserMessageCount extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('member_user', function (Blueprint $table) {
@@ -27,7 +31,11 @@ class ModifyMemberUserMessageCount extends Migration
         }
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

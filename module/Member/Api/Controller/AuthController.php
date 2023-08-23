@@ -32,18 +32,103 @@ use Module\Vendor\Job\SmsSendJob;
 use Module\Vendor\Support\ResponseCodes;
 use Module\Vendor\Util\SessionUtil;
 
+/**
+ * 相关配置开关
+ *
+ * - loginCaptchaEnable
+ * - registerDisable
+ * - registerEmailEnable
+ * - registerPhoneEnable
+ * - retrieveDisable
+ * - retrievePhoneEnable
+ * - retrieveEmailEnable
+ * - ssoServerEnable
+ * - ssoServerSecret
+ * - ssoServerClientList
+ * - ssoClientEnable
+ * - ssoClientSecret
+ * - ssoClientServer
+ */
+
+/**
+ * ############### 系列产品 SSO Client 登录流程 ###############
+ *
+ * 1. Client 访问 http://client.com/login 页面，前台检测到SSO登录是否已开启 (config.ssoClientEnable) ；
+ * 2. Client 请求 http://client.com/api/sso/client_prepare ，拿到需要跳转的SSO登录地址，SSO登录地址包含如下参数：
+ *              client      -> http://client.com/sso/client
+ *              timestamp   -> time()
+ *              sign        -> md5(md5(ssoClientSecret) + md5(timestamp) + md5(client))
+ * 3. Client 记录当前登录 redirect 存储到 Storage（ssoClientRedirect），同时跳转到SSO登录地址；
+ * 4. Server 端授权登录跳回页面 http://client.com/sso/client （第2步传递的client） 并附带参数
+ *              server      -> http://server.com/sso/server
+ *              timestamp   -> time()
+ *              username    -> base64_encode(username)
+ *              sign        -> md5( md5(ssoServerSecret) + md5(timestamp) + md5(server) + md5(username) )
+ * 5. Client 访问到 http://client.com/sso/client 请求 http://client.com/api/sso/client 并验证参数：
+ *              验证 sign 是否正确；
+ *              验证 timestamp 是否合法,误差不能相差 1 小时；
+ *              验证 server 是否为预期 (config.ssoClientServer)；
+ * 6. Client 验证完全正确后，根据 username 来进行登录,如果用户不存在创建用户,如果用户已经存在直接设置为已登录状态;
+ * 7. Client 前端跳转到 ssoClientRedirect（从Storage读取）；
+ */
 
 
+/**
+ * ############### 系列产品 SSO Server 登录流程 ###############
+ *
+ * 1. Server 访问 http://server.com/sso/server 页面 （跳转过来的登录请求），附带以下参数;
+ *              client      -> http://client.com/sso/client
+ *              timestamp   -> time()
+ *              sign        -> md5( md5(ssoServerSecret) + md5(timestamp) + md5(client) )
+ * 2. Server 发送第1步所有参数到，记录 ssoServerClient 到 Storage；
+ * 3. Server 请求 http://server.com/api/sso/server ，同时返回 isLogin 参数，验证以下信息：
+ *              检测 SSO 登录是否开启 (config.ssoServerEnable);
+ *              sign        -> 验证 sign 是否正确;
+ *              验证 timestamp 是否合法,误差不能超过 1 小时;
+ *              验证 client 是否为预期 (config.ssoServerClientList);
+ * 4. Server 如果判断 isLogin 为真, 直接跳转到 http://server.com/sso/server_success;
+ * 5. Server 如果判断 isLogin 为假，跳转到登录页面 /login 并附带以下参数:
+ *              redirect    -> http://server.com/sso/server_success
+ * 6. Server 用户登录，登录成功后重定向到 http://server.com/sso/server_success ;
+ * 4. Server 请求 http://server.com/api/sso/server_success 接口，
+ *    携带以下参数
+ *              client      -> http://client.com/sso/client （从 Storage 读取 ssoServerClient）
+ *              domainUrl   -> http://server.com
+ *    获取到以下参数
+ *              redirect    -> http://client.com/sso/client?server=xxx&timestamp=xxx&username=xxx&sign=xxx
+ *                             server      -> http://server.com/sso/server
+ *                             timestamp   -> time()
+ *                             username    -> base64_encode(username)
+ *                             sign        -> md5( md5(ssoServerSecret) + md5(timestamp) + md5(server) + md5(username) )
+ * 7. Server 页面跳转到 redirect
+ */
 
+/**
+ * ############### 系列产品 SSO Client 退出流程 ###############
+ * 1. Client 需要退出登陆,跳转到 http://client.com/logout 并附带以下参数：
+ *              redirect    -> <logout-to-go> 地址
+ * 2. Client 判断如果检测到SSO登录开启（config.ssoClientEnable），记录 redirect 到 Storage 为 ssoLogoutRedirect；
+ * 2. Client 请求 http://client.com/api/sso/client_logout_prepare ，返回以下参数：
+ *              redirect    -> http://server.com/sso/server_logout?redirect=urlencode(http://client.com/sso/client_logout)
+ * 3. Client 跳转到 redirect
+ * 4. Server 返回到 http://client.com/sso/client_logout ，请求 http://client.com/api/sso/client_logout ；
+ * 5. Client 从 Storage 读取 ssoLogoutRedirect ，跳转到 ssoLogout ；
+ */
 
+/**
+ * ############### 系列产品 SSO Server 退出流程 ###############
+ * 1. Client 页面访问 http://server.com/sso/server_logout 并附带以下参数：
+ *              redirect    -> <logout-to-go>
+ * 2. Client 请求 http://server.com/api/sso/server_logout ，返回以下参数：
+ *              redirect    -> <logout-to-go>
+ * 3. Client 跳转到 redirect
+ */
 
-
-
-
-
-
-
-
+/**
+ * Class AuthController
+ * @package Module\Member\Api\Controller
+ * @Api 用户授权
+ */
 class AuthController extends ModuleBaseController
 {
     public function checkRedirectSafety($redirect)
@@ -52,7 +137,8 @@ class AuthController extends ModuleBaseController
             return;
         }
         $info = parse_url($redirect);
-                if (empty($info['host'])) {
+        // ignore local url
+        if (empty($info['host'])) {
             return;
         }
         if ($info['host'] == Request::domain()) {
@@ -80,7 +166,7 @@ class AuthController extends ModuleBaseController
             $oauthType = $input->getTrimString('type');
         }
         BizException::throwsIfEmpty('授权类型为空', $oauthType);
-        
+        /** @var AbstractOauth $oauth */
         $oauth = MemberOauth::getOrFail($oauthType);
         $ret = $oauth->processTryLogin([
             'userInfo' => $oauthUserInfo,
@@ -106,9 +192,10 @@ class AuthController extends ModuleBaseController
         if (empty($oauthUserInfo)) {
             return Response::generate(-1, '用户授权数据为空');
         }
-        
+        /** @var AbstractOauth $oauth */
         $oauth = MemberOauth::getOrFail($oauthType);
-                $loginedMemberUserId = Session::get('memberUserId', 0);
+        //如果用户已经登录直接关联到当前用户
+        $loginedMemberUserId = Session::get('memberUserId', 0);
         if ($loginedMemberUserId > 0) {
             $ret = $oauth->processBindToUser([
                 'memberUserId' => $loginedMemberUserId,
@@ -133,7 +220,7 @@ class AuthController extends ModuleBaseController
             return Response::generate(-1, '用户注册已禁用');
         }
         $username = $input->getTrimString('username');
-        
+        /** 为了兼容统一登录，禁止使用手机号格式和邮箱格式  */
         if (Str::contains($username, '@')) {
             return Response::generate(-1, '用户名不能包含特殊字符');
         }
@@ -256,7 +343,7 @@ class AuthController extends ModuleBaseController
         if (empty($code)) {
             return Response::generate(-1, '登录失败(code为空)', null, '/');
         }
-        
+        /** @var AbstractOauth $oauth */
         $oauth = MemberOauth::getOrFail($oauthType);
         $param = Session::get('oauthLoginParam', []);
         Session::forget('oauthLoginParam');
@@ -295,7 +382,7 @@ class AuthController extends ModuleBaseController
             $callback = $input->getTrimString('callback', 'NO_CALLBACK');
         }
         $silence = $input->getBoolean('silence', false);
-        
+        /** @var AbstractOauth $oauth */
         $oauth = MemberOauth::getOrFail($oauthType);
         $param = [
             'callback' => $callback,
@@ -492,7 +579,8 @@ class AuthController extends ModuleBaseController
         }
         Session::put('memberUserId', $memberUser['id']);
         MemberUtil::fireLogin($memberUser['id']);
-                return Response::generate(0, 'ok');
+        // return Response::generateError('forbidden');
+        return Response::generate(0, 'ok');
     }
 
     public function ssoClientPrepare()
@@ -515,7 +603,11 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 登录-退出登录
+     */
     public function logout()
     {
         $memberUserId = MemberUser::id();
@@ -526,7 +618,15 @@ class AuthController extends ModuleBaseController
         return Response::generateSuccess();
     }
 
-    
+    /**
+     * @return array
+     * @throws BizException
+     *
+     * @Api 登录-用户登录
+     * @ApiBodyParam username string required 用户名
+     * @ApiBodyParam password string required 密码
+     * @ApiBodyParam captcha string 验证码（如果验证码开启需要传递）
+     */
     public function login()
     {
         $input = InputPackage::buildFromInput();
@@ -593,7 +693,11 @@ class AuthController extends ModuleBaseController
         return CaptchaFacade::create('default');
     }
 
-    
+    /**
+     * @Api 手机快捷登录-登录提交
+     * @ApiBodyParam phone string 手机号
+     * @ApiBodyParam verify string 手机验证码
+     */
     public function loginPhone()
     {
         if (!modstart_config('Member_LoginPhoneEnable', false)) {
@@ -620,9 +724,10 @@ class AuthController extends ModuleBaseController
             return Response::generate(-1, '两次手机不一致');
         }
         $memberUser = MemberUtil::getByPhone($phone);
-                if (empty($memberUser) && modstart_config('Member_LoginPhoneAutoRegister', false)) {
+        // 自动注册
+        if (empty($memberUser) && modstart_config('Member_LoginPhoneAutoRegister', false)) {
             foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-                
+                /** @var AbstractMemberRegisterProcessorProvider $provider */
                 $ret = $provider->preCheck();
                 if (Response::isError($ret)) {
                     return $ret;
@@ -643,7 +748,7 @@ class AuthController extends ModuleBaseController
             EventUtil::fire(new MemberUserRegisteredEvent($memberUserId));
             Session::forget('registerCaptchaPass');
             foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-                
+                /** @var AbstractMemberRegisterProcessorProvider $provider */
                 $provider->postProcess($memberUserId);
             }
             $memberUser = MemberUtil::get($memberUserId);
@@ -660,7 +765,12 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, null);
     }
 
-    
+    /**
+     * @return array
+     * @Api 手机快捷登录-获取手机验证码
+     * @ApiBodyParam target string 手机号
+     * @ApiBodyParam captcha string 图片验证码
+     */
     public function loginPhoneVerify()
     {
         if (!modstart_config('Member_LoginPhoneEnable', false)) {
@@ -707,7 +817,14 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 手机快捷登录-图片验证码
+     * @ApiResponseData {
+     *   "image":"图片Base64"
+     * }
+     */
     public function loginPhoneCaptcha()
     {
         $captcha = $this->loginCaptchaRaw();
@@ -716,7 +833,14 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 登录-图片验证码
+     * @ApiResponseData {
+     *   "image":"图片Base64"
+     * }
+     */
     public function loginCaptcha()
     {
         $captcha = $this->loginCaptchaRaw();
@@ -725,7 +849,12 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @Api 注册-手机快速注册
+     * @ApiBodyParam phone string 手机号
+     * @ApiBodyParam phoneVerify string 手机验证码
+     * @ApiBodyParam agreement boolean 是否同意协议
+     */
     public function registerPhone()
     {
         if (modstart_config('registerDisable', false)) {
@@ -759,7 +888,7 @@ class AuthController extends ModuleBaseController
         }
 
         foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-            
+            /** @var AbstractMemberRegisterProcessorProvider $provider */
             $ret = $provider->preCheck();
             if (Response::isError($ret)) {
                 return $ret;
@@ -781,7 +910,7 @@ class AuthController extends ModuleBaseController
         EventUtil::fire(new MemberUserRegisteredEvent($memberUserId));
         Session::forget('registerCaptchaPass');
         foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-            
+            /** @var AbstractMemberRegisterProcessorProvider $provider */
             $provider->postProcess($memberUserId);
         }
         Session::put('memberUserId', $memberUserId);
@@ -792,7 +921,18 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @Api 注册-用户注册
+     * @ApiBodyParam username string 用户名
+     * @ApiBodyParam password string 密码
+     * @ApiBodyParam passwordRepeat string 重复密码
+     * @ApiBodyParam phone string 手机号（如果开启手机注册需要传递）
+     * @ApiBodyParam phoneVerify string 手机验证码（如果开启手机注册需要传递）
+     * @ApiBodyParam email string 邮箱（如果开启邮箱注册需要传递）
+     * @ApiBodyParam emailVerify string 邮箱验证码（如果开启邮箱注册需要传递）
+     * @ApiBodyParam captcha string 验证码
+     * @ApiBodyParam agreement boolean 是否同意协议
+     */
     public function register()
     {
         if (modstart_config('registerDisable', false)) {
@@ -819,7 +959,7 @@ class AuthController extends ModuleBaseController
         if (empty($username)) {
             return Response::generate(-1, '用户名不能为空');
         }
-        
+        /** 为了兼容统一登录，禁止使用手机号格式和邮箱格式  */
         if (Str::contains($username, '@')) {
             return Response::generate(-1, '用户名不能包含特殊字符');
         }
@@ -877,7 +1017,7 @@ class AuthController extends ModuleBaseController
         }
 
         foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-            
+            /** @var AbstractMemberRegisterProcessorProvider $provider */
             $ret = $provider->preCheck();
             if (Response::isError($ret)) {
                 return $ret;
@@ -903,7 +1043,7 @@ class AuthController extends ModuleBaseController
         EventUtil::fire(new MemberUserRegisteredEvent($memberUserId));
         Session::forget('registerCaptchaPass');
         foreach (MemberRegisterProcessorProvider::listAll() as $provider) {
-            
+            /** @var AbstractMemberRegisterProcessorProvider $provider */
             $provider->postProcess($memberUserId);
         }
         return Response::generate(0, '注册成功', [
@@ -911,7 +1051,11 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     * @Api 注册-获取注册邮箱验证码
+     * @ApiBodyParam target string 邮箱地址
+     */
     public function registerEmailVerify()
     {
         if (modstart_config('registerDisable', false)) {
@@ -957,7 +1101,11 @@ class AuthController extends ModuleBaseController
     }
 
 
-    
+    /**
+     * @return array
+     * @Api 注册-获取注册手机验证码
+     * @ApiBodyParam target string 手机号
+     */
     public function registerPhoneVerify()
     {
         if (modstart_config('registerDisable', false)) {
@@ -1002,7 +1150,12 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 注册-图片验证码验证
+     * @ApiBodyParam captcha string 图片验证码
+     */
     public function registerCaptchaVerify()
     {
         $provider = SecurityUtil::registerCaptchaProvider();
@@ -1065,7 +1218,11 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     * @Api 授权登录-获取注册邮箱验证码
+     * @ApiBodyParam target string 邮箱地址
+     */
     public function oauthBindEmailVerify()
     {
         if (!modstart_config('Member_OauthBindEmailEnable')) {
@@ -1108,7 +1265,11 @@ class AuthController extends ModuleBaseController
     }
 
 
-    
+    /**
+     * @return array
+     * @Api 授权登录-获取注册手机验证码
+     * @ApiBodyParam target string 手机号
+     */
     public function oauthBindPhoneVerify()
     {
         if (!modstart_config('Member_OauthBindPhoneEnable')) {
@@ -1156,7 +1317,14 @@ class AuthController extends ModuleBaseController
     }
 
 
-    
+    /**
+     * @return array
+     *
+     * @Api 注册-获取注册验证码图片
+     * @ApiResponseData {
+     *   "image":"图片Base64"
+     * }
+     */
     public function registerCaptcha()
     {
         Session::forget('registerCaptchaPass');
@@ -1166,7 +1334,13 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-根据手机号找回
+     * @ApiBodyParam phone string 手机号
+     * @ApiBodyParam verify string 手机验证码
+     */
     public function retrievePhone()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -1206,7 +1380,13 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, null);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-发送手机验证码
+     * @ApiBodyParam target string 手机号
+     * @ApiBodyParam captcha string 图片验证码
+     */
     public function retrievePhoneVerify()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -1245,7 +1425,13 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-根据邮箱找回
+     * @ApiBodyParam email string 邮箱
+     * @ApiBodyParam verify string 邮箱验证码
+     */
     public function retrieveEmail()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -1293,7 +1479,13 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, null);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-发送邮箱验证码
+     * @ApiBodyParam target string 邮箱地址
+     * @ApiBodyParam captcha string 图片验证码
+     */
     public function retrieveEmailVerify()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -1334,7 +1526,16 @@ class AuthController extends ModuleBaseController
         return Response::generate(0, '验证码发送成功');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-获取已验证账户信息
+     * @ApiResponseData {
+     *   "memberUser":{
+     *     "username": "用户名"
+     *   }
+     * }
+     */
     public function retrieveResetInfo()
     {
         $retrieveMemberUserId = Session::get('retrieveMemberUserId');
@@ -1356,7 +1557,13 @@ class AuthController extends ModuleBaseController
         ]);
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-重置密码
+     * @ApiBodyParam password string 新密码
+     * @ApiBodyParam passwordRepeat string 重复新密码
+     */
     public function retrieveReset()
     {
         if (modstart_config('retrieveDisable', false)) {
@@ -1394,7 +1601,14 @@ class AuthController extends ModuleBaseController
         return CaptchaFacade::create('default');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Api 找回密码-图片验证码
+     * @ApiResponseData {
+     *   "image":"验证码图片Base64"
+     * }
+     */
     public function retrieveCaptcha()
     {
         $captcha = $this->retrieveCaptchaRaw();

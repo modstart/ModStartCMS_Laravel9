@@ -16,11 +16,13 @@ use Module\Member\Util\MemberUtil;
 
 class MemberProfileController extends ModuleBaseController implements MemberLoginCheck
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberProfileController */
     private $api;
     private $viewMemberFrame;
 
-    
+    /**
+     * MemberProfileController constructor.
+     */
     public function __construct()
     {
         list($this->viewMemberFrame, $_) = $this->viewPaths('member.frame');
@@ -84,7 +86,9 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         $oauth = MemberOauth::getOrFail($type);
         BizException::throwsIfEmpty('授权登录不存在', $oauth);
         $oauthRecord = MemberUtil::getOauth(MemberUser::id(), $oauth->oauthKey());
-                        $viewData = [
+        // var_dump([MemberUser::id(), $oauth->oauthKey()]);
+        // var_dump($oauthRecord);
+        $viewData = [
             'pageTitle' => $oauth->title(),
             'oauth' => $oauth,
             'oauthRecord' => $oauthRecord,

@@ -12,7 +12,7 @@ use Module\Member\Util\MemberVipUtil;
 
 class MemberVipController extends ModuleBaseController
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberVipController */
     private $api;
 
     public function index()

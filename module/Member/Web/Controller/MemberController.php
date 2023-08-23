@@ -15,10 +15,13 @@ use Module\Member\Support\MemberLoginCheck;
 
 class MemberController extends MemberFrameController implements MemberLoginCheck
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberController */
     private $api;
 
-    
+    /**
+     * MemberController constructor.
+     * @param \Module\Member\Api\Controller\MemberController $api
+     */
     public function __construct(\Module\Member\Api\Controller\MemberController $api)
     {
         parent::__construct();

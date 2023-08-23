@@ -139,7 +139,7 @@ class ContentController extends Controller
                     ];
                     $fieldClass = FieldManager::findFieldClass($field['fieldType']);
                     if (!empty($fieldClass)) {
-                        
+                        /** @var AbstractField $fieldInstance */
                         $fieldInstance = new $fieldClass('_empty_');
                         $viewData['value'] = $fieldInstance->unserializeValue($viewData['value'], $fieldInstance);
                     }
@@ -161,7 +161,7 @@ class ContentController extends Controller
         $grid->display('updated_at', L('Updated At'));
         if (modstart_config('CmsMemberPost_Enable', false)) {
             $grid->hookItemOperateRendering(function (ItemOperate $itemOperate) {
-                
+                /** @var \stdClass $item */
                 $item = $itemOperate->item();
                 switch ($item->verifyStatus) {
                     case CmsContentVerifyStatus::VERIFYING:
@@ -202,10 +202,17 @@ class ContentController extends Controller
         $grid->canDelete(true)->urlDelete(action('\\' . __CLASS__ . '@delete', ['modelId' => $this->modelId]));
         $grid->canBatchDelete(true);
         $grid->batchOperatePrepend('<button class="btn" data-batch-dialog-operate="' . modstart_admin_url('cms/content/batch_move/' . $this->modelId) . '"><i class="iconfont icon-right"></i> 批量移动</button>');
+        $grid->pageJumpEnable(true);
         if (Request::isPost()) {
             return $grid->request();
         }
         return $page->pageTitle($this->model['title'])
+//            ->row(function (Row $row) {
+//                $row->column(12, DashboardItemA::makeIconNumberTitle(
+//                    'iconfont icon-details', ModelUtil::count('cms_content', ['modelId' => $this->model['id']]), '总数',
+//                    modstart_admin_url('cms/content/' . $this->model['id'])
+//                ));
+//            })
             ->append($grid);
     }
 

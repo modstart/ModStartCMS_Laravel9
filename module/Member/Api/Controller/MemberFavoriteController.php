@@ -12,10 +12,20 @@ use Module\Member\Auth\MemberUser;
 use Module\Member\Support\MemberLoginCheck;
 use Module\Member\Util\MemberFavoriteUtil;
 
-
+/**
+ * Class MemberFavoriteController
+ * @package Module\Member\Api\Controller
+ * @Api 用户收藏
+ */
 class MemberFavoriteController extends Controller implements MemberLoginCheck
 {
-    
+    /**
+     * @return array
+     * @throws BizException
+     * @Api 收藏
+     * @ApiBodyParam category string 类别
+     * @ApiBodyParam categoryId int 类别ID
+     */
     public function favorite()
     {
         $input = InputPackage::buildFromInput();
@@ -33,7 +43,13 @@ class MemberFavoriteController extends Controller implements MemberLoginCheck
         return Response::generateSuccess();
     }
 
-    
+    /**
+     * @return array
+     * @throws BizException
+     * @Api 取消收藏
+     * @ApiBodyParam category string 类别
+     * @ApiBodyParam categoryId int 类别ID
+     */
     public function unfavorite()
     {
         $input = InputPackage::buildFromInput();

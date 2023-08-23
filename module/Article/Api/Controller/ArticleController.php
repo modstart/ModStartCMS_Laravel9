@@ -8,10 +8,18 @@ use ModStart\Core\Input\Response;
 use ModStart\Module\ModuleBaseController;
 use Module\Article\Util\ArticleUtil;
 
-
+/**
+ * Class ArticleController
+ * @package Module\Article\Api\Controller
+ * @Api 通用文章
+ */
 class ArticleController extends ModuleBaseController
 {
-    
+    /**
+     * @return array
+     * @Api 获取通用文章
+     * @ApiBodyParam id int 文章ID
+     */
     public function get()
     {
         $input = InputPackage::buildFromInput();

@@ -5,7 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMemberVipRight extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
 
@@ -24,7 +28,11 @@ class CreateMemberVipRight extends Migration
 
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
     }

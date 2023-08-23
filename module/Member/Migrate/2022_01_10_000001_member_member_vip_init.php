@@ -4,7 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class MemberMemberVipInit extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         if (\ModStart\Core\Dao\ModelUtil::count('member_vip_set') <= 0) {
@@ -55,7 +59,11 @@ class MemberMemberVipInit extends Migration
         }
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

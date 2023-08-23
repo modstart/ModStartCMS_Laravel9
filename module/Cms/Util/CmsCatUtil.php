@@ -10,17 +10,25 @@ use ModStart\Core\Util\ArrayUtil;
 use ModStart\Core\Util\TreeUtil;
 use Module\Cms\Type\CatUrlMode;
 
-
+/**
+ * @Util CMS栏目操作
+ */
 class CmsCatUtil
 {
-    
+    /**
+     * @Util 清除缓存
+     */
     public static function clearCache()
     {
         Cache::forget('CmsCatAll');
         Cache::forget('CmsCatMap');
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Util 获取所有栏目
+     */
     public static function all()
     {
         return Cache::rememberForever('CmsCatAll', function () {
@@ -48,7 +56,11 @@ class CmsCatUtil
         });
     }
 
-    
+    /**
+     * @return array
+     *
+     * @Util 获取所有栏目Tree
+     */
     public static function tree()
     {
         $cats = CmsCatUtil::all();
@@ -96,7 +108,13 @@ class CmsCatUtil
         return self::filterMemberCanPost($catTree);
     }
 
-    
+    /**
+     * @param $catId int 分类ID
+     * @param $includeSelf bool 是否包括自己
+     * @return array
+     *
+     * @Util 获取所有子栏目ID
+     */
     public static function childrenIds($catId, $includeSelf = true)
     {
         $nodes = self::all();
@@ -147,7 +165,12 @@ class CmsCatUtil
         return null;
     }
 
-    
+    /**
+     * @param $id int
+     * @return mixed|null
+     *
+     * @Util 获取一个子栏目
+     */
     public static function get($id)
     {
         $map = self::map();

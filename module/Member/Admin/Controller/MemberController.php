@@ -55,7 +55,7 @@ class MemberController extends Controller
         $builder
             ->init('member_user')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->id('id', 'ID');
                 MemberAdminList::callGridField($builder);
                 $builder->display('avatar', '头像')->hookRendering(function (AbstractField $field, $item, $index) {
@@ -106,7 +106,8 @@ class MemberController extends Controller
                     MemberStatus::NORMAL => 'success',
                     MemberStatus::FORBIDDEN => 'danger',
                 ])->required();
-                                $groupEnable = ModuleManager::getModuleConfig('Member', 'groupEnable', false);
+                // ->gridEditable(true)
+                $groupEnable = ModuleManager::getModuleConfig('Member', 'groupEnable', false);
                 if ($groupEnable) {
                     $builder->radio('groupId', '分组')->options(MemberGroupUtil::mapIdTitle())->required();
                 }

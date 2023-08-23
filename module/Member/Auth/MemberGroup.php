@@ -32,7 +32,9 @@ class MemberGroup
         return self::get('id', 0);
     }
 
-    
+    /**
+     * @deprecated delete at 2023-10-18
+     */
     public static function inGroupIds($groupIds)
     {
         return self::is($groupIds);

@@ -8,10 +8,15 @@ use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Response;
 use Module\Cms\Util\CmsContentUtil;
 
-
+/**
+ * @Api 通用CMS
+ */
 class PageController extends BaseCatController
 {
-    
+    /**
+     * @Api 单页-获取信息
+     * @ApiBodyParam cat string 栏目标识（ID、名称）
+     */
     public function index()
     {
         $input = InputPackage::buildFromInput();

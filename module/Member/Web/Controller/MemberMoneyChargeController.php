@@ -8,10 +8,13 @@ use Module\Member\Support\MemberLoginCheck;
 
 class MemberMoneyChargeController extends MemberFrameController implements MemberLoginCheck
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberMoneyChargeController */
     private $api;
 
-    
+    /**
+     * MemberMoneyChargeController constructor.
+     * @param \Module\Member\Api\Controller\MemberMoneyChargeController $api
+     */
     public function __construct(\Module\Member\Api\Controller\MemberMoneyChargeController $api)
     {
         parent::__construct();

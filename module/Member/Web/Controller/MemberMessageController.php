@@ -22,7 +22,7 @@ use Module\Member\Type\MemberMessageStatus;
 
 class MemberMessageController extends MemberFrameController implements MemberLoginCheck
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberMessageController */
     private $api;
 
     public function __construct()

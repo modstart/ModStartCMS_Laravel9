@@ -26,7 +26,11 @@ use Module\Vendor\Job\SmsSendJob;
 use Module\Vendor\Sms\SmsUtil;
 use Module\Vendor\Support\ResponseCodes;
 
-
+/**
+ * Class MemberProfileController
+ * @package Module\Member\Api\Controller
+ * @Api 用户资料
+ */
 class MemberProfileController extends ModuleBaseController implements MemberLoginCheck
 {
     public function nickname()
@@ -43,7 +47,12 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '修改成功', null, '[reload]');
     }
 
-    
+    /**
+     * @Api 修改密码
+     * @ApiBodyParam passwordOld string required 原密码
+     * @ApiBodyParam passwordNew string required 新密码
+     * @ApiBodyParam passwordRepeat string required 重复新密码
+     */
     public function password()
     {
         $input = InputPackage::buildFromInput();
@@ -66,7 +75,11 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '修改成功', null, '[reload]');
     }
 
-    
+    /**
+     * @Api 修改用户头像
+     * @ApiBodyParam avatar string required base64头像
+     * @ApiBodyParam type string required 类型，固定为 cropper
+     */
     public function avatar()
     {
         $input = InputPackage::buildFromInput();
@@ -124,7 +137,9 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return CaptchaFacade::create('default');
     }
 
-    
+    /**
+     * @Api 获取图片验证码（修改手机、修改邮箱）
+     */
     public function captcha()
     {
         $captcha = $this->captchaRaw();
@@ -217,7 +232,11 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '验证码发送成功');
     }
 
-    
+    /**
+     * @Api 修改手机号码
+     * @ApiBodyParam phone string 手机号码
+     * @ApiBodyParam verify string 手机验证码
+     */
     public function phone()
     {
         $input = InputPackage::buildFromInput();
@@ -263,7 +282,11 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '修改成功', null, '[reload]');
     }
 
-    
+    /**
+     * @Api 发送手机验证码
+     * @ApiBodyParam target string 手机号码
+     * @ApiBodyParam captcha string 图片验证码
+     */
     public function phoneVerify()
     {
         $phone = Input::get('target');
@@ -315,7 +338,10 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '解绑成功', null, '[reload]');
     }
 
-    
+    /**
+     * @Api 账号注销申请
+     * @ApiBodyParam agree string 同意协议选项，固定yes
+     */
     public function delete()
     {
         if (!modstart_config('Member_DeleteEnable', false)) {
@@ -334,7 +360,9 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
         return Response::generate(0, '申请注销成功', null, '[reload]');
     }
 
-    
+    /**
+     * @Api 账号注销申请撤销
+     */
     public function deleteRevert()
     {
         if (!modstart_config('Member_DeleteEnable', false)) {

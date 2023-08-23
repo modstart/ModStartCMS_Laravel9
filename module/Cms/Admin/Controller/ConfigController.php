@@ -17,7 +17,10 @@ class ConfigController extends Controller
 
         $builder->layoutPanel('文案设置', function (Form $builder) {
             $builder->text('Cms_CompanyName', '企业名称');
-                                                $builder->text('Cms_ContactFax', '企业传真');
+            // $builder->text('Cms_ContactEmail', '企业邮箱');
+            // $builder->text('Cms_ContactPhone', '企业电话');
+            // $builder->text('Cms_ContactAddress', '企业地址');
+            $builder->text('Cms_ContactFax', '企业传真');
             $builder->text('Cms_ContactContactPerson', '联系人');
             $builder->text('Cms_ContactQQ', '企业联系QQ');
 
@@ -28,6 +31,10 @@ class ConfigController extends Controller
 
         $builder->layoutPanel('使用设置', function (Form $builder) {
             $builder->radio('Cms_ContentUrlMode', '内容URL模式')->optionType(ContentUrlMode::class)->defaultValue(ContentUrlMode::A);
+            $builder->radio('Cms_CatAdminTreeMode', '后台栏目管理模式')->options([
+                'tree' => '全部显示',
+                'list' => '只显示一级',
+            ])->defaultValue('list');
         });
 
         $builder->formClass('wide');

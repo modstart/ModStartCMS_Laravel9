@@ -5,7 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMemberLoginLog extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('member_login_log', function (Blueprint $table) {
@@ -15,7 +19,7 @@ class CreateMemberLoginLog extends Migration
 
             $table->bigInteger('memberUserId')->nullable()->comment('用户ID');
 
-            
+            /** @see \Module\Vendor\Type\DeviceType */
             $table->tinyInteger('deviceType')->nullable()->comment('用户名');
             $table->string('ip', 20)->nullable()->comment('用户名');
             $table->string('userAgent', 400)->nullable()->comment('用户名');
@@ -26,7 +30,11 @@ class CreateMemberLoginLog extends Migration
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

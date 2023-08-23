@@ -12,12 +12,13 @@ class IndexController extends BaseController
 {
     public function index()
     {
+        L();
         InstallerUtil::checkForInstallRedirect();
         return HomePageProvider::call(__METHOD__, '\\Module\\Cms\\Web\\Controller\\IndexController@index');
     }
 
     public function test()
     {
-       
+
     }
 }

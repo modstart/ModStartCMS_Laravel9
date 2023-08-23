@@ -5,7 +5,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateCmsModel extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
 
@@ -49,7 +53,11 @@ class CreateCmsModel extends Migration
 
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

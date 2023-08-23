@@ -10,7 +10,11 @@ use ModStart\Field\AutoRenderedFieldValue;
 
 class MemberCmsUtil
 {
-    
+    /**
+     * @param $memberUserId int 用户ID
+     * @param $field string 字段名称，默认为username
+     * @return AutoRenderedFieldValue
+     */
     public static function showFromId($memberUserId, $field = null)
     {
         if (!$memberUserId) {
@@ -20,7 +24,11 @@ class MemberCmsUtil
         return self::show($memberUser, $field);
     }
 
-    
+    /**
+     * @param $memberUser
+     * @param $field string 字段名称，默认为username
+     * @return AutoRenderedFieldValue
+     */
     public static function show($memberUser, $field = null)
     {
         if (!empty($memberUser)) {

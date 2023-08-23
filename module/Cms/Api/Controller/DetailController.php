@@ -15,10 +15,15 @@ use Module\Cms\Util\CmsContentUtil;
 use Module\Cms\Util\CmsMemberPermitUtil;
 use Module\Member\Auth\MemberUser;
 
-
+/**
+ * @Api 通用CMS
+ */
 class DetailController extends ModuleBaseController
 {
-    
+    /**
+     * @Api 内容-获取详情
+     * @ApiBodyParam id integer 内容ID
+     */
     public function index()
     {
         $input = InputPackage::buildFromInput();

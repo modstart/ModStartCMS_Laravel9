@@ -15,7 +15,7 @@ use Module\Member\Support\MemberLoginCheck;
 
 class MemberMoneyController extends MemberFrameController implements MemberLoginCheck
 {
-    
+    /** @var \Module\Member\Api\Controller\MemberMoneyController */
     private $api;
 
     public function __construct()

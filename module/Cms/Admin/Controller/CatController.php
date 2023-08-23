@@ -30,7 +30,7 @@ class CatController extends Controller
         $builder
             ->init('cms_cat')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->id('id', 'ID');
                 $builder->text('title', '名称')->required()->width(200);
                 $builder->text('url', 'URL')->required()
@@ -71,27 +71,27 @@ class CatController extends Controller
                 $builder->textarea('seoKeywords', 'SEO关键词')->listable(false);
                 $builder->switch('visitMemberGroupEnable', '用户分组访问限制')->listable(false)
                     ->when('=', true, function ($builder) {
-                        
+                        /** @var HasFields $builder */
                         $builder->checkbox('visitMemberGroups', '允许访问的用户分组')->optionModel('member_group', 'id', 'title')->listable(false);
                     });
                 $builder->switch('visitMemberVipEnable', '用户VIP访问限制')->listable(false)
                     ->when('=', true, function ($builder) {
-                        
+                        /** @var HasFields $builder */
                         $builder->checkbox('visitMemberVips', '允许访问的用户VIP')->optionModel('member_vip_set', 'id', 'title')->listable(false);
                     });
                 if (modstart_config('CmsMemberPost_Enable', false)) {
                     $builder->switch('memberUserPostEnable', '允许用户发布')->optionsYesNo()->listable(false)
                         ->when('=', true, function ($builder) {
-                            
+                            /** @var HasFields $builder */
                             $builder->switch('postMemberGroupEnable', '用户分组发布限制')->listable(false)
                                 ->when('=', true, function ($builder) {
-                                    
+                                    /** @var HasFields $builder */
                                     $builder->checkbox('postMemberGroups', '允许发布的分组')->optionModel('member_group', 'id', 'title')->listable(false);
                                 });
-                            
+                            /** @var HasFields $builder */
                             $builder->switch('postMemberVipEnable', '用户VIP发布限制')->listable(false)
                                 ->when('=', true, function ($builder) {
-                                    
+                                    /** @var HasFields $builder */
                                     $builder->checkbox('postMemberVips', '允许发布的VIP')->optionModel('member_vip_set', 'id', 'title')->listable(false);
                                 });
                         });
@@ -99,9 +99,15 @@ class CatController extends Controller
                 $builder->number('pageSize', '默认分页大小')->help('默认为10')->listable(false);
                 $builder->display('created_at', L('Created At'))->listable(false);
                 $builder->display('updated_at', L('Updated At'))->listable(false);
-            })
-                        ->asTree()
-                                    ->gridFilter(function (GridFilter $filter) {
+            });
+        if ('list' == modstart_config('Cms_CatAdminTreeMode', 'tree')) {
+            $builder->asTreeMass($pid);
+        } else {
+            $builder->asTree();
+        }
+        $builder
+            ->treeMaxLevel(999)
+            ->gridFilter(function (GridFilter $filter) {
                 $filter->eq('id', L('ID'));
                 $filter->like('title', L('Title'));
             })

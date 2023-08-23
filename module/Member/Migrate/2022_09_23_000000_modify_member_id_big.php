@@ -5,7 +5,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifyMemberIdBig extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('member_user', function (Blueprint $table) {
@@ -75,7 +79,11 @@ class ModifyMemberIdBig extends Migration
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

@@ -13,7 +13,8 @@ class MigrateJob extends Command
 
     public function handle()
     {
-            }
+        // $this->storageTest();
+    }
 
     private function storageTest()
     {

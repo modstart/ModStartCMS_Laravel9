@@ -23,7 +23,7 @@ class MemberMoneyChargeOrderController extends Controller
         $builder
             ->init('member_money_charge_order')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->display('id', '业务订单ID');
                 $builder->datetime('created_at', '创建时间');
                 $builder->display('memberUserId', '用户')->hookRendering(function (AbstractField $field, $item, $index) {

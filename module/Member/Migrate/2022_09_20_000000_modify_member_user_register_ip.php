@@ -5,7 +5,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifyMemberUserRegisterIp extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('member_user', function (Blueprint $table) {
@@ -13,7 +17,11 @@ class ModifyMemberUserRegisterIp extends Migration
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

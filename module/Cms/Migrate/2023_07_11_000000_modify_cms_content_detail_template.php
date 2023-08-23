@@ -5,7 +5,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class ModifyCmsContentDetailTemplate extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
 
@@ -17,7 +21,11 @@ class ModifyCmsContentDetailTemplate extends Migration
 
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

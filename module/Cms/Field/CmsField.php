@@ -8,7 +8,9 @@ use ModStart\Core\Exception\BizException;
 
 class CmsField
 {
-    
+    /**
+     * @var array
+     */
     private static $list = [
         TextCmsField::class,
         TextareaCmsField::class,
@@ -37,7 +39,9 @@ class CmsField
         }
     }
 
-    
+    /**
+     * @return AbstractCmsField[]
+     */
     public static function all()
     {
         foreach (self::$list as $k => $v) {
@@ -50,7 +54,10 @@ class CmsField
         return self::$list;
     }
 
-    
+    /**
+     * @param $name
+     * @return AbstractCmsField|null
+     */
     public static function getByName($name)
     {
         foreach (self::all() as $item) {

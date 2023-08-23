@@ -8,7 +8,11 @@ use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\Response;
 use Module\Member\Type\MemberMessageStatus;
 
-
+/**
+ * @Util 用户消息
+ * Class MemberMessageUtil
+ * @package Module\Member\Util
+ */
 class MemberMessageUtil
 {
 
@@ -106,7 +110,13 @@ class MemberMessageUtil
         self::updateMessageCount($userId);
     }
 
-    
+    /**
+     * @Util 发送消息
+     * @param $userId integer 用户ID
+     * @param $content string 消息HTML内容
+     * @param $fromId int 来源用户ID，0表示系统消息
+     * @return array
+     */
     public static function send($userId, $content, $fromId = 0)
     {
         ModelUtil::insert('member_message', [

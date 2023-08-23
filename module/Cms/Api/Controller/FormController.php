@@ -12,10 +12,15 @@ use ModStart\Core\Input\Response;
 use Module\Cms\Field\CmsField;
 use Module\Cms\Util\CmsContentUtil;
 
-
+/**
+ * @Api 通用CMS
+ */
 class FormController extends BaseCatController
 {
-    
+    /**
+     * @Api 表单-获取详情
+     * @ApiBodyParam cat string 栏目标识（ID、名称）
+     */
     public function index()
     {
         $input = InputPackage::buildFromInput();
@@ -26,7 +31,12 @@ class FormController extends BaseCatController
         return Response::generateSuccessData($viewData);
     }
 
-    
+    /**
+     * @Api 表单-内容提交
+     * @ApiBodyParam cat string 栏目标识（ID、名称）
+     * @ApiBodyParam content string 内容
+     * @ApiBodyParam xxx string 其他信息
+     */
     public function submit()
     {
         $input = InputPackage::buildFromInput();

@@ -22,7 +22,7 @@ class MemberCreditLogController extends Controller
         $builder
             ->init('member_credit_log')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->id('id', 'ID');
                 $builder->display('memberUserId', '用户')->hookRendering(function (AbstractField $field, $item, $index) {
                     return MemberCmsUtil::showFromId($item->memberUserId);

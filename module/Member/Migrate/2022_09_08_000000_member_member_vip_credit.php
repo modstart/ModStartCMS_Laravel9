@@ -5,7 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 
 class MemberMemberVipCredit extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::table('member_vip_set', function (Blueprint $table) {
@@ -16,7 +20,11 @@ class MemberMemberVipCredit extends Migration
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
 

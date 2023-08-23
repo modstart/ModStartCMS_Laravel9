@@ -25,7 +25,7 @@ class MemberVipSetController extends Controller
         $builder
             ->init('member_vip_set')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->layoutPanel('基础信息', function ($builder) {
                     $builder->id('id', 'ID')->addable(true)->editable(true)
                         ->ruleUnique('member_vip_set')->required()
@@ -41,7 +41,7 @@ class MemberVipSetController extends Controller
                     $builder->richHtml('content', '详细说明')->required();
                     if (ModuleManager::getModuleConfig('Member', 'creditEnable', false)) {
                         $builder->switch('creditPresentEnable', '赠送积分')->when('=', true, function ($form) {
-                            
+                            /** @var Form $form */
                             $form->number('creditPresentValue', '赠送积分数量');
                         })->optionsYesNo()->listable(false);
                     }
@@ -86,7 +86,9 @@ class MemberVipSetController extends Controller
     {
         $builder->useDialog();
         $builder->pageTitle('功能设置');
-                        $builder->richHtml('Member_VipContent', 'VIP开通说明')->help('默认为 VIP开通说明');
+        // $builder->text('Member_VipTitle', 'VIP开通标题')->help('默认为 开通尊贵VIP 享受更多权益');
+        // $builder->text('Member_VipSubTitle', 'VIP开通副标题')->help('默认为 会员权益1 丨 会员权益2 丨 会员权益3 丨 会员权益4');
+        $builder->richHtml('Member_VipContent', 'VIP开通说明')->help('默认为 VIP开通说明');
         $builder->formClass('wide');
         return $builder->perform();
     }

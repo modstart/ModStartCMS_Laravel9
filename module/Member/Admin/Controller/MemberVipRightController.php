@@ -18,7 +18,9 @@ class MemberVipRightController extends Controller
         '*' => '\Module\Member\Admin\Controller\MemberVipSetController@index'
     ];
 
-    
+    /**
+     * MemberVipRightController constructor.
+     */
     public function __construct()
     {
         $this->useGridDialogPage();
@@ -32,7 +34,7 @@ class MemberVipRightController extends Controller
         $builder
             ->init('member_vip_right')
             ->field(function ($builder) {
-                
+                /** @var HasFields $builder */
                 $builder->checkbox('vipIds', 'VIP等级')->optionModel('member_vip_set', 'id', 'title')->required();
                 $builder->text('title', '标题')->required();
                 $builder->text('desc', '描述')->required();

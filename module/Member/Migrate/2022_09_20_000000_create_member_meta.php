@@ -5,7 +5,11 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateMemberMeta extends Migration
 {
-    
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
         Schema::create('member_meta', function (Blueprint $table) {
@@ -21,7 +25,11 @@ class CreateMemberMeta extends Migration
         });
     }
 
-    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
     }

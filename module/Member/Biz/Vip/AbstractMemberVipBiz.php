@@ -12,7 +12,9 @@ abstract class AbstractMemberVipBiz
 
     abstract public function title();
 
-    
+    /**
+     * @param $builder HasFields
+     */
     public function vipField($builder)
     {
 
