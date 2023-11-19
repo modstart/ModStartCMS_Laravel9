@@ -5,9 +5,7 @@ namespace Module\Vendor\Provider\SiteTemplate;
 
 
 /**
- * Class SiteTemplateProvider
- * @package Module\Vendor\Provider\SiteTemplate
- * @since 1.5.0
+ * 模板提供者，所有模板都需要在这里注册
  */
 class SiteTemplateProvider
 {
@@ -21,6 +19,11 @@ class SiteTemplateProvider
     public static function register($provider)
     {
         self::$instances[] = $provider;
+    }
+
+    public static function registerQuick($name, $title, $root = null)
+    {
+        self::register(QuickSiteTemplateProvider::make($name, $title, $root));
     }
 
     /**

@@ -8,6 +8,7 @@ use Carbon\Carbon;
 use ModStart\Core\Assets\AssetsUtil;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Exception\BizException;
+use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Util\ArrayUtil;
 use ModStart\Core\Util\TagUtil;
 use Module\Cms\Field\CmsField;
@@ -48,12 +49,21 @@ class CmsContentUtil
                 ['postTime', 'desc'],
             ];
         }
+
+        if (!empty($option['fieldFilterTable']) && !empty($option['fieldFilter'])) {
+            $query = ModelUtil::model($option['fieldFilterTable'])->select(['id']);
+            ModelUtil::queryFilterExecute($query, $option['fieldFilter']);
+            $sql = $query->toSql();
+            $bindings = $query->getBindings();
+            $option['whereRaw'] = ["( id IN ( {$sql} ) )", $bindings];
+        }
+
         $paginateData = ModelUtil::paginate('cms_content', $page, $pageSize, $option);
         foreach ($paginateData['records'] as $k => $record) {
             if (!empty($record['cover'])) {
                 $paginateData['records'][$k]['cover'] = AssetsUtil::fixFull($record['cover']);
             }
-            $paginateData['records'][$k]['_url'] = ContentUrlMode::url($record);
+            $paginateData['records'][$k]['_url'] = UrlUtil::content($record);
             $paginateData['records'][$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $paginateData['records'][$k]['_tags'] = TagUtil::string2Array($record['tags']);
         }
@@ -80,7 +90,7 @@ class CmsContentUtil
             if (!empty($record['cover'])) {
                 $records[$k]['cover'] = AssetsUtil::fixFull($record['cover']);
             }
-            $records[$k]['_url'] = ContentUrlMode::url($record);
+            $records[$k]['_url'] = UrlUtil::content($record);
             $records[$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $records[$k]['_tags'] = TagUtil::string2Array($record['tags']);
             $model = CmsModelUtil::get($record['modelId']);
@@ -140,7 +150,7 @@ class CmsContentUtil
             if (!empty($record['cover'])) {
                 $paginateData['records'][$k]['cover'] = AssetsUtil::fixFull($record['cover']);
             }
-            $paginateData['records'][$k]['_url'] = ContentUrlMode::url($record);
+            $paginateData['records'][$k]['_url'] = UrlUtil::content($record);
             $paginateData['records'][$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $paginateData['records'][$k]['_tags'] = TagUtil::string2Array($record['tags']);
             $paginateData['records'][$k] = CmsModelUtil::decodeCustomField($dataModel, $paginateData['records'][$k]);
@@ -159,6 +169,44 @@ class CmsContentUtil
         return self::paginate($page, $pageSize, $option);
     }
 
+    public static function mergeRecordsData(&$records, $param = [])
+    {
+        if (!isset($param['canVisit'])) {
+            $param['canVisit'] = false;
+        }
+        $modelGroup = [];
+        foreach ($records as $k => $record) {
+            $modelGroup[$record['modelId']][] = $record['id'];
+        }
+        $recordsMap = [];
+        foreach ($modelGroup as $modelId => $contentIds) {
+            $model = CmsModelUtil::get($modelId);
+            $recordDataList = ModelUtil::allIn($model['_table'], 'id', $contentIds, ['*']);
+            $guestVisitVisibleFields = array_map(function ($f) {
+                return $f['name'];
+            }, array_filter($model['_customFields'], function ($o) {
+                return $o['guestVisitVisible'];
+            }));
+            $guestVisitVisibleFields[] = 'id';
+            $guestVisitVisibleFields[] = 'created_at';
+            $guestVisitVisibleFields[] = 'updated_at';
+            $recordDataList = ArrayUtil::keepItemsKeys($recordDataList, $guestVisitVisibleFields);
+            foreach ($recordDataList as $recordData) {
+                foreach ($model['_customFields'] as $v) {
+                    if (!$v['guestVisitVisible']) {
+                        continue;
+                    }
+                    $f = CmsField::getByName($v['fieldType']);
+                    $recordData[$v['name']] = $f->unserializeValue($recordData[$v['name']], $recordData);
+                }
+                $recordsMap[$recordData['id']] = $recordData;
+            }
+        }
+        foreach ($records as $k => $record) {
+            $records[$k]['_data'] = isset($recordsMap[$record['id']]) ? $recordsMap[$record['id']] : null;
+        }
+    }
+
     public static function get($id)
     {
         $record = ModelUtil::get('cms_content', $id);
@@ -167,6 +215,12 @@ class CmsContentUtil
         $table = "cms_m_$model[name]";
         $recordData = ModelUtil::get($table, $record['id']);
         $record['_tags'] = TagUtil::string2Array($record['tags']);
+        $record['_tagList'] = array_map(function ($o) {
+            return [
+                'name' => $o,
+                'url' => UrlUtil::tag($o),
+            ];
+        }, $record['_tags']);
         foreach ($model['_customFields'] as $v) {
             $f = CmsField::getByName($v['fieldType']);
             $recordData[$v['name']] = $f->unserializeValue($recordData[$v['name']], $recordData);
@@ -248,5 +302,36 @@ class CmsContentUtil
     public static function delete($id)
     {
 
+    }
+
+    public static function buildFilter($option, $model)
+    {
+        $input = InputPackage::buildFromInput();
+        $filters = [];
+        foreach ($model['_customFields'] as $f) {
+            if (!$f['guestVisitVisible'] || !$f['isSearch']) {
+                continue;
+            }
+            $value = $input->getTrimString($f['name']);
+            if ('' === $value) {
+                continue;
+            }
+            $field = CmsField::getByName($f['fieldType']);
+            switch ($field->name()) {
+                case 'text':
+                case 'number':
+                    $filters[] = [
+                        'condition' => 'is',
+                        'field' => $f['name'],
+                        'value' => $value,
+                    ];
+                    break;
+            }
+        }
+        if (!empty($filters)) {
+            $option['fieldFilterTable'] = "cms_m_{$model['name']}";
+            $option['fieldFilter'] = $filters;
+        }
+        return $option;
     }
 }

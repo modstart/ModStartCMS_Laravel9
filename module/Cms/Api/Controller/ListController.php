@@ -8,6 +8,7 @@ use ModStart\Core\Exception\BizException;
 use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Response;
 use Module\Cms\Util\CmsContentUtil;
+use Module\Cms\Util\CmsMemberPermitUtil;
 
 /**
  * @Api 通用CMS
@@ -27,6 +28,8 @@ class ListController extends BaseCatController
         $data = parent::setup($catId);
         $page = $input->getPage();
         $cat = $data['cat'];
+        $model = $data['model'];
+
         if (empty($cat['pageSize']) || $cat['pageSize'] < 0) {
             $cat['pageSize'] = 12;
         }
@@ -39,7 +42,12 @@ class ListController extends BaseCatController
         if ($isRecommend) {
             $option['where']['isRecommend'] = true;
         }
+        $option = CmsContentUtil::buildFilter($option, $model);
         $paginateData = CmsContentUtil::paginateCat($cat['id'], $page, $pageSize, $option);
+        CmsContentUtil::mergeRecordsData($paginateData['records'], [
+            'canVisit' => CmsMemberPermitUtil::canVisitCat($cat),
+        ]);
+
         $viewData = [];
         $viewData['total'] = $paginateData['total'];
         $viewData['cat'] = $cat;

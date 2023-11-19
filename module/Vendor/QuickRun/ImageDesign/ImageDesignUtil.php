@@ -27,6 +27,27 @@ class ImageDesignUtil
         ]);
     }
 
+    private static function rectRadius($fillColor, $width, $height, $radius)
+    {
+        if (!class_exists('\ImagickDraw') || !class_exists('\Imagick')) {
+            return null;
+        }
+        $draw = new \ImagickDraw();
+        // $draw->setStrokeColor('#FF0000');
+        $draw->setFillColor($fillColor);
+        $draw->setStrokeWidth(0);
+        $draw->roundRectangle(0, 0, $width - 1, $height, $radius, $radius);
+
+        $imagick = new \Imagick();
+        $imagick->newImage($width, $height, 'transparent');
+        $imagick->setImageFormat('png');
+        $imagick->drawImage($draw);
+        $out = $imagick->getImageBlob();
+        $imagick->clear();
+        $imagick->destroy();
+        return $out;
+    }
+
     public static function render($imageConfig, $variables = [])
     {
         BizException::throwsIfEmpty('imageConfig 为空', $imageConfig);
@@ -40,7 +61,7 @@ class ImageDesignUtil
 
         BizException::throwsIf('width empty', empty($imageConfig['width']));
         BizException::throwsIf('height empty', empty($imageConfig['height']));
-        BizException::throwsIf('backgroundImage 为空', empty($imageConfig['backgroundImage']));
+        BizException::throwsIf('backgroundImage 和 backgroundColor 为空', empty($imageConfig['backgroundImage']) && empty($imageConfig['backgroundColor']));
         BizException::throwsIf('blocks empty', !isset($imageConfig['blocks']));
 
         if (empty($imageConfig['font'])) {
@@ -49,10 +70,16 @@ class ImageDesignUtil
             $fontPath = FileUtil::savePathToLocalTemp($imageConfig['font'], 'ttf', true);
         }
 
-        $backgroundImage = FileUtil::savePathToLocalTemp($imageConfig['backgroundImage']);
-        $image = Image::make($backgroundImage);
+        if (!empty($imageConfig['backgroundImage'])) {
+            $backgroundImage = FileUtil::savePathToLocalTemp($imageConfig['backgroundImage']);
+            $image = Image::make($backgroundImage);
+        } else {
+            $image = Image::canvas($imageConfig['width'], $imageConfig['height'], $imageConfig['backgroundColor']);
+        }
 
         foreach ($imageConfig['blocks'] as $item) {
+            $item['x'] = intval($item['x']);
+            $item['y'] = intval($item['y']);
             switch ($item['type']) {
                 case 'text':
                     $lines = explode("[BR]", $item['data']['text']);
@@ -69,7 +96,25 @@ class ImageDesignUtil
                             $font->align($item['data']['align']);
                             $font->valign('top');
                         });
-                        $y += $item['data']['size'] * 1.5;
+                        $y += $item['data']['size'] * 1.2;
+                    }
+                    break;
+                case 'rect':
+                    $x = $item['x'];
+                    $y = $item['y'];
+                    $isDraw = false;
+                    if (isset($item['data']['radius'])) {
+                        $radiusRect = self::rectRadius($item['data']['backgroundColor'], $item['data']['width'], $item['data']['height'], $item['data']['radius']);
+                        if ($radiusRect) {
+                            $radiusRect = Image::make($radiusRect);
+                            $image->insert($radiusRect, 'top-left', $x, $y);
+                            $isDraw = true;
+                        }
+                    }
+                    if (!$isDraw) {
+                        $image->rectangle($x, $y, $x + $item['data']['width'], $y + $item['data']['height'], function ($draw) use ($item) {
+                            $draw->background($item['data']['backgroundColor']);
+                        });
                     }
                     break;
                 case 'image':
@@ -77,6 +122,9 @@ class ImageDesignUtil
                     $itemImage = Image::make($itemImagePath);
                     if (!empty($item['data']['opacity'])) {
                         $itemImage->opacity($item['data']['opacity']);
+                    }
+                    if (isset($item['data']['width']) && isset($item['data']['height'])) {
+                        $itemImage->resize($item['data']['width'], $item['data']['height']);
                     }
                     $image->insert($itemImage, 'top-left', $item['x'], $item['y']);
                     break;

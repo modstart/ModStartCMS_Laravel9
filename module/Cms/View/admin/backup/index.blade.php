@@ -1,6 +1,6 @@
 @extends('modstart::admin.frame')
 
-@section('pageTitle')数据备份@endsection
+@section('pageTitle')数据库备份@endsection
 
 @section($_tabSectionName)
 
@@ -12,7 +12,7 @@
     <div class="ub-panel">
         <div class="head">
             <div class="title">
-                数据备份
+                数据库备份
             </div>
         </div>
         <div class="body">
@@ -22,10 +22,26 @@
                         <div class="label">备份CMS表</div>
                         <div class="field">
                             @foreach(\Module\Cms\Util\CmsBackupUtil::listBackupTables() as $table)
-                                <div class="tw-font-mono">
-                                    <input type="checkbox" style="vertical-align:middle;" name="table[]" checked value="{{$table}}" />
-                                    {{$table}}
-                                </div>
+                                <label class="tw-font-mono tw-block">
+                                    <input type="checkbox" style="vertical-align:middle;" name="table[]"
+                                           value="{{$table['name']}}"
+                                           @if($table['checked']) checked @endif
+                                    />
+                                    {{$table['name']}}
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="line">
+                        <div class="label">备份配置</div>
+                        <div class="field">
+                            @foreach($configs as $c)
+                                <label class="tw-font-mono tw-inline-block" style="min-width:15rem;">
+                                    <input type="checkbox" style="vertical-align:middle;" name="config[]"
+                                           value="{{$c['key']}}"
+                                    />
+                                    {{$c['key']}}
+                                </label>
                             @endforeach
                         </div>
                     </div>
@@ -39,12 +55,28 @@
                                     <option value="{{$theme->name()}}">module/{{$theme->name()}}/Backup</option>
                                 @endforeach
                             </select>
+                            <script>
+                                $(function () {
+                                    var change = function () {
+                                        var val = $('[name="module"]').val();
+                                        $('[name="config[]"]').each(function () {
+                                            var $this = $(this);
+                                            if ($this.val().indexOf(val) === 0) {
+                                                $this.prop('checked', true);
+                                            } else {
+                                                $this.prop('checked', false);
+                                            }
+                                        });
+                                    };
+                                    $('[name="module"]').on('change', change);
+                                });
+                            </script>
                         </div>
                     </div>
                     <div class="line">
                         <div class="label">备份文件名称</div>
                         <div class="field">
-                            <input name="filename" class="form tw-w-full" value="{{date('Ymd_His')}}" />
+                            <input name="filename" class="form tw-w-full" value="{{date('Ymd_His')}}"/>
                             <div class="help">
                                 规则：数字字母下划线组成
                             </div>
