@@ -115,6 +115,9 @@ class CollectionConfigurator
         return $this;
     }
 
+    /**
+     * This method overrides the one from LocalizedRouteTrait.
+     */
     private function createRoute(string $path): Route
     {
         return (clone $this->route)->setPath($path);

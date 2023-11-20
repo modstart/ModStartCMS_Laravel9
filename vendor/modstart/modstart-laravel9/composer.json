@@ -1,28 +1,29 @@
 {
-  "name": "modstart/modstart-laravel9",
-  "description": "modstart",
-  "type": "library",
-  "keywords": [
-    "laravel",
-    "admin"
-  ],
-  "homepage": "modstart/modstart-laravel9",
-  "license": "Apache 2.0",
-  "authors": [
-    {
-      "name": "ModStart",
-      "email": "modstart@163.com"
+    "name": "modstart/modstart-laravel9",
+    "description": "modstart",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "admin"
+    ],
+    "homepage": "modstart/modstart-laravel9",
+    "license": "Apache 2.0",
+    "authors": [
+        {
+            "name": "ModStart",
+            "email": "modstart@163.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.0",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "modstart/modstart": "dev-master",
+        "maatwebsite/excel": "*",
+        "w7corp/easywechat": "5.28.0"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
     }
-  ],
-  "require": {
-    "php": ">=8.0.0",
-    "ext-json": "*",
-    "ext-curl": "*",
-    "modstart/modstart": "dev-master",
-    "w7corp/easywechat": "5.28.0"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "autoload": {
-  }
 }
