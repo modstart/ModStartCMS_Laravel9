@@ -66,6 +66,14 @@ class CmsContentUtil
             $paginateData['records'][$k]['_url'] = UrlUtil::content($record);
             $paginateData['records'][$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $paginateData['records'][$k]['_tags'] = TagUtil::string2Array($record['tags']);
+            $paginateData['records'][$k]['_tagList'] = array_map(function ($o) {
+                return [
+                    'name' => $o,
+                    'url' => UrlUtil::tag($o),
+                ];
+            }, $paginateData['records'][$k]['_tags']);
+            $model = CmsModelUtil::get($record['modelId']);
+            $paginateData['records'][$k]['_data'] = CmsContentUtil::getModelData($model, $record['id']);
         }
         return $paginateData;
     }
@@ -93,6 +101,12 @@ class CmsContentUtil
             $records[$k]['_url'] = UrlUtil::content($record);
             $records[$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $records[$k]['_tags'] = TagUtil::string2Array($record['tags']);
+            $records[$k]['_tagList'] = array_map(function ($o) {
+                return [
+                    'name' => $o,
+                    'url' => UrlUtil::tag($o),
+                ];
+            }, $records[$k]['_tags']);
             $model = CmsModelUtil::get($record['modelId']);
             $records[$k]['_data'] = CmsContentUtil::getModelData($model, $record['id']);
         }
@@ -153,6 +167,12 @@ class CmsContentUtil
             $paginateData['records'][$k]['_url'] = UrlUtil::content($record);
             $paginateData['records'][$k]['_day'] = Carbon::parse($record['postTime'])->toDateString();
             $paginateData['records'][$k]['_tags'] = TagUtil::string2Array($record['tags']);
+            $paginateData['records'][$k]['_tagList'] = array_map(function ($o) {
+                return [
+                    'name' => $o,
+                    'url' => UrlUtil::tag($o),
+                ];
+            }, $paginateData['records'][$k]['_tags']);
             $paginateData['records'][$k] = CmsModelUtil::decodeCustomField($dataModel, $paginateData['records'][$k]);
         }
         return $paginateData;
@@ -225,6 +245,7 @@ class CmsContentUtil
             $f = CmsField::getByName($v['fieldType']);
             $recordData[$v['name']] = $f->unserializeValue($recordData[$v['name']], $recordData);
         }
+        $record['_url'] = UrlUtil::content($record);
         $record['_data'] = $recordData;
         if (!empty($record['cover'])) {
             $record['cover'] = AssetsUtil::fixFull($record['cover']);
@@ -265,6 +286,12 @@ class CmsContentUtil
         $table = "cms_m_$model[name]";
         $recordData = ModelUtil::get($table, $record['id']);
         $record['_tags'] = TagUtil::string2Array($record['tags']);
+        $record['_tagList'] = array_map(function ($o) {
+            return [
+                'name' => $o,
+                'url' => UrlUtil::tag($o),
+            ];
+        }, $record['_tags']);
         $record['_data'] = $recordData;
         if (!empty($record['cover'])) {
             $record['cover'] = AssetsUtil::fixFull($record['cover']);
