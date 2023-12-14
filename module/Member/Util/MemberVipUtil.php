@@ -8,6 +8,7 @@ use ModStart\Core\Assets\AssetsUtil;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Input\Response;
 use ModStart\Module\ModuleManager;
+use Module\Member\Events\MemberUserVipChangeEvent;
 use Module\Vendor\Util\CacheUtil;
 
 class MemberVipUtil
@@ -112,10 +113,14 @@ class MemberVipUtil
         }
         // 过期的用户，需要更新数据库
         if (!empty($memberUser['vipExpire']) && strtotime($memberUser['vipExpire']) <= time()) {
+            $defaultVipId = self::defaultVipId();
             MemberUtil::update($memberUser['id'], [
-                'vipId' => self::defaultVipId(),
+                'vipId' => $defaultVipId,
                 'vipExpire' => null
             ]);
+            if ($defaultVipId != $memberUser['vipId']) {
+                MemberUserVipChangeEvent::fire($memberUser['id'], $defaultVipId, $memberUser['vipId']);
+            }
         }
         if (empty($vip)) {
             return null;
@@ -195,12 +200,12 @@ class MemberVipUtil
     {
         $newVip = self::get($newVipId);
         $newDays = ($newVip ? $newVip['vipDays'] : 0);
-        $oldExpireTimestamp = (strtotime($oldExpire) > 0 ? strtotime($oldExpire) : 0);
         $timestamp = time();
+        $oldExpireTimestamp = max(strtotime($oldExpire), 0);
         if ($oldExpireTimestamp > time()) {
             $timestamp = $oldExpireTimestamp;
         }
-        return date('Y-m-d', $oldExpireTimestamp + $newDays * 24 * 3600);
+        return date('Y-m-d', $timestamp + $newDays * 24 * 3600);
     }
 
     /**
