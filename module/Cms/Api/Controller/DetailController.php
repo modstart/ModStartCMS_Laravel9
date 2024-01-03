@@ -9,6 +9,7 @@ use ModStart\Core\Input\InputPackage;
 use ModStart\Core\Input\Response;
 use ModStart\Core\Util\ArrayUtil;
 use ModStart\Module\ModuleBaseController;
+use Module\Cms\Core\CmsRecommendBiz;
 use Module\Cms\Type\CmsContentVerifyStatus;
 use Module\Cms\Util\CmsCatUtil;
 use Module\Cms\Util\CmsContentUtil;
@@ -69,6 +70,9 @@ class DetailController extends ModuleBaseController
             if (MemberUser::isNotMine($data['record']['memberUserId'])) {
                 BizException::throws('记录未审核');
             }
+        }
+        if (MemberUser::isLogin()) {
+            CmsRecommendBiz::itemFeedbackVisit($record['id'], MemberUser::id());
         }
         return Response::generateSuccessData($viewData);
     }
