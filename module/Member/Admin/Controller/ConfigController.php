@@ -105,6 +105,9 @@ class ConfigController extends Controller
                     ->defaultValue(false);
             }
             $builder->number('Member_UsernameMinLength', '用户名最小长度')->defaultValue(3);
+            $builder->text('Member_RegisterUsernameSuggest', '自动注册用户名前缀')
+                ->defaultValue('用户')
+                ->help('部分场景注册时可能无法获取到用户名，开启自动注册后将自动设置用户名前缀，用户名如遇冲突将会自动追加随机字符串');
 
         });
         $builder->layoutPanel('找回密码', function ($builder) {
@@ -167,6 +170,12 @@ class ConfigController extends Controller
             ->when('=', true, function ($builder) {
                 $builder->text('Member_PrivacyTitle', '用户隐私协议标题')->help('默认为 用户隐私协议');
                 $builder->richHtml('Member_PrivacyContent', '用户隐私协议内容');
+            });
+
+        $builder->switch('Member_AppealEnable', '账号申诉开启')
+            ->when('=', true, function ($builder) {
+                $builder->text('Member_AppealTitle', '账号申诉标题')->help('默认为 账号申诉');
+                $builder->richHtml('Member_AppealContent', '账号申诉内容');
             });
         $builder->formClass('wide');
         return $builder->perform();
