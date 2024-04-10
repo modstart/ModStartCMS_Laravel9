@@ -31,7 +31,7 @@
     --panel-menu-search-tip-color: #999;
     --panel-menu-scrollbar-background: #CCC;
     --panel-menu-page-tab-scrollbar-background: var(--color-primary);
-    --panel-menu-arrow-color: #CCC;
+    --panel-menu-arrow-color: #999;
 }
 
 .ub-panel-frame {
@@ -92,6 +92,14 @@
             bottom: 0;
             overflow: auto;
             transition: all 0.2s linear;
+
+            &.moving {
+                cursor: grab;
+
+                * {
+                    cursor: grab;
+                }
+            }
 
             mark {
                 color: red;
@@ -231,7 +239,7 @@
                         width: 0px;
                         height: 0px;
                         display: block;
-                        border: 0.2rem solid var(--panel-menu-arrow-color);
+                        border: 0.215rem solid var(--panel-menu-arrow-color);
                         border-color: transparent transparent transparent var(--panel-menu-arrow-color);
                         position: absolute;
                         right: 0.5rem;
@@ -303,6 +311,14 @@
                 overflow-y: hidden;
                 overflow-x: auto;
                 white-space: nowrap;
+
+                &.moving {
+                    cursor: grab;
+
+                    * {
+                        cursor: grab;
+                    }
+                }
 
                 &::-webkit-scrollbar-track {
                     background: transparent;
