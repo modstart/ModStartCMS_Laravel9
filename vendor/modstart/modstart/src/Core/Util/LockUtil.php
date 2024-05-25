@@ -28,6 +28,12 @@ class LockUtil
         return self::$instance;
     }
 
+    /**
+     * 请求一个锁
+     * @param $name string 锁的名字
+     * @param $timeout int 超时时间，单位秒
+     * @return bool
+     */
     public static function acquire($name, $timeout = 60)
     {
         if (RedisUtil::isEnable()) {
@@ -50,6 +56,11 @@ class LockUtil
         return false;
     }
 
+    /**
+     * 释放一个锁
+     * @param $name string 锁的名字
+     * @return void
+     */
     public static function release($name)
     {
         if (RedisUtil::isEnable()) {
