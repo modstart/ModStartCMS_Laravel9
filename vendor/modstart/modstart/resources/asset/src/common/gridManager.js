@@ -187,7 +187,12 @@ var GridManager = function (opt) {
                             $grid.find('[data-table]').html(emptyHtml);
                         }
                     }
-                }
+                },
+                error: function (msg) {
+                    var $emptyHtml = $(emptyHtml);
+                    $emptyHtml.find('.text').text(msg);
+                    $grid.find('[data-table]').html($emptyHtml[0].outerHTML);
+                },
             });
 
         } else {
@@ -245,11 +250,12 @@ var GridManager = function (opt) {
                     updateTableCheckedOrder();
                 }
             });
+            var $listerTable = $lister.find('[data-table]');
             lister = new window.api.lister(
                 {
                     lister: $lister,
                     search: $lister.find('[data-search]'),
-                    table: $lister.find('[data-table]')
+                    table: $listerTable
                 },
                 {
                     hashUrl: false,
@@ -259,6 +265,20 @@ var GridManager = function (opt) {
                         pageSize: option.defaultPageSize,
                     },
                     customLoading: function (loading) {
+
+                        // set css property --layui-table-loading-top start
+                        var offset = $listerTable.offset();
+                        var rect = $listerTable[0].getBoundingClientRect();
+                        var offsetTop = Math.max(-rect.top, 0);
+                        var windowHeight = $(window).height();
+                        var height = windowHeight - Math.max(rect.top, 0) - Math.max(windowHeight - rect.bottom, 0);
+                        var top = '50%';
+                        if (height > 0) {
+                            top = (offsetTop + height / 2) + 'px';
+                        }
+                        $lister[0].style.setProperty('--layui-table-loading-top', top);
+                        // set css property --layui-table-loading-top end
+
                         if (option.gridBeforeRequestScript) {
                             eval(option.gridBeforeRequestScript);
                         }
@@ -289,7 +309,17 @@ var GridManager = function (opt) {
                         if (data.script) {
                             eval(data.script);
                         }
-                    }
+                    },
+                    error: function (msg) {
+                        layui.table.reload(option.id + 'Table', {
+                            text: {
+                                none: '<div class="ub-text-muted tw-py-10"><i class="iconfont icon-warning" style="font-size:2rem;"></i><br />' + MS.util.specialchars(msg) + '</div>'
+                            },
+                            cols: [],
+                            data: [],
+                            limit: 0,
+                        });
+                    },
                 });
         }
 

@@ -72,6 +72,7 @@ use ModStart\Support\Manager\FieldManager;
  * @method Grid|mixed batchOperatePrepend($value = null)
  * @method Grid|mixed gridOperateAppend($value = null)
  * @method Grid|mixed view($value = null)
+ * @method Grid|mixed viewData($value = null)
  * // 配合 useSimple 使用，设置每行的列数，value 是一个数组，分别表示 md 和 sm 的占比（总和为 12）
  * @method Grid|mixed gridRowCols($value = null)
  * @method Grid|mixed defaultPageSize($value = null)
@@ -108,6 +109,7 @@ class Grid
 
     protected $fluentAttributes = [
         'view',
+        'viewData',
         'engine',
         'title',
         'titleAdd',
@@ -239,6 +241,10 @@ class Grid
      */
     private $view = 'modstart::core.grid.index';
     /**
+     * @var array Grid页面视图数据
+     */
+    private $viewData = [];
+    /**
      * @var string 追加视图内容
      */
     private $bodyAppend = '';
@@ -268,7 +274,7 @@ class Grid
     public static function make($model, \Closure $builder = null)
     {
         if ($model && is_object($model)) {
-            return new Grid($model, $builder);
+            return new static($model, $builder);
         }
         if (class_exists($model)) {
             if (
@@ -276,10 +282,10 @@ class Grid
                 ||
                 is_subclass_of($model, Repository::class)
             ) {
-                return new Grid($model, $builder);
+                return new static($model, $builder);
             }
         }
-        $grid = new Grid(DynamicModel::make($model), $builder);
+        $grid = new static(DynamicModel::make($model), $builder);
         $grid->isDynamicModel = true;
         $grid->dynamicModelTableName = $model;
         return $grid;
@@ -683,7 +689,7 @@ class Grid
             'gridBeforeRequestScript' => $this->gridBeforeRequestScript,
             'scopeCurrent' => Input::get('_scope', $this->scopeDefault),
             'bodyAppend' => $this->bodyAppend,
-        ]);
+        ], $this->viewData);
         return view($this->view, $data)->render();
     }
 

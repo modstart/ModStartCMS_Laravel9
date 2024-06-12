@@ -4,7 +4,7 @@
 namespace ModStart\Core\Util;
 
 
-use NinjaMutex\Lock\MySqlLock;
+use ModStart\Core\Util\Support\MySqlLock;
 use NinjaMutex\MutexFabric;
 
 class LockUtil
@@ -17,11 +17,7 @@ class LockUtil
     private static function instance()
     {
         if (null === self::$instance) {
-            $mysqlLock = new MySqlLock(
-                config('env.DB_USERNAME'),
-                config('env.DB_PASSWORD'),
-                config('env.DB_HOST')
-            );
+            $mysqlLock = new MySqlLock();
             $mutexFabric = new MutexFabric('mysql', $mysqlLock);
             self::$instance = $mutexFabric;
         }
@@ -38,18 +34,22 @@ class LockUtil
     {
         if (RedisUtil::isEnable()) {
             $key = "Lock:$name";
-            if (RedisUtil::setnx($key, time() + $timeout)) {
-                RedisUtil::expire($key, $timeout);
-                return true;
-            }
-            $ts = RedisUtil::get($key);
-            if ($ts < time()) {
-                RedisUtil::delete($key);
-                return self::acquire($name, $timeout);
+            $endLife = microtime(true) + $timeout;
+            while (microtime(true) < $endLife) {
+                if (RedisUtil::setnx($key, time() + $timeout)) {
+                    RedisUtil::expire($key, $timeout);
+                    return true;
+                }
+                $ts = RedisUtil::get($key);
+                if ($ts < time()) {
+                    RedisUtil::delete($key);
+                    return self::acquire($name, $timeout);
+                }
+                usleep(1000);
             }
             return false;
         } else {
-            if (self::instance()->get($name)->acquireLock($timeout)) {
+            if (self::instance()->get($name)->acquireLock($timeout * 1000)) {
                 return true;
             }
         }

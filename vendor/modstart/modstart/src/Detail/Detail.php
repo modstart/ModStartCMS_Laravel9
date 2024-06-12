@@ -13,7 +13,6 @@ use ModStart\Detail\Type\DetailEngine;
 use ModStart\Field\AbstractField;
 use ModStart\Field\Type\FieldRenderMode;
 use ModStart\Form\Concern\HasCascadeFields;
-use ModStart\Form\Form;
 use ModStart\Repository\Filter\HasRepositoryFilter;
 use ModStart\Repository\Filter\HasScopeFilter;
 use ModStart\Repository\Repository;
@@ -28,6 +27,8 @@ use ModStart\Support\Manager\FieldManager;
  *
  * @method  Detail|mixed engine($value = null)
  * @method  Detail|mixed title($value = null)
+ * @method  Detail|mixed view($value = null)
+ * @method  Detail|mixed viewData($value = null)
  * @method  Detail|mixed formClass($value = null)
  * @method  Detail|array|integer|string itemId($value = null)
  * @method  Detail|Model|\stdClass item($value = null)
@@ -54,8 +55,14 @@ class Detail implements Renderable
      * @var string
      */
     private $view = 'modstart::core.detail.index';
+    /**
+     * @var array
+     */
+    private $viewData = [];
 
     private $fluentAttributes = [
+        'view',
+        'viewData',
         'engine',
         'title',
         'itemId',
@@ -96,14 +103,22 @@ class Detail implements Renderable
 
     public static function make($model, \Closure $builder = null)
     {
-        if (
-            is_object($model)
-            ||
-            (class_exists($model) && is_subclass_of($model, Model::class))
-        ) {
-            return new Detail($model, $builder);
+        if ($model && is_object($model)) {
+            return new static($model, $builder);
         }
-        return new Detail(DynamicModel::make($model), $builder);
+        if (class_exists($model)) {
+            if (
+                is_subclass_of($model, \Illuminate\Database\Eloquent\Model::class)
+                ||
+                is_subclass_of($model, Repository::class)
+            ) {
+                return new static($model, $builder);
+            }
+        }
+        $grid = new static(DynamicModel::make($model), $builder);
+        $grid->isDynamicModel = true;
+        $grid->dynamicModelTableName = $model;
+        return $grid;
     }
 
     public function asTree($keyName = 'id', $pidColumn = 'pid', $sortColumn = 'sort', $titleColumn = 'title')
@@ -158,7 +173,7 @@ class Detail implements Renderable
     {
         $data = [];
         $data['fields'] = $this->showableFields();
-        $data = array_merge($this->fluentAttributeVariables(), $data);
+        $data = array_merge($this->fluentAttributeVariables(), $data, $this->viewData);
         return view($this->view, $data)->render();
     }
 

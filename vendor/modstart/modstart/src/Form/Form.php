@@ -49,6 +49,8 @@ use stdClass;
  * @method  Form|mixed title($value = null)
  * @method  Form|mixed showSubmit($value = null)
  * @method  Form|mixed showReset($value = null)
+ * @method  Form|mixed view($value = null)
+ * @method  Form|mixed viewData($value = null)
  *
  * 当前数据ID
  * > add模式：为空
@@ -135,8 +137,14 @@ class Form implements Renderable
      * @var string
      */
     private $view = 'modstart::core.form.index';
+    /**
+     * @var array
+     */
+    protected $viewData = [];
 
     protected $fluentAttributes = [
+        'view',
+        'viewData',
         'engine',
         'builder',
         'mode',
@@ -277,14 +285,22 @@ class Form implements Renderable
 
     public static function make($model = null, \Closure $builder = null)
     {
-        if (
-            is_object($model)
-            ||
-            (class_exists($model) && is_subclass_of($model, Model::class))
-        ) {
-            return new Form($model, $builder);
+        if ($model && is_object($model)) {
+            return new static($model, $builder);
         }
-        return new Form(DynamicModel::make($model), $builder);
+        if (class_exists($model)) {
+            if (
+                is_subclass_of($model, \Illuminate\Database\Eloquent\Model::class)
+                ||
+                is_subclass_of($model, Repository::class)
+            ) {
+                return new static($model, $builder);
+            }
+        }
+        $grid = new static(DynamicModel::make($model), $builder);
+        $grid->isDynamicModel = true;
+        $grid->dynamicModelTableName = $model;
+        return $grid;
     }
 
     public function asTree($keyName = 'id', $pidColumn = 'pid', $sortColumn = 'sort', $titleColumn = 'title')
@@ -790,7 +806,7 @@ class Form implements Renderable
             default:
                 return Response::sendError('Form.render mode error : ' . $this->mode);
         }
-        $data = array_merge($this->fluentAttributeVariables(), $data);
+        $data = array_merge($this->fluentAttributeVariables(), $data, $this->viewData);
         return view($this->view, $data)->render();
     }
 
