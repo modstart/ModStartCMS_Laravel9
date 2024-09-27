@@ -330,7 +330,7 @@ export default {
             return data.name.indexOf(value) !== -1
         },
         isImage(file) {
-            return ['jpg', 'png', 'gif', 'jpeg', 'webp'].includes(file.type)
+            return ['jpg', 'png', 'gif', 'jpeg', 'webp', 'svg'].includes(file.type)
         },
         show() {
             this.visible = true
@@ -488,7 +488,6 @@ export default {
                 page: page,
                 categoryId: this.currentCategoryId
             }, res => {
-                this.tab = 'list'
                 let records = res.data.records
                 records.map(o => {
                     o.checked = false

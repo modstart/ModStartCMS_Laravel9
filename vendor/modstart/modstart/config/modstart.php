@@ -3,7 +3,7 @@ return [
 
     'name' => 'ModStart',
 
-    'trackMissingLang' => false,
+    'trackMissingLang' => env('TRACK_MISSING_LANG', false),
     /**
      * 开启性能追踪，开启后会在日志中记录必要的请求，如慢SQL执行、多查询请求
      */
@@ -76,7 +76,7 @@ return [
     ],
 
     'openApi' => [
-        'prefix' => trim(env('API_PATH', 'open_api'), '/'),
+        'prefix' => trim(env('OPEN_API_PATH', 'open_api'), '/'),
         'directory' => app_path('OpenApi'),
     ],
 
