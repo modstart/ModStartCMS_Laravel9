@@ -29,6 +29,7 @@ $router->group([
     $router->match(['post'], 'oauth/login', 'AuthController@oauthLogin');
     $router->match(['post'], 'oauth/callback', 'AuthController@oauthCallback');
     $router->match(['post'], 'oauth/try_login', 'AuthController@oauthTryLogin');
+    $router->match(['post'], 'oauth/bind_info', 'AuthController@oauthBindInfo');
     $router->match(['post'], 'oauth/bind', 'AuthController@oauthBind');
     $router->match(['post'], 'oauth/bind_captcha', 'AuthController@oauthBindCaptcha');
     $router->match(['post'], 'oauth/bind_captcha_verify', 'AuthController@oauthBindCaptchaVerify');
@@ -51,6 +52,7 @@ $router->group([
     $router->match(['post'], 'member_profile/phone', 'MemberProfileController@phone');
     $router->match(['post'], 'member_profile/phone_verify', 'MemberProfileController@phoneVerify');
     $router->match(['post'], 'member_profile/oauth_unbind', 'MemberProfileController@oauthUnbind');
+    $router->match(['post'], 'member_profile/delete_info', 'MemberProfileController@deleteInfo');
     $router->match(['post'], 'member_profile/delete', 'MemberProfileController@delete');
     $router->match(['post'], 'member_profile/delete_revert', 'MemberProfileController@deleteRevert');
     $router->match(['post'], 'member_profile/nickname', 'MemberProfileController@nickname');
