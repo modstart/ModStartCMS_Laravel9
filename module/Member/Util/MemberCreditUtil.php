@@ -5,6 +5,7 @@ namespace Module\Member\Util;
 use ModStart\Core\Dao\ModelUtil;
 use ModStart\Core\Exception\BizException;
 use ModStart\Core\Util\SerializeUtil;
+use Module\Member\Auth\MemberUser;
 use Module\Member\Model\MemberCredit;
 use Module\Member\Model\MemberCreditFreeze;
 use Module\Member\Model\MemberCreditLog;
@@ -12,6 +13,16 @@ use Module\Member\Type\MemberCreditFreezeStatus;
 
 class MemberCreditUtil
 {
+    public static function checkOrFail($memberUserId = null, $creditValue = 1)
+    {
+        if (null === $memberUserId) {
+            $memberUserId = MemberUser::id();
+        }
+        if (self::getTotal($memberUserId) < $creditValue) {
+            BizException::throws(modstart_module_config('Member', 'creditName') . '不足');
+        }
+    }
+
     public static function paginateLog($memberUserId, $page, $pageSize, $option = [])
     {
         $option['where']['memberUserId'] = $memberUserId;
