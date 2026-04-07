@@ -95,7 +95,7 @@ class AigcKeyPoolController extends Controller
                         if ($provider) {
                             $html[] = "<table class='ub-table mini border tw-bg-white'>";
                             foreach ($provider->paramDisplay($item->toArray()) as $v) {
-                                $html[] = "<tr><td>$v[name]</td><td><div style='max-width:8rem;overflow:hidden;text-overflow:ellipsis;'>$v[value]</div></td></tr>";
+                                $html[] = "<tr><td>$v[name]</td><td><div style='max-width:10rem;overflow:hidden;text-overflow:ellipsis;'>$v[value]</div></td></tr>";
                             }
                             $html[] = "</table>";
                         }
@@ -105,8 +105,8 @@ class AigcKeyPoolController extends Controller
                     ->listable(true)->showable(true)->addable(false)->editable(false);
                 $builder->text('remark', '备注');
 
-                $builder->display('created_at', L('Created At'))->listable(false);
-                $builder->display('updated_at', L('Updated At'))->listable(false);
+                $builder->display('created_at', L('CreatedAt'))->listable(false);
+                $builder->display('updated_at', L('UpdatedAt'))->listable(false);
             })
             ->gridFilter(function (GridFilter $filter) {
                 // $filter->eq('userId', '用户ID');

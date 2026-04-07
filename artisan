@@ -3,6 +3,8 @@
 
 define('LARAVEL_START', microtime(true));
 
+require __DIR__.'/module/Vendor/Installer/artisanCheck.php';
+
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -18,16 +20,6 @@ define('LARAVEL_START', microtime(true));
 require __DIR__.'/vendor/autoload.php';
 
 $app = require_once __DIR__.'/bootstrap/app.php';
-
-if (\ModStart\Core\Util\PlatformUtil::isLinux()) {
-    if (function_exists('posix_getuid')) {
-        $uid = posix_getuid();
-        if ($uid == 0) {
-            echo "You can't run this command as root ( uid = ${uid} ).\n";
-            exit(-1);
-        }
-    }
-}
 
 /*
 |--------------------------------------------------------------------------

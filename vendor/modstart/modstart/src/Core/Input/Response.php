@@ -258,7 +258,7 @@ class Response
         if (Request::isAjax()) {
             return self::json(-1, L('Api Not Found : %s', Request::basePath()));
         } else {
-            abort(404, L('Page Not Found'));
+            abort(404, L('PageNotFound'));
         }
     }
 
@@ -279,9 +279,9 @@ class Response
     public static function pagePermissionDenied($msg = null)
     {
         if (Request::isAjax()) {
-            return self::json(-1, $msg ? $msg : L('No Permission'));
+            return self::json(-1, $msg ? $msg : L('NoPermission'));
         } else {
-            abort(403, $msg ? $msg : L('No Permission'));
+            abort(403, $msg ? $msg : L('NoPermission'));
         }
     }
 
@@ -318,7 +318,8 @@ class Response
 
     public static function send($code, $msg, $data = null, $redirect = null)
     {
-        if (\Illuminate\Support\Facades\Request::ajax()
+        if (
+            \Illuminate\Support\Facades\Request::ajax()
             || Request::headerGet('is-ajax', false)
             || (($headerAccept = Request::headerGet('accept')) && $headerAccept == 'application/json')
         ) {
@@ -340,11 +341,73 @@ class Response
         }
     }
 
+    public static function downloadUrl($file, $url, $headers = [], $filenameFallback = null, $param = [])
+    {
+        $param = array_merge([
+            'requestUserAgent' => false,
+        ], $param);
+        $response = new StreamedResponse();
+        $response->setCallback(function () use ($url, $param) {
+            ob_get_clean();
+            $opts = [
+                'http' => [
+                    'method' => 'GET',
+                    'timeout' => 300,
+                ]
+            ];
+            if ($param['requestUserAgent']) {
+                $opts['http']['user_agent'] = AgentUtil::getUserAgent();
+            }
+            $context = stream_context_create($opts);
+            $stream = fopen($url, 'rb', false, $context);
+            if ($stream === false) {
+                BizException::throws('Failed to open URL');
+            }
+            while (!feof($stream)) {
+                $data = fread($stream, 1024 * 1024);
+                if ($data === false) {
+                    break;
+                }
+                echo $data;
+                flush();
+            }
+            fclose($stream);
+        });
+        if (empty($filenameFallback)) {
+            $filenameFallback = 'file.' . FileUtil::extension($file);
+        }
+        $fileNameInvalidChars = ['/'];
+        $file = str_replace($fileNameInvalidChars, '_', $file);
+        $filenameFallback = str_replace($fileNameInvalidChars, '_', $filenameFallback);
+        if (AgentUtil::isBrowser('safari', '<15')) {
+            $file = $filenameFallback;
+        }
+        $disposition = $response->headers->makeDisposition(
+            \Symfony\Component\HttpFoundation\ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            $file,
+            $filenameFallback
+        );
+        $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('X-Accel-Buffering', 'no');
+        $response->headers->set('Cache-Control', 'no-cache');
+        if (!isset($headers['Content-Type'])) {
+            $response->headers->set('Content-Type', 'application/octet-stream');
+        }
+        foreach ($headers as $k => $v) {
+            $response->headers->set($k, $v);
+        }
+        $response->send();
+        return null;
+    }
+
     public static function downloadFile($filename, $filepath, $headers = [], $filenameFallback = null, $param = [])
     {
         $param = array_merge([
             'deleteAfterSent' => false,
         ], $param);
+        if (empty($filenameFallback)) {
+            $filenameFallback = 'file.' . FileUtil::extension($filename);
+        }
         $response = new StreamedResponse();
         $fileSize = filesize($filepath);
         $response->setCallback(function () use ($filepath, $fileSize, $param) {
@@ -361,7 +424,7 @@ class Response
                 flush();
                 $sentBytes += $bytesToRead;
             }
-            fclose($fileStream);
+            fclose($f);
             if ($param['deleteAfterSent']) {
                 unlink($filepath);
             }
@@ -382,6 +445,7 @@ class Response
             $response->headers->set($k, $v);
         }
         $response->send();
+        return null;
     }
 
     public static function download($filename, $content, $headers = [], $filenameFallback = null)
