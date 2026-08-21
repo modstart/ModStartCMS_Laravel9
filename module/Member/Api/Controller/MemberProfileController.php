@@ -145,7 +145,11 @@ class MemberProfileController extends ModuleBaseController implements MemberLogi
                 EventUtil::fire(new MemberUserUpdatedEvent(MemberUser::id(), 'avatar'));
                 return Response::generate(0, '保存成功', null, '[reload]');
             default:
-                $avatar = FileUtil::savePathToLocalTemp($avatar);
+                $avatar = FileUtil::savePathToLocalTemp($avatar, null, false, [
+                    'ssrfConfig' => [
+                        'enable' => true,
+                    ],
+                ]);
                 if (empty($avatar)) {
                     return Response::generate(-1, '读取头像文件失败:-1');
                 }
